@@ -10,11 +10,11 @@
 
 `getValue(r, c) = v` requires 
 
-* c is in header(r)
+* `c` is in header(r)
 
 and ensures
 
-* v is of type `schema(r)[c]`
+* `v` is of type `schema(r)[c]`
 
 ## `selectColumns :: Table * List<ColName> -> Table`
 
@@ -36,11 +36,11 @@ and ensures
 ```
 
 `selectColumns(t1, cs) = t2` requires
-* cs must be distinct
-* cs constitute a sub-sequence of header(t1)
+* `cs` must be distinct
+* `cs` constitute a sub-sequence of `header(t1)`
 
 and ensures
 
-* schema(t1) includes schema(t2)
-* cs == header(t2)
+* `schema(t1)` includes `schema(t2)`
+* `cs == header(t2)`
 
