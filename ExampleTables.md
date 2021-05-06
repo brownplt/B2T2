@@ -45,7 +45,7 @@ We are going to use four tables through out example code.
 |   "Eve" |  13 |       |     9 |      84 |     8 |     8 |    77 |
 
 
-Note: in gradebook tables, quiz grades are generated with 
+Note: in gradebook tables, quiz grades are generated with the following R code.
 
 ```R
 logistic = function(a) {
