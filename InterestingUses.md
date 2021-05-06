@@ -21,3 +21,5 @@ buildColumn(
     sum / quizCount
   end)
 ```
+
+[TODO] KC: what is a reasonable implementation? I might be biased because I am designing the Core API. I can be unawarely affacted by the limitation of the APIs.
