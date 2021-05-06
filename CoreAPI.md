@@ -27,12 +27,12 @@ and ensures
 | "Bob"   |  12 |
 | "Alice" |  17 |
 | "Eve"   |  13 |
-> selectColumns(tableGF, ["name", "midterm", "final"])
-|    name | age | midterm | final |
-|---------|-----|---------|-------|
-|   "Bob" |  12 |      77 |    87 |
-| "Alice" |  17 |      88 |    85 |
-|   "Eve" |  13 |      84 |    77 |
+> selectColumns(tableGF, ["final", "midterm", "name"])
+| final | midterm |   name   |
+|-------|---------|----------|
+|    87 |      77 |    "Bob" | 
+|    85 |      88 |  "Alice" |
+|    77 |      84 |    "Eve" |
 ```
 
 `selectColumns(t1, cs) = t2` requires
