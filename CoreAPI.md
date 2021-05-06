@@ -18,7 +18,7 @@ and ensures
 
 ## `selectColumns :: Table * List<ColName> -> Table`
 
-`selectColumns(t1, cs) = t2` produces a new Table containing only those columns referred to by `cs`. The order of the columns is as given in `cs`. e.g.
+`selectColumns(t1, cs) = t2` produces a new table containing only those columns referred to by `cs`. The order of the columns is as given in `cs`. e.g.
 
 ```
 > selectColumns(tableSF, ["name", "age"])
