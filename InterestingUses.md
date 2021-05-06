@@ -1,3 +1,5 @@
+[TODO] KC: what is a reasonable program for each of the following programming problem? I might be biased because I am designing the Core API. I can be unawarely affacted by the limitation of the APIs.
+
 ## Gradebook
 
 For each student, compute their average quiz grade 
@@ -22,4 +24,9 @@ buildColumn(
   end)
 ```
 
-[TODO] KC: what is a reasonable implementation? I might be biased because I am designing the Core API. I can be unawarely affacted by the limitation of the APIs.
+## Jellybean A
+
+```
+> tableJellybeanA
+```
+
