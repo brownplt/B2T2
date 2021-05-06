@@ -8,11 +8,11 @@
 12
 ```
 
-`getValue(r, c) = v` requires that 
+`getValue(r, c) = v` requires 
 
 * c is in header(r)
 
-and ensures that
+and ensures
 
 * v is of type `schema(r)[c]`
 
