@@ -22,7 +22,7 @@ We are going to use four tables through out example code.
 | "Alice" |  17 |        "green" |
 |   "Eve" |  13 |                |
 
-`tableGG`: a table that represents a gradebook and is filled
+`tableGF`: a table that represents a gradebook and is filled
 
 ```
 > tableGF
