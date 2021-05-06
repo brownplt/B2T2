@@ -1,6 +1,6 @@
-We are going to use four tables through out example code.
+We are going to use four tables throughout our benchmark.
 
-`tableSF`: a table that is simple and filled
+`tableSF`: a simple table with no values missing.
 
 ```
 > tableSF
@@ -11,7 +11,7 @@ We are going to use four tables through out example code.
 | "Alice" |  17 |        "green"  |
 | "Eve"   |  13 |          "red"  |
 
-`tableSM`: a table that is simple and contains some missing values
+`tableSM`: a simple table missing some values.
 
 ```
 > tableSM
@@ -22,7 +22,7 @@ We are going to use four tables through out example code.
 | "Alice" |  17 |        "green" |
 |   "Eve" |  13 |                |
 
-`tableGF`: a table that represents a gradebook and is filled
+`tableGF`: a gradebook table with no missing values.
 
 ```
 > tableGF
@@ -33,6 +33,8 @@ We are going to use four tables through out example code.
 |   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |
 | "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
 |   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+
+`tableGM`: a gradebook table missing some values.
 
 ```
 > tableGM
@@ -45,7 +47,10 @@ We are going to use four tables through out example code.
 |   "Eve" |  13 |       |     9 |      84 |     8 |     8 |    77 |
 
 
-Note: in gradebook tables, quiz grades are generated with the following R code.
+-----
+
+Internal note: in the gradebook tables, quiz grades are generated with
+the following R code (noted here in case we want to generate more):
 
 ```R
 logistic = function(a) {
