@@ -1,14 +1,14 @@
-## `getValue :: Row * ColName -> Value`
+## `getValue(r :: Row, c :: ColName) = (v :: Value)`
 
-`getValue(r, c) = v` requires 
+__Require:__
 
 * `c` is in header(r)
 
-and ensures
+__Ensure:__
 
 * `v` is of type `schema(r)[c]`
 
-It accesses a row `r` at a particular column `c`, resulting in a particular value. e.g.
+__Description:__ access a row `r` at a particular column `c`, resulting in a particular value. e.g.
 
 ```
 > getValue([row: ("name", "Bob"),  ("age", 12)], "age")
