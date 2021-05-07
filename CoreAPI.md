@@ -1,4 +1,4 @@
-## `getValue(r :: Row, c :: ColName) = (v :: Value)`
+## `getValue :: r:Row * c:ColName -> v:Value`
 
 __Require:__
 
@@ -15,9 +15,18 @@ __Description:__ access a row `r` at a particular column `c`, resulting in a par
 12
 ```
 
-## `selectColumns :: Table * List<ColName> -> Table`
+## `selectColumns :: t1:Table * cs:List<ColName> -> t2:Table`
 
-`selectColumns(t1, cs) = t2` produces a new table containing only those columns referred to by `cs`. The order of the columns is as given in `cs`. e.g.
+require:
+* `cs` must be distinct
+* `cs` constitute a sub-sequence of `header(t1)`
+
+ensure:
+
+* `schema(t1)` includes `schema(t2)`
+* `cs == header(t2)`
+
+produce a new table containing only those columns referred to by `cs`. The order of the columns is as given in `cs`. e.g.
 
 ```
 > selectColumns(tableSF, ["name", "age"])
@@ -34,12 +43,4 @@ __Description:__ access a row `r` at a particular column `c`, resulting in a par
 |    77 |      84 |    "Eve" |
 ```
 
-`selectColumns(t1, cs) = t2` requires
-* `cs` must be distinct
-* `cs` constitute a sub-sequence of `header(t1)`
-
-and ensures
-
-* `schema(t1)` includes `schema(t2)`
-* `cs == header(t2)`
 
