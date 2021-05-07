@@ -1,5 +1,22 @@
 [TODO: KC: what is a reasonable program for each of the following programming problem? I might be biased because I am designing the Core API. I can be unawarely affacted by the limitation of the APIs.]
 
+## randomRows
+
+In a tidy table, each row is one observation. Thus it is interesting to sample rows randomly.
+
+```lua
+> randomRows =
+    function(t, n):
+      indexes = sample(range(nrows(t)), n)
+      selectRowsByNumbers(t, indexes)
+    end
+> randomRows(tableGM, 2)
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|---------|-----|-------|-------|---------|-------|-------|-------|
+|   "Eve" |  13 |       |     9 |      84 |     8 |     8 |    77 |
+| "Alice" |  17 |     6 |     8 |      88 |       |     7 |    85 |
+```
+
 ## Gradebook
 
 For each student, compute their average quiz grade 
