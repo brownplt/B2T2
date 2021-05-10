@@ -4,11 +4,11 @@ We are going to use four tables throughout our benchmark.
 
 ```
 > tableSF
-|   name  | age | favorite-color  |
-|---------|-----|-----------------|
-| "Bob"   |  12 |         "blue"  |
-| "Alice" |  17 |        "green"  |
-| "Eve"   |  13 |          "red"  |
+|    name | age | favorite-color |
+|---------|-----|----------------|
+|   "Bob" |  12 |         "blue" |
+| "Alice" |  17 |        "green" |
+|   "Eve" |  13 |          "red" |
 ```
 
 `tableSM`: a simple table missing some values.
