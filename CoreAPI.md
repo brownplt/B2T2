@@ -25,18 +25,20 @@ header
 schema
 range
 rows
+concat
+insert
 
 ### Relations
 
 `x` has no duplicates
 `x` is equal to `y`
-`x` is included by `y`
-`x` is in `y`
+`x` is not greater than `y`
+`x` is (not) included by `y`
+`x` is (not) in `y`
 `x` is a subsequence of `y` (not changing order)
+`x` is of type `y`
 
 ## `getValue :: r:Row * c:ColName -> v:Value`
-
-[TODO: maybe we should remove getValue because it is not about table. It is perfectly fine to program tables without the concept "row"]
 
 ### Constraints
 
@@ -77,7 +79,7 @@ ensure:
 * for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs2[i]` is equal to `true`
 * `schema(t2)` is included by `schema(t1)`
 
-### desc
+### Description
 
 Select a sub-table. e.g.
 
@@ -117,7 +119,7 @@ ensure:
 * `length(header(t2))` is equal to `length(selector)`for all `i` in `range(length(ns2))`, `header(t2)[i]` is equal to `header(t1)[ns2[i]]`
 * `schema(t2)` is included by `schema(t2)`
 
-### desc:
+### Description
 
 Select a sub-table.
 
@@ -154,7 +156,7 @@ ensure:
 * `header(t2)` is equal to `cs` 
 * `schema(t2)` is included by `schema(t2)`
 
-### desc:
+### Description
 
 Select a sub-table.
 
@@ -176,6 +178,8 @@ In R, `t1[bs1, cs2]`
 
 ## `subsetNB :: t1:Table * ns1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
 
+### Constraints
+
 require:
 
 * for all `n` in `ns1`, `n` is in `range(nrows(t1))`
@@ -188,8 +192,7 @@ ensure:
 * for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs2[i]` is equal to `true`
 * `schema(t2)` is included by `schema(t1)`
 
-
-desc:
+### Description
 
 Select a sub-table. e.g.
 
@@ -232,7 +235,7 @@ ensure:
 * for all `i` in `range(length(ns2))`, `header(t2)[i]` is equal to `header(t1)[ns2[i]]`
 * `schema(t2)` is included by `schema(t2)`
 
-desc:
+### Description
 
 Select a sub-table.
 
@@ -274,7 +277,7 @@ ensure:
 * `header(t2)` is equal to `cs` 
 * `schema(t2)` is included by `schema(t2)`
 
-desc:
+### Description
 
 Select a sub-table.
 
@@ -449,10 +452,11 @@ produce a new table containing only those columns referred to by `cs`. The order
 ### Origins
 
 In R, `t1[,selector]`
+In CS111 Pyret, `select-columns(t, selector)`. The `selector` must be a list of column names.
 
-## getColumnN :: t:Table * n:Number -> vs:List<Value>
+## `getColumnN :: t:Table * n:Number -> vs:List<Value>`
 
-### constraints
+### Constraints
 
 require:
 
@@ -479,7 +483,7 @@ In R, `t[[n]]`
 
 ## `getColumnC :: t:Table * c:ColName -> vs:List<Value>`
 
-### constraints
+### Constraints
 
 require:
 
@@ -508,9 +512,40 @@ In R, `t[[c]]`.
 
 In CS111 Pyret, `t.get-column(c)`.
 
+## `getRow :: t:Table * n:Number -> r:Row`
+
+### Constraints
+
+require:
+
+* `n` is in `range(nrows(t))`
+  
+ensure:
+
+* `r` is equal to `rows(t)[n]`
+
+### Description
+
+Extract a row out of a table by a numeric index. E.g.
+
+```
+> getRow(tableSF, 0)
+[row: ("name", "Bob"), ("age", 12), ("favorite-color", "blue")]
+> getRow(tableGF, 1)
+[row:
+  ("name", "Alice"), ("age", 17),
+  ("quiz1", 6), ("quiz2", 8), ("midterm", 88),
+  ("quiz3", 8), ("quiz4", 7), ("final", 85)]
+```
+
+### origins
+
+* In R, `t[n,]`. The output is a data frame.
+* In CS111 Pyret, `get-row(t, n)`
+
 ## `nrows :: t:Table -> n:Number`
 
-### constraints
+### Constraints
 
 require nothing
 
@@ -518,7 +553,7 @@ ensure:
 
 * `n` is equal to `nrows(t)`
 
-### desc
+### Description
 
 Compute the number of rows in table t. e.g.
 
@@ -535,7 +570,7 @@ In R, `nrow(t)`
 
 ## `ncols :: t:Table -> n:Number`
 
-### constraints
+### Constraints
 
 require nothing
 
@@ -543,7 +578,7 @@ ensure:
 
 * `n` is equal to `ncols(t)`
 
-### desc
+### Description
 
 Compute the number of columns in table t. e.g.
 
@@ -559,4 +594,261 @@ Compute the number of columns in table t. e.g.
 In R, `ncol(t)`
 
 ## `header :: t:Table -> cs:List<ColName>`
+
+### Constraints
+
+require:
+
+ensure:
+
+* `cs` is equal to `header(t)`
+
+### Description
+
+Compute the header. e.g.
+
+```
+> header(tableSF)
+["name", "age", "favorite-color"]
+> header(tableGF)
+["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
+```
+
+### origins
+
+In R, `colnames(t)`
+
+## `buildColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table`
+
+### Constraints
+
+require:
+
+* `c` is not in `header(t1)`
+
+ensure:
+
+* `header(r)` is equal to `header(t1)`
+* `schema(r)` is equal to `schema(t1)`
+* `header(t2)` is equal to `concat(header(t1), [c])`
+* `v` is of type `schema(t2)[c]`
+* for all `c` in `header(t1)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+
+### Description
+
+Compute a new table by adding a new column to t1. The new column will be named after c. And its values are computed by f from each row of t1. E.g.
+
+```lua
+> isTeenagerBuilder =
+    function(r):
+      12 < getValue(r, "age") and getValue(r, "age") < 20
+    end
+> buildColumn(tableSF, "is-teenager", isTeenagerBuilder)
+|   name  | age | favorite-color  | is-teenager |
+|---------|-----|-----------------|-------------|
+| "Bob"   |  12 |         "blue"  |       false |
+| "Alice" |  17 |        "green"  |        true |
+| "Eve"   |  13 |          "red"  |        true |
+> didWellInFinal =
+    function(r):
+      85 <= getValue(r, "final")
+    end
+> buildColumn(tableGF, "did-well-in-final", didWellInFinal)
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | did-well-in-final |
+|---------|-----|-------|-------|---------|-------|-------|-------|-------------------|
+|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |              true |
+| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |              true |
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |             false |
+```
+
+### Origin
+
+* In CS111 Pyret, `build-column(t, c, f)`.
+* In Bootstrap Pyret, `t.build-column(c, f)`
+
+## `addRow :: t1:Table * r:Row -> t2:Table`
+
+### Constraints
+
+require:
+
+* `header(r)` is equal to `header(t1)`
+* `schema(r)` is equal to `schema(t1)`
+
+ensure:
+
+* `header(t2)` is equal to `header(t1)`
+* `schema(t2)` is equal to `schema(t1)`
+* `nrows(t2)` is equal to `nrows(t1) + 1`
+
+### Description
+
+Compute a new table by adding a new row to `t1`. e.g.
+
+```
+> addRow(
+    tableSF,
+    [row: 
+      ("name", "Colton"), ("age", 19),
+      ("favorite-color", "blue")])
+|   name   | age | favorite-color  |
+|----------|-----|-----------------|
+|    "Bob" |  12 |         "blue"  |
+|  "Alice" |  17 |        "green"  |
+|    "Eve" |  13 |          "red"  |
+| "Colton" |  19 |         "blue"  |
+> addRow(
+    tableGF,
+    [row:
+      ("name", "Colton"), ("age", 19),
+      ("quiz1", 8), ("quiz2", 9), ("midterm", 73),
+      ("quiz3", 7), ("quiz4", 9), ("final", 64)])
+|     name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|----------|-----|-------|-------|---------|-------|-------|-------|
+|    "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |
+|  "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
+|    "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+| "Colton" |  19 |     8 |     9 |      73 |     7 |     9 |    64 |
+```
+
+### origins
+
+* In CS111 Pyret, `add-row(t1,r)`
+
+## `addColumn :: t1:Table * c:ColName * vs:List<Value> -> t2:Table`
+
+### Constraints
+
+require:
+
+* `c` is not in `header(t1)`
+* `length(vs)` is equal to `ncols(t1)`
+
+ensure:
+
+* `header(t2)` is equal to `concat(header(t1), [c])`
+* `schema(t1)` is included by `schema(t2)`
+* for all `v` in `vs`, `vs` is of type `schema(t2)[c]`
+* `nrows(t2)` is equal to `nrows(t1)`
+
+### Description
+
+Compute a new table by adding a new column to t1. e.g.
+
+```
+> hairColor = ["brown", "red", "blonde"]
+> addColumn(tableSF, "hair-color", hairColor)
+|   name  | age | favorite-color  | hair-color |
+|---------|-----|-----------------|------------|
+| "Bob"   |  12 |         "blue"  |    "brown" |
+| "Alice" |  17 |        "green"  |      "red" |
+| "Eve"   |  13 |          "red"  |   "blonde" |
+> presentation = [9, 9, 6]
+> addColumn(tableGF, "presentation", presentation)
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | presentation |
+|---------|-----|-------|-------|---------|-------|-------|-------|--------------|
+|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |            9 |
+| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |            9 |
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |            6 |
+```
+
+### origins
+
+* In CS111 Pyret, `add-col(t, c, vs)`
+* In Python pandas, `t[c] = vs`. If `c` is already in `t`, the old column is replaced with `vs` and `c` keeps its position in the header. 
+
+## `transformColumn :: t1:Table * c:ColName * f:(v1:Value -> v2:Value) -> t2:Table`
+
+### Constraints
+
+require:
+
+* `c` is in `header(t1)`
+
+ensure:
+
+* `v1` is of type `schema(t1)[c]`
+* `header(t2)` is equal to `header(t1)`
+* for all `c'` in `header(t1)`, if `c'` is not equal to `c` then `schema(t2)[c]` is equal to `schema(t1)[c]`
+* `v2` is of type `schema(t2)[c]`
+
+### Description
+
+Update a column in `t1`. For each row, `f` maps from the old value to the new one. E.g.
+
+```
+> addLastName =
+    lam(name):
+      Strings.concat(name, “ Smith”)
+    end
+> transformColumn(tableSF, “name”, addLastName)
+|          name | age |  favorite-color |
+|---------------|-----|-----------------|
+|   "Bob Smith" |  12 |         "blue"  |
+| "Alice Smith" |  17 |        "green"  |
+|   "Eve Smith" |  13 |          "red"  |
+> quizScoreToPassFail =
+    lam(score):
+      if score <= 6:
+        "fail"
+      else:
+        "pass"
+      end
+    end
+> transformColumn(tableGF, "quiz1", quizScoreToPassFail)
+|    name | age |  quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|---------|-----|--------|-------|---------|-------|-------|-------|
+|   "Bob" |  12 | "pass" |     9 |      77 |     7 |     9 |    87 |
+| "Alice" |  17 | "fail" |     8 |      88 |     8 |     7 |    85 |
+|   "Eve" |  13 | "fail" |     9 |      84 |     8 |     8 |    77 |
+```
+
+### origins
+
+In CS111 Pyret, `transform-column(t, c, f)`
+
+## `filter :: t1:Table * f:(r:Row -> b:Boolean) -> t2:Table`
+
+### Constraints
+
+require:
+
+ensure:
+
+* `header(r)` is equal to `header(t1)`
+* `schema(r)` is equal to `schema(t1)`
+* `header(t2)` is equal to `header(t1)`
+* `schema(t2)` is equal to `schema(t1)`
+* `nrows(t2)` is not greater than `nrows(t1)`
+
+### Description
+
+For each row of t1, keep those satisfy f and delete the others. E.g.
+
+```
+> ageUnderFifteen =
+    lam(r):
+      getValue(r, “age”) < 15
+    end
+> filter(tableSF, ageUnderFifteen)
+|  name | age | favorite-color |
+|-------|-----|----------------|
+| "Bob" |  12 |         "blue" |
+| "Eve" |  13 |          "red" |
+> nameLongerThan3Letters =
+    lam(r):
+      length(getValue(r, “name)) > 3
+    end
+> filter(tableGF, nameLongerThan3Letters)
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|---------|-----|-------|-------|---------|-------|-------|-------|
+|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |
+| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+```
+
+### origins
+
+* In CS111 Pyret, `filter-with(t1, f)`
+* In Bootstrap Pyret, `t1.filter(f)`
 
