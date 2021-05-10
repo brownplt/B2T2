@@ -1,6 +1,44 @@
+## Introduction
+
+This file listed table operators that we gather from Python, R, LINQ, and Pyret communities.
+
+Python pandas: https://pandas.pydata.org/
+
+Python pandas and R: https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html
+
+R tibbles: https://adv-r.hadley.nz/vectors-chap.html#tibble
+
+R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html
+
+Pyret as taught in Brown CS111: https://hackmd.io/@cs111/table
+
+Pyret as taught in Bootstrap project: https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml
+
+## Terminologies
+
+### Functions
+
+length
+ncols
+nrows
+header
+schema
+range
+rows
+
+### Relations
+
+`x` has no duplicates
+`x` is equal to `y`
+`x` is included by `y`
+`x` is in `y`
+`x` is a subsequence of `y` (not changing order)
+
 ## `getValue :: r:Row * c:ColName -> v:Value`
 
 [TODO: maybe we should remove getValue because it is not about table. It is perfectly fine to program tables without the concept "row"]
+
+### Constraints
 
 __Require:__
 
@@ -10,16 +48,22 @@ __Ensure:__
 
 * `v` is of type `schema(r)[c]`
 
-__Description:__ access a row `r` at a particular column `c`, resulting in a particular value. e.g.
+### Description
+
+access a row `r` at a particular column `c`, resulting in a particular value. e.g.
 
 ```
 > getValue([row: ("name", "Bob"),  ("age", 12)], "age")
 12
 ```
 
+### Origins
+
 In CS111, `get-value(r, c)`
 
-## `subsetBB :: t1:Table * bs1:List<Boolean> * bs2:List<Boolean> -> t2:Table`
+## `subsetBB :: t1:Table * bs1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
+
+### Constraints
 
 require:
 
@@ -28,10 +72,12 @@ require:
 
 ensure:
 
-* `nrows(t2)` is equal to the number of `true`s in `bs1`
-* `schema(t2)` is a subsequence of `schema(t1)` such that it only includes column names whose corresponding Boolean value in `bs2` is `true`
+* `rows(t2)` is a subsequence of `rows(t1)`
+* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `bs1[i]` is equal to `true`
+* for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs2[i]` is equal to `true`
+* `schema(t2)` is included by `schema(t1)`
 
-desc:
+### desc
 
 Select a sub-table. e.g.
 
@@ -47,25 +93,31 @@ Select a sub-table. e.g.
     [true, false, false, false, true, false, false, true])
 |    name | midterm | final |
 |---------|---------|-------|
-|   "Bob" |      77 |    87 |
-| "Alice" |      88 |    85 |
 |   "Eve" |      84 |    77 |
 ```
 
-## `subsetBN :: t1:Table * bs1:List<Boolean> * ns2:List<Number> -> t2:Table`
+### Origins
+
+In R, `t1[bs1, bs2]`
+
+## `subsetBN :: t1:Table * bs1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
+
+### Constraints
 
 require:
 
 * `length(bs1)` is equal to `nrows(t1)`
-* every `n` in `ns2` is a valid column index of `t1`
-* there is no duplicated element in `ns2`
+* `ns2` has no duplicates
+* for all `n` in `ns2`, `n` is in `range(ncols(t1))`
 
 ensure:
 
-* `nrows(t2)` is equal to the number of `true`s in `bs1`
-* `schema(t2)` is a permutation of a subsequence of `header(t1)` such that it only includes columns indicated by `ns2`
+* `rows(t2)` is a subsequence of `rows(t1)`
+* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `bs1[i]` is equal to `true`
+* `length(header(t2))` is equal to `length(selector)`for all `i` in `range(length(ns2))`, `header(t2)[i]` is equal to `header(t1)[ns2[i]]`
+* `schema(t2)` is included by `schema(t2)`
 
-desc:
+### desc:
 
 Select a sub-table.
 
@@ -78,26 +130,31 @@ Select a sub-table.
 > subsetBN(tableGM, [false, false, true], [4, 7, 0])
 | midterm | final |    name |
 |---------|-------|---------|
-|      77 |    87 |   "Bob" |
-|      88 |    85 | "Alice" |
 |      84 |    77 |   "Eve" |
 ```
 
-## `subsetBC :: t1:Table * bs1:List<Boolean> * cs2:List<ColName> -> t2:Table`
+### Origins
+
+In R, `t1[bs1, ns2]`
+
+## `subsetBC :: t1:Table * bs1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
+
+### Constraints
 
 require:
 
 * `length(bs1)` is equal to `nrows(t1)`
-* every `c` in `cs2` is a valid column name of `t1`
-* there is no duplicated element in `cs2`
+* `cs2` has no duplicates
+* for all `c` in `cs2`, `c` is in `header(t1)`
 
 ensure:
 
-* `nrows(t2)` is equal to the number of `true`s in `bs1`
-* `header(t2)` is equal to `cs2` 
-* for all `c` in `cs2` we have `schema(t2)[c] == schema(t1)[c]`
+* `rows(t2)` is a subsequence of `rows(t1)`
+* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `bs1[i]` is equal to `true`
+* `header(t2)` is equal to `cs` 
+* `schema(t2)` is included by `schema(t2)`
 
-desc:
+### desc:
 
 Select a sub-table.
 
@@ -110,37 +167,396 @@ Select a sub-table.
 > subsetBC(tableGM, [false, false, true], ["midterm", "final", "name"])
 | midterm | final |    name |
 |---------|-------|---------|
-|      77 |    87 |   "Bob" |
-|      88 |    85 | "Alice" |
 |      84 |    77 |   "Eve" |
 ```
 
-## `selectColumns :: t1:Table * cs:List<ColName> -> t2:Table`
+### Origins
+
+In R, `t1[bs1, cs2]`
+
+## `subsetNB :: t1:Table * ns1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
 
 require:
-* `cs` must be distinct
-* `cs` constitute a sub-sequence of `header(t1)`
+
+* for all `n` in `ns1`, `n` is in `range(nrows(t1))`
+* `length(bs2)` is equal to `ncols(t1)`
 
 ensure:
 
-* `schema(t1)` includes `schema(t2)`
-* `cs == header(t2)`
+* `nrows(t2)` is equal to `length(ns1)`
+* for all `i` in `range(length(ns1))`, `rows(t2)[i]` is equal to `rows(t1)[ns1[i]]`
+* for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs2[i]` is equal to `true`
+* `schema(t2)` is included by `schema(t1)`
+
+
+desc:
+
+Select a sub-table. e.g.
+
+```
+> subsetNB(tableSF, [2, 0, 2, 1], [false, true, true])
+| age | favorite-color  |
+|-----|-----------------|
+|  13 |          "red"  |
+|  12 |         "blue"  |
+|  13 |          "red"  |
+|  17 |        "green"  |
+> subsetNB(
+    tableGM,
+    [2, 1],
+    [true, false, false, false, true, false, false, true])
+|    name | midterm | final |
+|---------|---------|-------|
+|   "Eve" |      84 |    77 |
+| "Alice" |      88 |    85 |
+```
+
+### Origins
+
+In R, `t1[ns1, bs2]`
+
+
+## `subsetNN :: t1:Table * ns1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
+
+require:
+
+* for all `n` in `ns1`, `n` is in `range(nrows(t1))`
+* `ns2` has no duplicates
+* for all `n` in `ns2`, `n` is in `range(ncols(t1))`
+
+ensure:
+
+* `nrows(t2)` is equal to `length(ns1)`
+* for all `i` in `range(length(ns1))`, `rows(t2)[i]` is equal to `rows(t1)[ns1[i]]`
+* `length(header(t2))` is equal to `length(selector)`
+* for all `i` in `range(length(ns2))`, `header(t2)[i]` is equal to `header(t1)[ns2[i]]`
+* `schema(t2)` is included by `schema(t2)`
+
+desc:
+
+Select a sub-table.
+
+```
+> subsetNN(tableSF, [2, 0, 2, 1], [2, 1])
+| favorite-color  | age |
+|-----------------|-----|
+|          "red"  |  13 |
+|         "blue"  |  12 |
+|          "red"  |  13 |
+|        "green"  |  17 |
+> subsetNN(
+    tableGM,
+    [2, 1],
+    [4, 0, 7])
+| midterm |    name | final |
+|---------|---------|-------|
+|      84 |   "Eve" |    77 |
+|      88 | "Alice" |    85 |
+```
+
+### Origins
+
+In R, `t1[ns1, ns2]`
+
+
+## `subsetNC :: t1:Table * ns1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
+
+require:
+
+* for all `n` in `ns1`, `n` is in `range(nrows(t1))`
+* `cs2` has no duplicates
+* for all `c` in `cs2`, `c` is in `header(t1)`
+
+ensure:
+
+* `nrows(t2)` is equal to `length(ns1)`
+* for all `i` in `range(length(ns1))`, `rows(t2)[i]` is equal to `rows(t1)[ns1[i]]`
+* `header(t2)` is equal to `cs` 
+* `schema(t2)` is included by `schema(t2)`
+
+desc:
+
+Select a sub-table.
+
+```
+> subsetNC(tableSF, [2, 0, 2, 1], ["favorite-color", "age"])
+| favorite-color  | age |
+|-----------------|-----|
+|          "red"  |  13 |
+|         "blue"  |  12 |
+|          "red"  |  13 |
+|        "green"  |  17 |
+> subsetNC(
+    tableGM,
+    [2, 1],
+    ["midterm", "name", "final"])
+| midterm |    name | final |
+|---------|---------|-------|
+|      84 |   "Eve" |    77 |
+|      88 | "Alice" |    85 |
+```
+
+### Origins
+
+In R, `t1[ns1, cs2]`
+
+## `selectRows :: t1:Table * selector:RowSelector -> t2:Table`
+
+`selectRows` is an family of operators. A row selector can be either a `Seq<Bool>` or a `Seq<Number>`. A programming language may provde `selectRows` as two distinct operators, as one operator with `RowSelector` as a tag or untag union, or as an overloaded operator.
+
+### Constraints (when `selector` is a `Seq<Bool>`)
+
+require:
+
+* `length(selector)` is equal to `nrows(t1)`
+
+ensure:
+
+* `rows(t2)` is a subsequence of `rows(t1)`
+* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `selector[i]` is equal to `true`
+* `header(t2)` is equal to `header(t1)`
+* `schema(t2)` is equal to `schema(t2)`
+
+### Constraints (when `selector` is a `Seq<Number>`)
+
+require:
+
+* for all `n` in `selector`, `n` is in `range(nrows(t1))`
+
+ensure:
+
+* `nrows(t2)` is equal to `length(selector)`
+* for all `i` in `range(length(selector))`, `rows(t2)[i]` is equal to `rows(t1)[selector[i]]`
+* `header(t2)` is equal to `header(t1)`
+* `schema(t2)` is equal to `schema(t2)`
+
+### Description
+
+Select some rows of `t1`
+
+```
+> selectRows(tableSF, [true, false, true])
+|   name  | age | favorite-color  |
+|---------|-----|-----------------|
+| "Bob"   |  12 |         "blue"  |
+| "Eve"   |  13 |          "red"  |
+> selectRows(tableGM, [false, false, true])
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|---------|-----|-------|-------|---------|-------|-------|-------|
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+> selectRows(tableSF, [2, 0, 2, 1])
+|   name  | age | favorite-color  |
+|---------|-----|-----------------|
+| "Eve"   |  13 |          "red"  |
+| "Bob"   |  12 |         "blue"  |
+| "Eve"   |  13 |          "red"  |
+| "Alice" |  17 |        "green"  |
+> selectRows(tableGM, [2, 1])
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|---------|-----|-------|-------|---------|-------|-------|-------|
+| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+```
+
+### Origins
+
+In R, `t1[selector,]`
+
+## `selectColumns :: t1:Table * selector:ColumnSelector -> t2:Table`
+
+`selectColumns` is an family of operators. A column selector can be either a `Seq<Bool>`, a `Seq<Number>`, or a `Seq<ColName>`. A programming language may provde `selectColumns` as three distinct operators, as one operator with `ColumnSelector` as a tag or untag union, or as an overloaded operator.
+
+### Constraints (when `selector` is a `Seq<Bool>`)
+
+require:
+
+* `length(selector)` is equal to `ncols(t1)`
+
+ensure:
+
+* `header(t2)` is a subsequence of `header(t1)`
+* for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
+* `schema(t2)` is included by `schema(t1)`
+  
+### Constraints (when `selector` is a `Seq<Number>`)
+
+require:
+
+* `selector` has no duplicates
+* for all `n` in `selector`, `n` is in `range(ncols(t1))`
+
+ensure:
+
+* `length(header(t2))` is equal to `length(selector)`
+* for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
+* `schema(t2)` is included by `schema(t2)`
+
+### Constraints (when `selector` is a `Seq<ColName>`)
+
+require:
+
+* `selector` has no duplicates
+* for all `c` in `selector`, `c` is in `header(t1)`
+
+ensure:
+
+* `header(t2)` is equal to `cs` 
+* `schema(t2)` is included by `schema(t2)`
+
+### Description
 
 produce a new table containing only those columns referred to by `cs`. The order of the columns is as given in `cs`. e.g.
 
 ```
-> selectColumns(tableSF, ["name", "age"])
+> selectColumns(tableSF, [true, true, false])
 |   name  | age |
 |---------|-----|
 | "Bob"   |  12 |
 | "Alice" |  17 |
 | "Eve"   |  13 |
-> selectColumns(tableGF, ["final", "midterm", "name"])
-| final | midterm |   name   |
-|-------|---------|----------|
-|    87 |      77 |    "Bob" | 
-|    85 |      88 |  "Alice" |
-|    77 |      84 |    "Eve" |
+> selectColumns(tableGF, [true, false, false, false, true, false, false, true])
+|   name   | midterm | final |
+|----------|---------|-------|
+|    "Bob" |      77 |    87 |
+|  "Alice" |      88 |    85 |
+|    "Eve" |      84 |    77 |
+> selectColumns(tableSF, [2, 1])
+| favorite-color  | age |
+|-----------------|-----|
+|         "blue"  |  12 |
+|        "green"  |  17 |
+|          "red"  |  13 |
+> selectColumns(tableGF, [7, 0, 4])
+| final |   name   | midterm |
+|-------|----------|---------|
+|    87 |    "Bob" |      77 |
+|    85 |  "Alice" |      88 |
+|    77 |    "Eve" |      84 |
+> selectColumns(tableSF, ["favorite-color", "age"])
+| favorite-color  | age |
+|-----------------|-----|
+|         "blue"  |  12 |
+|        "green"  |  17 |
+|          "red"  |  13 |
+> selectColumns(tableGF, ["final", "name", "midterm"])
+| final |   name   | midterm |
+|-------|----------|---------|
+|    87 |    "Bob" |      77 |
+|    85 |  "Alice" |      88 |
+|    77 |    "Eve" |      84 |
 ```
 
+### Origins
+
+In R, `t1[,selector]`
+
+## getColumnN :: t:Table * n:Number -> vs:List<Value>
+
+### constraints
+
+require:
+
+* `n` is in `range(ncols(t))`
+
+ensure:
+
+* for all `v` in `vs`, `v` is of type `schema(t)[header(t)[n]]`
+
+### Description
+
+Extract a column out of a table t by a column index. e.g.
+
+```
+> getColumnN(tableSF, 1)
+[12, 17, 13]
+> getColumnN(tableGF, 0)
+["Bob", "Alice", "Eve"]
+```
+
+### Origins
+
+In R, `t[[n]]`
+
+## `getColumnC :: t:Table * c:ColName -> vs:List<Value>`
+
+### constraints
+
+require:
+
+* `c` is in `header(t)`
+
+ensure:
+
+* for all `v` in `vs`, `v` is of type `schema(t)[c]`
+
+### Description
+
+Extract a column out of a table t by a column name. e.g.
+
+```
+> getColumnC(tableSF, "age")
+[12, 17, 13]
+> getColumnC(tableGF, "name")
+["Bob", "Alice", "Eve"]
+```
+
+### Origins
+
+In Python pandas, `t[c]`.
+
+In R, `t[[c]]`.
+
+In CS111 Pyret, `t.get-column(c)`.
+
+## `nrows :: t:Table -> n:Number`
+
+### constraints
+
+require nothing
+
+ensure:
+
+* `n` is equal to `nrows(t)`
+
+### desc
+
+Compute the number of rows in table t. e.g.
+
+```
+> nrows(tableSF)
+3
+> nrows(tableSM)
+3
+```
+
+### Origins
+
+In R, `nrow(t)`
+
+## `ncols :: t:Table -> n:Number`
+
+### constraints
+
+require nothing
+
+ensure:
+
+* `n` is equal to `ncols(t)`
+
+### desc
+
+Compute the number of columns in table t. e.g.
+
+```
+> ncols(tableSF)
+3
+> ncols(tableSM)
+8
+```
+
+### Origins
+
+In R, `ncol(t)`
+
+## `header :: t:Table -> cs:List<ColName>`
 
