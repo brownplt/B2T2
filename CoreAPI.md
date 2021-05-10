@@ -34,8 +34,6 @@ rows
 
 ## `getValue :: r:Row * c:ColName -> v:Value`
 
-[TODO: maybe we should remove getValue because it is not about table. It is perfectly fine to program tables without the concept "row"]
-
 ### Constraints
 
 __Require:__
