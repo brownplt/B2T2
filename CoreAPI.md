@@ -303,7 +303,7 @@ In R, `t1[ns1, cs2]`
 
 ## `selectRows :: t1:Table * selector:RowSelector -> t2:Table`
 
-`selectRows` is an family of operators. A row selector can be either a `Seq<Bool>` or a `Seq<Number>`. A programming language may provde `selectRows` as two distinct operators, as one operator with `RowSelector` as a tag or untag union, or as an overloaded operator.
+`selectRows` is an family of operators. A row selector can be either a `Seq<Bool>` or a `Seq<Number>`. A programming language may provde `selectRows` as two distinct operators, as one operator with `RowSelector` being a tag or untag union, or as an overloaded operator.
 
 ### Constraints (when `selector` is a `Seq<Bool>`)
 
@@ -365,7 +365,7 @@ In R, `t1[selector,]`
 
 ## `selectColumns :: t1:Table * selector:ColumnSelector -> t2:Table`
 
-`selectColumns` is an family of operators. A column selector can be either a `Seq<Bool>`, a `Seq<Number>`, or a `Seq<ColName>`. A programming language may provde `selectColumns` as three distinct operators, as one operator with `ColumnSelector` as a tag or untag union, or as an overloaded operator.
+`selectColumns` is an family of operators. A column selector can be either a `Seq<Bool>`, a `Seq<Number>`, or a `Seq<ColName>`. A programming language may provde `selectColumns` as three distinct operators, as one operator with `ColumnSelector` being a tag or untag union, or as an overloaded operator.
 
 ### Constraints (when `selector` is a `Seq<Bool>`)
 
