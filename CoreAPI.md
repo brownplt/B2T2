@@ -2,8 +2,6 @@
 
 This file listed table operators that we gather from Python, R, LINQ, and Pyret communities.
 
-Python pandas: https://pandas.pydata.org/
-
 Python pandas and R: https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html
 
 R tibbles: https://adv-r.hadley.nz/vectors-chap.html#tibble
