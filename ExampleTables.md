@@ -58,7 +58,7 @@ logit = function(p) {
   log(p / (1 - p))
 }
 
-> round(logistic(rnorm(6, mean = logit(0.8), sd = 0.5)) * 10)
+> round(logistic(rnorm(4, mean = logit(0.8), sd = 0.5)) * 10)
 ```
 
 and midterm and final grades are generated with
