@@ -101,3 +101,34 @@ and midterm and final grades are generated with
 ```R
 > round(logistic(rnorm(2, mean = logit(0.8), sd = 0.7)) * 100)
 ```
+
+Jelly bean tables and analysis are produced with
+
+```R
+library(tibble)
+tableJN = 
+  as.tibble(
+    matrix(
+      rbinom(100, 1, 0.3),
+      ncol=10))
+colnames(tableJN) = 
+  c("get-acne",
+    "red", "black", "white",
+    "green", "yellow", "brown",
+    "orange", "pink", "purple")
+
+show(tableJN)
+
+pHacking = function(t) {
+  colAcne = factor(t[["get-acne"]], levels = 0:1)
+  tableJB = t[,2:ncol(t)]
+  show(tableJB)
+  for (c in colnames(tableJB)) {
+    colJB = factor(tableJB[[c]], levels = 0:1)
+    show(colJB)
+    result = fisher.test(colAcne, colJB)
+    show(c)
+    show(result)
+  }
+}
+```
