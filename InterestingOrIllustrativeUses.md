@@ -11,10 +11,10 @@ This example defines a function that randomly sample rows of a table. This funct
       selectRowsByNumbers(t, indexes)
     end
 > randomRows(tableGM, 2)
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-|   "Eve" |  13 |       |     9 |      84 |     8 |     8 |    77 |
-| "Alice" |  17 |     6 |     8 |      88 |       |     7 |    85 |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
+| "Alice" | 17  | 6     | 8     | 88      |       | 7     | 85    |
 ```
 
 ## Gradebook
@@ -35,24 +35,20 @@ This example computes the average quiz score for each student in `tableGF`. This
       scores = map(fields, second)
       sum(scores) / length(scores)
     end)
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | average-quiz |
-|---------|-----|-------|-------|---------|-------|-------|-------|--------------|
-|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |         8.25 |
-| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |         7.25 |
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |            8 |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | average-quiz |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ------------ |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | 8.25         |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    | 7.25         |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 8            |
 ```
 
 
-## Jellybean A
+## Jelly Bean Homo
 
-Do jelly beans of a certain color cause acne?
-
-[Fisher's exact test in R](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/fisher.test.html)
+This example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `tableJN`, is homogeneous because all of its columns contain numbers. It is interesting to compare this program with the next example, Jelly Bean Hetero, which processes `tableJM`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
 
 ```
 > tableAcneJB
-```
-
 | get-acne | red | black | white | green | yellow | brown | orange | pink | purple |
 | -------- | --- | ----- | ----- | ----- | ------ | ----- | ------ | ---- | ------ |
 | 0        | 1   | 1     | 1     | 1     | 1      | 0     | 0      | 0    | 1      |
@@ -75,45 +71,34 @@ Do jelly beans of a certain color cause acne?
 | 1        | 1   | 1     | 0     | 0     | 1      | 1     | 0      | 0    | 1      |
 | 1        | 1   | 0     | 1     | 0     | 1      | 0     | 1      | 0    | 0      |
 | 1        | 1   | 1     | 0     | 1     | 0      | 0     | 0      | 1    | 1      |
-
-```lua
-> colAcne = getColumn(tableAcneJB, "get-acne")
-> for c in header(tableAcneJB):
-    if c != "get-acne":
-      colJB = getColumn(tableAcneJB, c)
-      p = fisherTest(colAcne, colJB)
-      if p < 0.05:
-        println(
-          "We found a link between " ++ 
-          c ++ " beans and acne (p < 0.05).")
-      end
-    end
-  end
 ```
 
-[TODO: Should I put in a result?]
-
-## Jellybean B
-
 ```lua
-> tableJB
-    = selectColumns(
-        tableAcneJB,
-        delete(header(tableAcneJB), "get-acne"))
-> for c1 in header(tableJB):
-    for c2 in header(tableJB):
-      if c1 != c2:
-        p = fisherTest(getColumn(tableJB, c1), getColumn(tableJB, c2))
+> pHacking =
+    function(t):
+      colAcne = getColumn(t, "get-acne")
+      tableJB = drop(t, "get-acne")
+      for c in header(tableJB):
+        colJB = getColumn(t, c)
+        p = fisherTest(colAcne, colJB)
         if p < 0.05:
           println(
-            "We found a link between consuming " ++ 
-            c1 ++ " beans and consuming " ++ 
-            c2 ++ " beans (p < 0.05).")
+            "We found a link between " ++ 
+            c ++ " beans and acne (p < 0.05).")
         end
       end
-    end
-  end
+> pHacking(tableJN)
 ```
 
-[TODO: Should I put in a result?]
+[TODO: put in a result]
+
+## Jelly Bean Hetero
+
+This example program is similar to Jelly Bean Homo but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table will be a table of numbers.
+
+```lua
+> pHacking(drop(tableJM, "name"))
+```
+
+[TODO: put in a result]
 
