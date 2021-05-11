@@ -4,46 +4,101 @@ We are going to use four tables throughout our benchmark.
 
 ```
 > tableSF
-|    name | age | favorite-color |
-|---------|-----|----------------|
-|   "Bob" |  12 |         "blue" |
-| "Alice" |  17 |        "green" |
-|   "Eve" |  13 |          "red" |
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+| "Alice" | 17  | "green"        |
+| "Eve"   | 13  | "red"          |
 ```
 
 `tableSM`: a simple table missing some values.
 
 ```
 > tableSM
-|    name | age | favorite-color |
-|---------|-----|----------------|
-|   "Bob" |     |         "blue" |
-| "Alice" |  17 |        "green" |
-|   "Eve" |  13 |                |
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   |     | "blue"         |
+| "Alice" | 17  | "green"        |
+| "Eve"   | 13  |                |
 ```
 
 `tableGF`: a gradebook table with no missing values.
 
 ```
 > tableGF
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |
-| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 `tableGM`: a gradebook table missing some values.
 
 ```
 > tableGM
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |
-| "Alice" |  17 |     6 |     8 |      88 |       |     7 |    85 |
-|   "Eve" |  13 |       |     9 |      84 |     8 |     8 |    77 |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | 6     | 8     | 88      |       | 7     | 85    |
+| "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
 ```
 
+`tableJN`: a jelly bean table that contains only numeric data
+
+```
+> tableJN
+| get-acne | red | black | white | green | yellow | brown | orange | pink | purple |
+| -------- | --- | ----- | ----- | ----- | ------ | ----- | ------ | ---- | ------ |
+| 0        | 1   | 1     | 1     | 1     | 1      | 0     | 0      | 0    | 1      |
+| 0        | 0   | 0     | 1     | 0     | 1      | 1     | 1      | 1    | 0      |
+| 1        | 0   | 1     | 1     | 0     | 1      | 1     | 0      | 1    | 0      |
+| 1        | 0   | 0     | 1     | 1     | 0      | 0     | 0      | 0    | 0      |
+| 0        | 0   | 1     | 1     | 0     | 0      | 0     | 0      | 0    | 0      |
+| 0        | 1   | 1     | 1     | 1     | 0      | 0     | 0      | 1    | 1      |
+| 0        | 1   | 1     | 0     | 0     | 1      | 1     | 1      | 1    | 1      |
+| 0        | 0   | 1     | 1     | 1     | 1      | 1     | 1      | 0    | 0      |
+| 1        | 0   | 0     | 1     | 1     | 0      | 0     | 0      | 0    | 0      |
+| 1        | 0   | 0     | 1     | 1     | 1      | 1     | 0      | 0    | 1      |
+| 0        | 1   | 1     | 1     | 1     | 1      | 1     | 0      | 0    | 1      |
+| 0        | 0   | 0     | 0     | 0     | 0      | 0     | 1      | 1    | 0      |
+| 0        | 1   | 1     | 0     | 1     | 1      | 1     | 0      | 0    | 0      |
+| 0        | 0   | 1     | 1     | 0     | 1      | 0     | 1      | 0    | 0      |
+| 0        | 0   | 0     | 0     | 0     | 0      | 0     | 0      | 1    | 1      |
+| 0        | 0   | 0     | 0     | 0     | 0      | 0     | 1      | 1    | 0      |
+| 0        | 1   | 1     | 1     | 1     | 1      | 1     | 1      | 1    | 0      |
+| 1        | 1   | 1     | 0     | 0     | 1      | 1     | 0      | 0    | 1      |
+| 1        | 1   | 0     | 1     | 0     | 1      | 0     | 1      | 0    | 0      |
+| 1        | 1   | 1     | 0     | 1     | 0      | 0     | 0      | 1    | 1      |
+```
+
+`tableJM`: a jelly bean table that contains mix-typed data
+
+```
+> tableJN
+| name       | get-acne | red | black | white | green | yellow | brown | orange | pink | purple |
+| ---------- | -------- | --- | ----- | ----- | ----- | ------ | ----- | ------ | ---- | ------ |
+| "Emily"    | 0        | 1   | 1     | 1     | 1     | 1      | 0     | 0      | 0    | 1      |
+| "Jacob"    | 0        | 0   | 0     | 1     | 0     | 1      | 1     | 1      | 1    | 0      |
+| "Emma"     | 1        | 0   | 1     | 1     | 0     | 1      | 1     | 0      | 1    | 0      |
+| "Aidan"    | 1        | 0   | 0     | 1     | 1     | 0      | 0     | 0      | 0    | 0      |
+| "Madison"  | 0        | 0   | 1     | 1     | 0     | 0      | 0     | 0      | 0    | 0      |
+| "Ethan"    | 0        | 1   | 1     | 1     | 1     | 0      | 0     | 0      | 1    | 1      |
+| "Hannah"   | 0        | 1   | 1     | 0     | 0     | 1      | 1     | 1      | 1    | 1      |
+| "Matthew"  | 0        | 0   | 1     | 1     | 1     | 1      | 1     | 1      | 0    | 0      |
+| "Hailey"   | 1        | 0   | 0     | 1     | 1     | 0      | 0     | 0      | 0    | 0      |
+| "Nicholas" | 1        | 0   | 0     | 1     | 1     | 1      | 1     | 0      | 0    | 1      |
+| "Sarah"    | 0        | 1   | 1     | 1     | 1     | 1      | 1     | 0      | 0    | 1      |
+| "Joshua"   | 0        | 0   | 0     | 0     | 0     | 0      | 0     | 1      | 1    | 0      |
+| "Kaitlyn"  | 0        | 1   | 1     | 0     | 1     | 1      | 1     | 0      | 0    | 0      |
+| "Ryan"     | 0        | 0   | 1     | 1     | 0     | 1      | 0     | 1      | 0    | 0      |
+| "Isabella" | 0        | 0   | 0     | 0     | 0     | 0      | 0     | 0      | 1    | 1      |
+| "Michael"  | 0        | 0   | 0     | 0     | 0     | 0      | 0     | 1      | 1    | 0      |
+| "Olivia"   | 0        | 1   | 1     | 1     | 1     | 1      | 1     | 1      | 1    | 0      |
+| "Zachary"  | 1        | 1   | 1     | 0     | 0     | 1      | 1     | 0      | 0    | 1      |
+| "Abigail"  | 1        | 1   | 0     | 1     | 0     | 1      | 0     | 1      | 0    | 0      |
+| "Tyler"    | 1        | 1   | 1     | 0     | 1     | 0      | 0     | 0      | 1    | 1      |
+```
 
 -----
 
