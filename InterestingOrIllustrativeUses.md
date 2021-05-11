@@ -1,5 +1,3 @@
-[TODO: KC: what is a reasonable program for each of the following programming problem? I might be biased because I am designing the Core API. I can be unawarely affacted by the limitation of the APIs.]
-
 ## randomRows
 
 This example defines a function that randomly sample rows of a table. This function might be interesting when working with tidy tables, where each row is one observation.
