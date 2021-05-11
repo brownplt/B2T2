@@ -40,11 +40,11 @@ insert
 
 ### Constraints
 
-__Require:__
+__Requires:__
 
 * `c` is in header(r)
 
-__Ensure:__
+__Ensures:__
 
 * `v` is of type `schema(r)[c]`
 
@@ -65,12 +65,12 @@ In CS111, `get-value(r, c)`
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `length(bs1)` is equal to `nrows(t1)`
 * `length(bs2)` is equal to `ncols(t1)`
 
-ensure:
+__Ensures:__
 
 * `rows(t2)` is a subsequence of `rows(t1)`
 * for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `bs1[i]` is equal to `true`
@@ -104,13 +104,13 @@ In R, `t1[bs1, bs2]`
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `length(bs1)` is equal to `nrows(t1)`
 * `ns2` has no duplicates
 * for all `n` in `ns2`, `n` is in `range(ncols(t1))`
 
-ensure:
+__Ensures:__
 
 * `rows(t2)` is a subsequence of `rows(t1)`
 * for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `bs1[i]` is equal to `true`
@@ -141,13 +141,13 @@ In R, `t1[bs1, ns2]`
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `length(bs1)` is equal to `nrows(t1)`
 * `cs2` has no duplicates
 * for all `c` in `cs2`, `c` is in `header(t1)`
 
-ensure:
+__Ensures:__
 
 * `rows(t2)` is a subsequence of `rows(t1)`
 * for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `bs1[i]` is equal to `true`
@@ -178,12 +178,12 @@ In R, `t1[bs1, cs2]`
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * for all `n` in `ns1`, `n` is in `range(nrows(t1))`
 * `length(bs2)` is equal to `ncols(t1)`
 
-ensure:
+__Ensures:__
 
 * `nrows(t2)` is equal to `length(ns1)`
 * for all `i` in `range(length(ns1))`, `rows(t2)[i]` is equal to `rows(t1)[ns1[i]]`
@@ -219,13 +219,13 @@ In R, `t1[ns1, bs2]`
 
 ## `subsetNN :: t1:Table * ns1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
 
-require:
+__Requiers:__
 
 * for all `n` in `ns1`, `n` is in `range(nrows(t1))`
 * `ns2` has no duplicates
 * for all `n` in `ns2`, `n` is in `range(ncols(t1))`
 
-ensure:
+__Ensures:__
 
 * `nrows(t2)` is equal to `length(ns1)`
 * for all `i` in `range(length(ns1))`, `rows(t2)[i]` is equal to `rows(t1)[ns1[i]]`
@@ -262,13 +262,13 @@ In R, `t1[ns1, ns2]`
 
 ## `subsetNC :: t1:Table * ns1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
 
-require:
+__Requiers:__
 
 * for all `n` in `ns1`, `n` is in `range(nrows(t1))`
 * `cs2` has no duplicates
 * for all `c` in `cs2`, `c` is in `header(t1)`
 
-ensure:
+__Ensures:__
 
 * `nrows(t2)` is equal to `length(ns1)`
 * for all `i` in `range(length(ns1))`, `rows(t2)[i]` is equal to `rows(t1)[ns1[i]]`
@@ -307,11 +307,11 @@ In R, `t1[ns1, cs2]`
 
 ### Constraints (when `selector` is a `Seq<Bool>`)
 
-require:
+__Requiers:__
 
 * `length(selector)` is equal to `nrows(t1)`
 
-ensure:
+__Ensures:__
 
 * `rows(t2)` is a subsequence of `rows(t1)`
 * for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `selector[i]` is equal to `true`
@@ -320,11 +320,11 @@ ensure:
 
 ### Constraints (when `selector` is a `Seq<Number>`)
 
-require:
+__Requiers:__
 
 * for all `n` in `selector`, `n` is in `range(nrows(t1))`
 
-ensure:
+__Ensures:__
 
 * `nrows(t2)` is equal to `length(selector)`
 * for all `i` in `range(length(selector))`, `rows(t2)[i]` is equal to `rows(t1)[selector[i]]`
@@ -369,11 +369,11 @@ In R, `t1[selector,]`
 
 ### Constraints (when `selector` is a `Seq<Bool>`)
 
-require:
+__Requiers:__
 
 * `length(selector)` is equal to `ncols(t1)`
 
-ensure:
+__Ensures:__
 
 * `header(t2)` is a subsequence of `header(t1)`
 * for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
@@ -381,12 +381,12 @@ ensure:
   
 ### Constraints (when `selector` is a `Seq<Number>`)
 
-require:
+__Requiers:__
 
 * `selector` has no duplicates
 * for all `n` in `selector`, `n` is in `range(ncols(t1))`
 
-ensure:
+__Ensures:__
 
 * `length(header(t2))` is equal to `length(selector)`
 * for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
@@ -394,12 +394,12 @@ ensure:
 
 ### Constraints (when `selector` is a `Seq<ColName>`)
 
-require:
+__Requiers:__
 
 * `selector` has no duplicates
 * for all `c` in `selector`, `c` is in `header(t1)`
 
-ensure:
+__Ensures:__
 
 * `header(t2)` is equal to `cs` 
 * `schema(t2)` is included by `schema(t2)`
@@ -456,11 +456,11 @@ In CS111 Pyret, `select-columns(t, selector)`. The `selector` must be a list of 
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `n` is in `range(ncols(t))`
 
-ensure:
+__Ensures:__
 
 * for all `v` in `vs`, `v` is of type `schema(t)[header(t)[n]]`
 
@@ -483,11 +483,11 @@ In R, `t[[n]]`
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `c` is in `header(t)`
 
-ensure:
+__Ensures:__
 
 * for all `v` in `vs`, `v` is of type `schema(t)[c]`
 
@@ -514,11 +514,11 @@ In CS111 Pyret, `t.get-column(c)`.
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `n` is in `range(nrows(t))`
   
-ensure:
+__Ensures:__
 
 * `r` is equal to `rows(t)[n]`
 
@@ -547,7 +547,7 @@ Extract a row out of a table by a numeric index. E.g.
 
 require nothing
 
-ensure:
+__Ensures:__
 
 * `n` is equal to `nrows(t)`
 
@@ -572,7 +572,7 @@ In R, `nrow(t)`
 
 require nothing
 
-ensure:
+__Ensures:__
 
 * `n` is equal to `ncols(t)`
 
@@ -595,9 +595,9 @@ In R, `ncol(t)`
 
 ### Constraints
 
-require:
+__Requiers:__
 
-ensure:
+__Ensures:__
 
 * `cs` is equal to `header(t)`
 
@@ -620,11 +620,11 @@ In R, `colnames(t)`
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `c` is not in `header(t1)`
 
-ensure:
+__Ensures:__
 
 * `header(r)` is equal to `header(t1)`
 * `schema(r)` is equal to `schema(t1)`
@@ -668,12 +668,12 @@ Compute a new table by adding a new column to t1. The new column will be named a
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `header(r)` is equal to `header(t1)`
 * `schema(r)` is equal to `schema(t1)`
 
-ensure:
+__Ensures:__
 
 * `header(t2)` is equal to `header(t1)`
 * `schema(t2)` is equal to `schema(t1)`
@@ -717,12 +717,12 @@ Compute a new table by adding a new row to `t1`. e.g.
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `c` is not in `header(t1)`
 * `length(vs)` is equal to `ncols(t1)`
 
-ensure:
+__Ensures:__
 
 * `header(t2)` is equal to `concat(header(t1), [c])`
 * `schema(t1)` is included by `schema(t2)`
@@ -759,11 +759,11 @@ Compute a new table by adding a new column to t1. e.g.
 
 ### Constraints
 
-require:
+__Requiers:__
 
 * `c` is in `header(t1)`
 
-ensure:
+__Ensures:__
 
 * `v1` is of type `schema(t1)[c]`
 * `header(t2)` is equal to `header(t1)`
@@ -809,9 +809,9 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 ### Constraints
 
-require:
+__Requiers:__
 
-ensure:
+__Ensures:__
 
 * `header(r)` is equal to `header(t1)`
 * `schema(r)` is equal to `schema(t1)`
