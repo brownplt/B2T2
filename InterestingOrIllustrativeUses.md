@@ -2,7 +2,7 @@
 
 ## randomRows
 
-In a tidy table, each row is one observation. Thus it is interesting to sample rows randomly.
+This example defines a function that randomly sample rows of a table. This function might be interesting when working with tidy tables, where each row is one observation.
 
 ```lua
 > randomRows =
@@ -19,28 +19,28 @@ In a tidy table, each row is one observation. Thus it is interesting to sample r
 
 ## Gradebook
 
-For each student, compute their average quiz grade 
+This example computes the average quiz score for each student in `tableGF`. This example is interesting because the type system needs to understand the connection between the pattern of quiz column names (i.e. `startsWith(..., "quiz")`) and the type of those columns (i.e. numeric).
 
 ```lua
-> quizColNames = 
-    filter(
-      header(tableGF),
-      function(c):
-        ColNames.startsWith("quiz")
-      end)
-> quizCount = Lists.length(quizColNames)
 > buildColumn(
     tableGM,
     "average-quiz",
     function(row):
-      let sum = ref 0
-      for c in quizColNames:
-        sum := getValue(row) + !sum
-      end
-      sum / quizCount
+      fields =
+        filter(
+          listOfRow(row),
+          function(fld):
+            startsWith(first(fld), "quiz")
+          end)
+      scores = map(fields, second)
+      sum(scores) / length(scores)
     end)
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | average-quiz |
+|---------|-----|-------|-------|---------|-------|-------|-------|--------------|
+|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |         8.25 |
+| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |         7.25 |
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |            8 |
 ```
-[TODO: Should I put in a result?]
 
 
 ## Jellybean A
