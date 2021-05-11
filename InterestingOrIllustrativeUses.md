@@ -47,32 +47,6 @@ This example computes the average quiz score for each student in `tableGF`. This
 
 This example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `tableJN`, is homogeneous because all of its columns contain numbers. It is interesting to compare this program with the next example, Jelly Bean Hetero, which processes `tableJM`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
 
-```
-> tableAcneJB
-| get-acne | red | black | white | green | yellow | brown | orange | pink | purple |
-| -------- | --- | ----- | ----- | ----- | ------ | ----- | ------ | ---- | ------ |
-| 0        | 1   | 1     | 1     | 1     | 1      | 0     | 0      | 0    | 1      |
-| 0        | 0   | 0     | 1     | 0     | 1      | 1     | 1      | 1    | 0      |
-| 1        | 0   | 1     | 1     | 0     | 1      | 1     | 0      | 1    | 0      |
-| 1        | 0   | 0     | 1     | 1     | 0      | 0     | 0      | 0    | 0      |
-| 0        | 0   | 1     | 1     | 0     | 0      | 0     | 0      | 0    | 0      |
-| 0        | 1   | 1     | 1     | 1     | 0      | 0     | 0      | 1    | 1      |
-| 0        | 1   | 1     | 0     | 0     | 1      | 1     | 1      | 1    | 1      |
-| 0        | 0   | 1     | 1     | 1     | 1      | 1     | 1      | 0    | 0      |
-| 1        | 0   | 0     | 1     | 1     | 0      | 0     | 0      | 0    | 0      |
-| 1        | 0   | 0     | 1     | 1     | 1      | 1     | 0      | 0    | 1      |
-| 0        | 1   | 1     | 1     | 1     | 1      | 1     | 0      | 0    | 1      |
-| 0        | 0   | 0     | 0     | 0     | 0      | 0     | 1      | 1    | 0      |
-| 0        | 1   | 1     | 0     | 1     | 1      | 1     | 0      | 0    | 0      |
-| 0        | 0   | 1     | 1     | 0     | 1      | 0     | 1      | 0    | 0      |
-| 0        | 0   | 0     | 0     | 0     | 0      | 0     | 0      | 1    | 1      |
-| 0        | 0   | 0     | 0     | 0     | 0      | 0     | 1      | 1    | 0      |
-| 0        | 1   | 1     | 1     | 1     | 1      | 1     | 1      | 1    | 0      |
-| 1        | 1   | 1     | 0     | 0     | 1      | 1     | 0      | 0    | 1      |
-| 1        | 1   | 0     | 1     | 0     | 1      | 0     | 1      | 0    | 0      |
-| 1        | 1   | 1     | 0     | 1     | 0      | 0     | 0      | 1    | 1      |
-```
-
 ```lua
 > pHacking =
     function(t):
@@ -88,9 +62,8 @@ This example program investigates the association between getting acne and consu
         end
       end
 > pHacking(tableJN)
+We found a link between orange beans and acne (p < 0.05).
 ```
-
-[TODO: put in a result]
 
 ## Jelly Bean Hetero
 
@@ -98,7 +71,5 @@ This example program is similar to Jelly Bean Homo but processes a table with an
 
 ```lua
 > pHacking(drop(tableJM, "name"))
+We found a link between orange beans and acne (p < 0.05).
 ```
-
-[TODO: put in a result]
-
