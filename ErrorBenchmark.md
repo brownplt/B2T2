@@ -10,7 +10,7 @@ and final exam.
 ```
 
 The `"mid"` is not a valid column name of `tableGF`. However, the table 
-contains a `"midterm"` column. The student eventually wrote
+contains a `"midterm"` column. A corrected program is
 
 ```lua
 > scatterPlot(tableGF, "midterm", "final")
@@ -18,7 +18,7 @@ contains a `"midterm"` column. The student eventually wrote
 
 ## Distributive Laws
 
-[TODO: this example requires a table holding boolean values]
+[TODO: this example requires a table containing boolean values]
 
 The student was asked to build a column that indicates whether a participant consumed
 black jelly beans and white ones.
@@ -32,7 +32,7 @@ black jelly beans and white ones.
 ```
 
 `"black and white"` is not a valid column name of `r`, which is a row of `tableJN`.
-The student eventually wrote
+A corrected program is
 
 ```
 > eatBlackAndWhite =
@@ -42,3 +42,34 @@ The student eventually wrote
 > buildColumn(tableJN, "eat-black-and-white", eatBlackAndWhite)
 ```
 
+## Scope error
+
+The student was asked to count the number of participants that consumed jelly bean of a given color.
+
+[TODO: if students know first-class function, fixing this program would not be too hard.]
+
+```lua
+> countParticipants =
+    function(t, color):
+      nrows(filter(t, keep))
+    end
+> keep =
+    function(r):
+      r["color"]
+    end
+> countParticipants(tableJN, "brown")
+```
+
+`"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color in `countParticipants`. A corrected program is
+
+```lua
+> countParticipants =
+    function(t, color):
+      keep =
+        function(r):
+          r["color"]
+        end
+      nrows(filter(t, keep))
+    end
+> countParticipants(tableJN, "brown")
+```
