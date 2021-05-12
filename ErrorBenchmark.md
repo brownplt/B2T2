@@ -46,8 +46,6 @@ A corrected program is
 
 The student was asked to count the number of participants that consumed jelly bean of a given color.
 
-[TODO: if students know first-class function, fixing this program would not be too hard.]
-
 ```lua
 > countParticipants =
     function(t, color):
