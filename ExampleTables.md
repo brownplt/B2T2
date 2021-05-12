@@ -65,7 +65,7 @@ We are going to use four tables throughout our benchmark.
 `tableJM`: a jelly bean table that contains mix-typed data
 
 ```
-> tableJN
+> tableJM
 | name       | get-acne | red | black | white | green | yellow | brown | orange | pink | purple |
 | ---------- | -------- | --- | ----- | ----- | ----- | ------ | ----- | ------ | ---- | ------ |
 | "Emily"    | 1        | 0   | 0     | 0     | 1     | 0      | 0     | 1      | 0    | 0      |
