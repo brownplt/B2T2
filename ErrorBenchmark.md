@@ -16,7 +16,7 @@ contains a `"midterm"` column. The student eventually wrote
 > scatterPlot(tableGF, "midterm", "final")
 ```
 
-## Distrivutive Laws
+## Distributive Laws
 
 [TODO: this example requires a table holding boolean values]
 
