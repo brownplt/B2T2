@@ -73,3 +73,19 @@ The student was asked to count the number of participants that consumed jelly be
     end
 > countParticipants(tableJN, "brown")
 ```
+
+## `count` Table
+
+The student was asked to visualize the proportion of participants getting acne.
+
+```lua
+> showAcneProportions =
+    function(t):
+      pieChart(count(t, "get-acne"), "true", "get-acne")
+    end
+> showAcneProportions(tableJM)
+```
+
+[TODO: `count` is not in CoreAPI.md yet. And this function should be overloaded.]
+
+Tables constructed by `count` containt two columns, `"value"` and `"count"`. The p
