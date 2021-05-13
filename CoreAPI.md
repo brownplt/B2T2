@@ -27,7 +27,7 @@ Pyret as taught in Bootstrap project: https://bootstrapworld.org/materials/sprin
 - rows
 - concat
 - insert
-- 
+
 ### Relations
 
 - `x` has no duplicates
