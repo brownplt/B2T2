@@ -38,6 +38,207 @@ Pyret as taught in Bootstrap project: https://bootstrapworld.org/materials/sprin
 - `x` is a subsequence of `y` (not changing order)
 - `x` is of type `y`
 
+
+## (overload 1/2) `selectRows :: t1:Table * selector:Seq<Bool> -> t2:Table`
+
+### Constraints
+
+__Requires__:__
+
+* `length(selector)` is equal to `nrows(t1)`
+
+__Ensures:__
+
+* `rows(t2)` is a subsequence of `rows(t1)`
+* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `selector[i]` is equal to `true`
+* `header(t2)` is equal to `header(t1)`
+* `schema(t2)` is equal to `schema(t2)`
+
+### Description
+
+Given a `Table` and a `Seq<Bool>` that represents a predicate on rows, returns a Table with only the rows for which the predicate returns true. [cite cs111]
+
+```lua
+> selectRows(tableSF, [2, 0, 2, 1])
+|   name  | age | favorite-color  |
+|---------|-----|-----------------|
+| "Eve"   |  13 |          "red"  |
+| "Bob"   |  12 |         "blue"  |
+| "Eve"   |  13 |          "red"  |
+| "Alice" |  17 |        "green"  |
+> selectRows(tableGM, [2, 1])
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|---------|-----|-------|-------|---------|-------|-------|-------|
+| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+```
+
+### Origins
+
+In R, `t1[selector,]`
+
+## (overload 2/2) `selectRows :: t1:Table * selector:Seq<Number> -> t2:Table`
+
+### Constraints
+
+__Requires__:__
+
+* for all `n` in `selector`, `n` is in `range(nrows(t1))`
+
+__Ensures:__
+
+* `nrows(t2)` is equal to `length(selector)`
+* for all `i` in `range(length(selector))`, `rows(t2)[i]` is equal to `rows(t1)[selector[i]]`
+* `header(t2)` is equal to `header(t1)`
+* `schema(t2)` is equal to `schema(t2)`
+
+### Description
+
+Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `Table` containing only those rows. [cite cs111]
+
+```lua
+> selectRows(tableSF, [true, false, true])
+|   name  | age | favorite-color  |
+|---------|-----|-----------------|
+| "Bob"   |  12 |         "blue"  |
+| "Eve"   |  13 |          "red"  |
+> selectRows(tableGM, [false, false, true])
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|---------|-----|-------|-------|---------|-------|-------|-------|
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+> selectRows(tableSF, [2, 0, 2, 1])
+|   name  | age | favorite-color  |
+|---------|-----|-----------------|
+| "Eve"   |  13 |          "red"  |
+| "Bob"   |  12 |         "blue"  |
+| "Eve"   |  13 |          "red"  |
+| "Alice" |  17 |        "green"  |
+> selectRows(tableGM, [2, 1])
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|---------|-----|-------|-------|---------|-------|-------|-------|
+| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+```
+
+### Origins
+
+In R, `t1[selector,]`
+
+## (overload 1/3) `selectColumns :: t1:Table * selector:Seq<Bool> -> t2:Table`
+
+### Constraints
+
+__Requires__:__
+
+* `length(selector)` is equal to `ncols(t1)`
+
+__Ensures:__
+
+* `header(t2)` is a subsequence of `header(t1)`
+* for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
+* `schema(t2)` is included by `schema(t1)`
+
+### Description
+
+Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be kept, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`. [cite cs111]
+
+```lua
+> selectColumns(tableSF, [true, true, false])
+|   name  | age |
+|---------|-----|
+| "Bob"   |  12 |
+| "Alice" |  17 |
+| "Eve"   |  13 |
+> selectColumns(tableGF, [true, false, false, false, true, false, false, true])
+|   name   | midterm | final |
+|----------|---------|-------|
+|    "Bob" |      77 |    87 |
+|  "Alice" |      88 |    85 |
+|    "Eve" |      84 |    77 |
+```
+
+### Origins
+
+In R, `t1[,selector]`
+
+## (overload 2/3) `selectColumns :: t1:Table * selector:Seq<Number> -> t2:Table`
+  
+### Constraints
+
+__Requires__:__
+
+* `selector` has no duplicates
+* for all `n` in `selector`, `n` is in `range(ncols(t1))`
+
+__Ensures:__
+
+* `length(header(t2))` is equal to `length(selector)`
+* for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
+* `schema(t2)` is included by `schema(t2)`
+
+### Description
+
+Consumes a `Table` and a `Seq<ColName>` containing column indexes, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
+
+
+```lua
+> selectColumns(tableSF, [2, 1])
+| favorite-color  | age |
+|-----------------|-----|
+|         "blue"  |  12 |
+|        "green"  |  17 |
+|          "red"  |  13 |
+> selectColumns(tableGF, [7, 0, 4])
+| final |   name   | midterm |
+|-------|----------|---------|
+|    87 |    "Bob" |      77 |
+|    85 |  "Alice" |      88 |
+|    77 |    "Eve" |      84 |
+```
+
+### Origins
+
+In R, `t1[,selector]`
+
+## (overload 3/3) `selectColumns :: t1:Table * selector:Seq<ColName> -> t2:Table`
+
+### Constraints
+
+__Requires__:__
+
+* `selector` has no duplicates
+* for all `c` in `selector`, `c` is in `header(t1)`
+
+__Ensures:__
+
+* `header(t2)` is equal to `cs` 
+* `schema(t2)` is included by `schema(t2)`
+
+### Description
+
+Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`. [cite cs111]
+
+```lua
+> selectColumns(tableSF, ["favorite-color", "age"])
+| favorite-color  | age |
+|-----------------|-----|
+|         "blue"  |  12 |
+|        "green"  |  17 |
+|          "red"  |  13 |
+> selectColumns(tableGF, ["final", "name", "midterm"])
+| final |   name   | midterm |
+|-------|----------|---------|
+|    87 |    "Bob" |      77 |
+|    85 |  "Alice" |      88 |
+|    77 |    "Eve" |      84 |
+```
+
+### Origins
+
+In R, `t1[,selector]`
+
+In CS111 Pyret, `select-columns(t, selector)`.
+
 ## `getValue :: r:Row * c:ColName -> v:Value`
 
 ### Constraints
@@ -302,206 +503,6 @@ Select a sub-table.
 ### Origins
 
 In R, `t1[ns1, cs2]`
-
-## (overload 1/2) `selectRows :: t1:Table * selector:Seq<Bool> -> t2:Table`
-
-### Constraints
-
-__Requires__:__
-
-* `length(selector)` is equal to `nrows(t1)`
-
-__Ensures:__
-
-* `rows(t2)` is a subsequence of `rows(t1)`
-* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `selector[i]` is equal to `true`
-* `header(t2)` is equal to `header(t1)`
-* `schema(t2)` is equal to `schema(t2)`
-
-### Description
-
-Given a `Table` and a `Seq<Bool>` that represents a predicate on rows, returns a Table with only the rows for which the predicate returns true. [cite cs111]
-
-```lua
-> selectRows(tableSF, [2, 0, 2, 1])
-|   name  | age | favorite-color  |
-|---------|-----|-----------------|
-| "Eve"   |  13 |          "red"  |
-| "Bob"   |  12 |         "blue"  |
-| "Eve"   |  13 |          "red"  |
-| "Alice" |  17 |        "green"  |
-> selectRows(tableGM, [2, 1])
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
-```
-
-### Origins
-
-In R, `t1[selector,]`
-
-## (overload 2/2) `selectRows :: t1:Table * selector:Seq<Number> -> t2:Table`
-
-### Constraints
-
-__Requires__:__
-
-* for all `n` in `selector`, `n` is in `range(nrows(t1))`
-
-__Ensures:__
-
-* `nrows(t2)` is equal to `length(selector)`
-* for all `i` in `range(length(selector))`, `rows(t2)[i]` is equal to `rows(t1)[selector[i]]`
-* `header(t2)` is equal to `header(t1)`
-* `schema(t2)` is equal to `schema(t2)`
-
-### Description
-
-Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `Table` containing only those rows. [cite cs111]
-
-```lua
-> selectRows(tableSF, [true, false, true])
-|   name  | age | favorite-color  |
-|---------|-----|-----------------|
-| "Bob"   |  12 |         "blue"  |
-| "Eve"   |  13 |          "red"  |
-> selectRows(tableGM, [false, false, true])
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
-> selectRows(tableSF, [2, 0, 2, 1])
-|   name  | age | favorite-color  |
-|---------|-----|-----------------|
-| "Eve"   |  13 |          "red"  |
-| "Bob"   |  12 |         "blue"  |
-| "Eve"   |  13 |          "red"  |
-| "Alice" |  17 |        "green"  |
-> selectRows(tableGM, [2, 1])
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
-```
-
-### Origins
-
-In R, `t1[selector,]`
-
-## (overload 1/3) `selectColumns :: t1:Table * selector:Seq<Bool> -> t2:Table`
-
-### Constraints
-
-__Requires__:__
-
-* `length(selector)` is equal to `ncols(t1)`
-
-__Ensures:__
-
-* `header(t2)` is a subsequence of `header(t1)`
-* for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
-* `schema(t2)` is included by `schema(t1)`
-
-### Description
-
-Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be kept, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`. [cite cs111]
-
-```lua
-> selectColumns(tableSF, [true, true, false])
-|   name  | age |
-|---------|-----|
-| "Bob"   |  12 |
-| "Alice" |  17 |
-| "Eve"   |  13 |
-> selectColumns(tableGF, [true, false, false, false, true, false, false, true])
-|   name   | midterm | final |
-|----------|---------|-------|
-|    "Bob" |      77 |    87 |
-|  "Alice" |      88 |    85 |
-|    "Eve" |      84 |    77 |
-```
-
-### Origins
-
-In R, `t1[,selector]`
-
-## (overload 2/3) `selectColumns :: t1:Table * selector:Seq<Number> -> t2:Table`
-  
-### Constraints
-
-__Requires__:__
-
-* `selector` has no duplicates
-* for all `n` in `selector`, `n` is in `range(ncols(t1))`
-
-__Ensures:__
-
-* `length(header(t2))` is equal to `length(selector)`
-* for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
-* `schema(t2)` is included by `schema(t2)`
-
-### Description
-
-Consumes a `Table` and a `Seq<ColName>` containing column indexes, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
-
-
-```lua
-> selectColumns(tableSF, [2, 1])
-| favorite-color  | age |
-|-----------------|-----|
-|         "blue"  |  12 |
-|        "green"  |  17 |
-|          "red"  |  13 |
-> selectColumns(tableGF, [7, 0, 4])
-| final |   name   | midterm |
-|-------|----------|---------|
-|    87 |    "Bob" |      77 |
-|    85 |  "Alice" |      88 |
-|    77 |    "Eve" |      84 |
-```
-
-### Origins
-
-In R, `t1[,selector]`
-
-## (overload 3/3) `selectColumns :: t1:Table * selector:Seq<ColName> -> t2:Table`
-
-### Constraints
-
-__Requires__:__
-
-* `selector` has no duplicates
-* for all `c` in `selector`, `c` is in `header(t1)`
-
-__Ensures:__
-
-* `header(t2)` is equal to `cs` 
-* `schema(t2)` is included by `schema(t2)`
-
-### Description
-
-Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`. [cite cs111]
-
-```lua
-> selectColumns(tableSF, ["favorite-color", "age"])
-| favorite-color  | age |
-|-----------------|-----|
-|         "blue"  |  12 |
-|        "green"  |  17 |
-|          "red"  |  13 |
-> selectColumns(tableGF, ["final", "name", "midterm"])
-| final |   name   | midterm |
-|-------|----------|---------|
-|    87 |    "Bob" |      77 |
-|    85 |  "Alice" |      88 |
-|    77 |    "Eve" |      84 |
-```
-
-### Origins
-
-In R, `t1[,selector]`
-
-In CS111 Pyret, `select-columns(t, selector)`.
 
 ## `getColumnN :: t:Table * n:Number -> vs:List<Value>`
 
