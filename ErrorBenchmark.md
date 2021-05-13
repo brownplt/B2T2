@@ -2,15 +2,27 @@
 
 ## Mistyped Column Name
 
-The student was asked to visualize as a scatter plot the connection between midterm 
+### context
+
+`tableGF`
+
+### task
+
+The programmer was asked to visualize as a scatter plot the connection between midterm 
 and final exam.
+
+### buggy program
 
 ```lua
 > scatterPlot(tableGF, "mid", "final")
 ```
 
+### what's the bug
+
 The `"mid"` is not a valid column name of `tableGF`. However, the table 
-contains a `"midterm"` column. A corrected program is
+contains a `"midterm"` column.
+
+### corrected program
 
 ```lua
 > scatterPlot(tableGF, "midterm", "final")
@@ -18,33 +30,52 @@ contains a `"midterm"` column. A corrected program is
 
 ## Distributive Laws
 
-[TODO: this example requires a table containing boolean values]
+### context
 
-The student was asked to build a column that indicates whether a participant consumed
+`tableJN`
+
+### task
+
+The programmer was asked to build a column that indicates whether a participant consumed
 black jelly beans and white ones.
+
+### buggy program
 
 ```
 > eatBlackAndWhite =
     function(r):
-      r["black and white"] == true
+      r["black an
+      ### what's the bug
+      d white"] == true
     end
 > buildColumn(tableJN, "eat-black-and-white", eatBlackAndWhite)
 ```
 
+### what's the bug
+
 `"black and white"` is not a valid column name of `r`, which is a row of `tableJN`.
-A corrected program is
+
+### corrected program
 
 ```
 > eatBlackAndWhite =
     function(r):
-      (r["black"] == true) and (r["white"] == true)
+      r["black"] and r["white"]
     end
 > buildColumn(tableJN, "eat-black-and-white", eatBlackAndWhite)
 ```
 
 ## Scope error
 
-The student was asked to count the number of participants that consumed jelly bean of a given color.
+### context
+
+`tableJN`
+
+### task
+
+The programmer was asked to count the number of participants that consumed jelly bean of a given color.
+
+### buggy program
 
 ```lua
 > countParticipants =
@@ -58,7 +89,27 @@ The student was asked to count the number of participants that consumed jelly be
 > countParticipants(tableJN, "brown")
 ```
 
-`"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color in `countParticipants`. A corrected program is
+### what's the bug
+
+`"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color in `countParticipants`.
+
+### corrected program (1/2)
+
+```lua
+> countParticipants =
+    function(t, color):
+      nrows(filter(t, keep(color)))
+    end
+> keep =
+    function(color):
+      function(r):
+        r[color]
+      end
+    end
+> countParticipants(tableJN, "brown")
+```
+
+### corrected program (2/2)
 
 ```lua
 > countParticipants =
@@ -74,16 +125,24 @@ The student was asked to count the number of participants that consumed jelly be
 
 ## `count` Table
 
-The student was asked to visualize the proportion of participants getting acne.
+[TODO: in progress]
 
+The programmer was asked to visualize the proportion of participants getting acne.
+
+
+### buggy program
 ```lua
 > showAcneProportions =
     function(t):
       pieChart(count(t, "get-acne"), "true", "get-acne")
+### what's the bug
+
     end
 > showAcneProportions(tableJM)
 ```
 
+
+### corrected program
 [TODO: `count` is not in CoreAPI.md yet. And this function should be overloaded.]
 
 Tables constructed by `count` containt two columns, `"value"` and `"count"`. The p
