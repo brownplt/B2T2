@@ -48,36 +48,36 @@ We are going to use four tables throughout our benchmark.
 
 ```
 > tableJN
-| get-acne | red | black | white | green | yellow | brown | orange | pink | purple |
-| -------- | --- | ----- | ----- | ----- | ------ | ----- | ------ | ---- | ------ |
-| 1        | 0   | 0     | 0     | 1     | 0      | 0     | 1      | 0    | 0      |
-| 1        | 0   | 1     | 0     | 1     | 1      | 0     | 0      | 0    | 0      |
-| 0        | 0   | 0     | 0     | 1     | 0      | 0     | 0      | 1    | 0      |
-| 0        | 0   | 0     | 0     | 0     | 1      | 0     | 0      | 0    | 0      |
-| 0        | 0   | 0     | 0     | 0     | 1      | 0     | 0      | 1    | 0      |
-| 1        | 0   | 1     | 0     | 0     | 0      | 0     | 1      | 1    | 0      |
-| 0        | 0   | 1     | 0     | 0     | 0      | 0     | 0      | 1    | 0      |
-| 1        | 0   | 0     | 0     | 0     | 0      | 1     | 1      | 0    | 0      |
-| 1        | 0   | 0     | 0     | 0     | 0      | 0     | 1      | 0    | 0      |
-| 0        | 1   | 0     | 0     | 0     | 1      | 1     | 0      | 1    | 0      |
+| get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
+| -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
+| true     | false | false | false | true  | false  | false | true   | false | false  |
+| true     | false | true  | false | true  | true   | false | false  | false | false  |
+| false    | false | false | false | true  | false  | false | false  | true  | false  |
+| false    | false | false | false | false | true   | false | false  | false | false  |
+| false    | false | false | false | false | true   | false | false  | true  | false  |
+| true     | false | true  | false | false | false  | false | true   | true  | false  |
+| false    | false | true  | false | false | false  | false | false  | true  | false  |
+| true     | false | false | false | false | false  | true  | true   | false | false  |
+| true     | false | false | false | false | false  | false | true   | false | false  |
+| false    | true  | false | false | false | true   | true  | false  | true  | false  |
 ```
 
 `tableJM`: a jelly bean table that contains mix-typed data
 
 ```
 > tableJM
-| name       | get-acne | red | black | white | green | yellow | brown | orange | pink | purple |
-| ---------- | -------- | --- | ----- | ----- | ----- | ------ | ----- | ------ | ---- | ------ |
-| "Emily"    | 1        | 0   | 0     | 0     | 1     | 0      | 0     | 1      | 0    | 0      |
-| "Jacob"    | 1        | 0   | 1     | 0     | 1     | 1      | 0     | 0      | 0    | 0      |
-| "Emma"     | 0        | 0   | 0     | 0     | 1     | 0      | 0     | 0      | 1    | 0      |
-| "Aidan"    | 0        | 0   | 0     | 0     | 0     | 1      | 0     | 0      | 0    | 0      |
-| "Madison"  | 0        | 0   | 0     | 0     | 0     | 1      | 0     | 0      | 1    | 0      |
-| "Ethan"    | 1        | 0   | 1     | 0     | 0     | 0      | 0     | 1      | 1    | 0      |
-| "Hannah"   | 0        | 0   | 1     | 0     | 0     | 0      | 0     | 0      | 1    | 0      |
-| "Matthew"  | 1        | 0   | 0     | 0     | 0     | 0      | 1     | 1      | 0    | 0      |
-| "Hailey"   | 1        | 0   | 0     | 0     | 0     | 0      | 0     | 1      | 0    | 0      |
-| "Nicholas" | 0        | 1   | 0     | 0     | 0     | 1      | 1     | 0      | 1    | 0      |
+| name       | get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
+| ---------- | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
+| "Emily"    | true     | false | false | false | true  | false  | false | true   | false | false  |
+| "Jacob"    | true     | false | true  | false | true  | true   | false | false  | false | false  |
+| "Emma"     | false    | false | false | false | true  | false  | false | false  | true  | false  |
+| "Aidan"    | false    | false | false | false | false | true   | false | false  | false | false  |
+| "Madison"  | false    | false | false | false | false | true   | false | false  | true  | false  |
+| "Ethan"    | true     | false | true  | false | false | false  | false | true   | true  | false  |
+| "Hannah"   | false    | false | true  | false | false | false  | false | false  | true  | false  |
+| "Matthew"  | true     | false | false | false | false | false  | true  | true   | false | false  |
+| "Hailey"   | true     | false | false | false | false | false  | false | true   | false | false  |
+| "Nicholas" | false    | true  | false | false | false | true   | true  | false  | true  | false  |
 ```
 
 -----
@@ -109,7 +109,7 @@ library(tibble)
 tableJN = 
   as.tibble(
     matrix(
-      rbinom(100, 1, 0.3),
+      rbinom(100, 1, 0.3) == 1,
       ncol=10))
 colnames(tableJN) = 
   c("get-acne",
