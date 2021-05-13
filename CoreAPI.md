@@ -52,7 +52,7 @@ __Ensures:__
 
 ### Description
 
-access a row `r` at a particular column `c`, resulting in a particular value. e.g.
+Retrieve the value for the column `c` in the row `r`. [cite cs111]
 
 ```
 > getValue([row: ("name", "Bob"),  ("age", 12)], "age")
@@ -63,7 +63,7 @@ access a row `r` at a particular column `c`, resulting in a particular value. e.
 
 In CS111, `get-value(r, c)`
 
-## `subTableBB :: t1:Table * bs1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
+## (overload 1/6) `subTable :: t1:Table * bs1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
 
 ### Constraints
 
@@ -84,12 +84,12 @@ __Ensures:__
 Select a sub-table. e.g.
 
 ```
-> subTableBB(tableSF, [true, false, true], [true, true, false])
+> subTable(tableSF, [true, false, true], [true, true, false])
 |    name | age |
 |---------|-----|
 |   "Bob" |     |
 |   "Eve" |  13 |
-> subTableBB(
+> subTable(
     tableGM,
     [false, false, true],
     [true, false, false, false, true, false, false, true])
@@ -102,7 +102,7 @@ Select a sub-table. e.g.
 
 In R, `t1[bs1, bs2]`
 
-## `subTableBN :: t1:Table * bs1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
+## (overload 2/6) `subTable :: t1:Table * bs1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
 
 ### Constraints
 
@@ -124,12 +124,12 @@ __Ensures:__
 Select a sub-table.
 
 ```
-> subTableBN(tableSF, [true, false, true], [0, 1])
+> subTable(tableSF, [true, false, true], [0, 1])
 |    name | age |
 |---------|-----|
 |   "Bob" |     |
 |   "Eve" |  13 |
-> subTableBN(tableGM, [false, false, true], [4, 7, 0])
+> subTable(tableGM, [false, false, true], [4, 7, 0])
 | midterm | final |    name |
 |---------|-------|---------|
 |      84 |    77 |   "Eve" |
@@ -139,7 +139,7 @@ Select a sub-table.
 
 In R, `t1[bs1, ns2]`
 
-## `subTableBC :: t1:Table * bs1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
+## (overload 3/6) `subTable :: t1:Table * bs1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
 
 ### Constraints
 
@@ -161,12 +161,12 @@ __Ensures:__
 Select a sub-table.
 
 ```
-> subTableBC(tableSF, [true, false, true], ["name", "age"])
+> subTable(tableSF, [true, false, true], ["name", "age"])
 |    name | age |
 |---------|-----|
 |   "Bob" |     |
 |   "Eve" |  13 |
-> subTableBC(tableGM, [false, false, true], ["midterm", "final", "name"])
+> subTable(tableGM, [false, false, true], ["midterm", "final", "name"])
 | midterm | final |    name |
 |---------|-------|---------|
 |      84 |    77 |   "Eve" |
@@ -176,7 +176,7 @@ Select a sub-table.
 
 In R, `t1[bs1, cs2]`
 
-## `subTableNB :: t1:Table * ns1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
+## (overload 4/6) `subTable :: t1:Table * ns1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
 
 ### Constraints
 
@@ -197,14 +197,14 @@ __Ensures:__
 Select a sub-table. e.g.
 
 ```
-> subTableNB(tableSF, [2, 0, 2, 1], [false, true, true])
+> subTable(tableSF, [2, 0, 2, 1], [false, true, true])
 | age | favorite-color  |
 |-----|-----------------|
 |  13 |          "red"  |
 |  12 |         "blue"  |
 |  13 |          "red"  |
 |  17 |        "green"  |
-> subTableNB(
+> subTable(
     tableGM,
     [2, 1],
     [true, false, false, false, true, false, false, true])
@@ -219,7 +219,7 @@ Select a sub-table. e.g.
 In R, `t1[ns1, bs2]`
 
 
-## `subTableNN :: t1:Table * ns1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
+## (overload 5/6) `subTable :: t1:Table * ns1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
 
 __Requires__:__
 
@@ -240,14 +240,14 @@ __Ensures:__
 Select a sub-table.
 
 ```
-> subTableNN(tableSF, [2, 0, 2, 1], [2, 1])
+> subTable(tableSF, [2, 0, 2, 1], [2, 1])
 | favorite-color  | age |
 |-----------------|-----|
 |          "red"  |  13 |
 |         "blue"  |  12 |
 |          "red"  |  13 |
 |        "green"  |  17 |
-> subTableNN(
+> subTable(
     tableGM,
     [2, 1],
     [4, 0, 7])
@@ -262,7 +262,7 @@ Select a sub-table.
 In R, `t1[ns1, ns2]`
 
 
-## `subTableNC :: t1:Table * ns1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
+## (overload 6/6) `subTable :: t1:Table * ns1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
 
 __Requires__:__
 
@@ -282,14 +282,14 @@ __Ensures:__
 Select a sub-table.
 
 ```
-> subTableNC(tableSF, [2, 0, 2, 1], ["favorite-color", "age"])
+> subTable(tableSF, [2, 0, 2, 1], ["favorite-color", "age"])
 | favorite-color  | age |
 |-----------------|-----|
 |          "red"  |  13 |
 |         "blue"  |  12 |
 |          "red"  |  13 |
 |        "green"  |  17 |
-> subTableNC(
+> subTable(
     tableGM,
     [2, 1],
     ["midterm", "name", "final"])
@@ -303,11 +303,9 @@ Select a sub-table.
 
 In R, `t1[ns1, cs2]`
 
-## `selectRows :: t1:Table * selector:RowSelector -> t2:Table`
+## (overload 1/2) `selectRows :: t1:Table * selector:Seq<Bool> -> t2:Table`
 
-`selectRows` is an family of operators. A row selector can be either a `Seq<Bool>` or a `Seq<Number>`. A programming language may provde `selectRows` as two distinct operators, as one operator with `RowSelector` being a tag or untag union, or as an overloaded operator.
-
-### Constraints (when `selector` is a `Seq<Bool>`)
+### Constraints
 
 __Requires__:__
 
@@ -320,7 +318,32 @@ __Ensures:__
 * `header(t2)` is equal to `header(t1)`
 * `schema(t2)` is equal to `schema(t2)`
 
-### Constraints (when `selector` is a `Seq<Number>`)
+### Description
+
+Given a `Table` and a `Seq<Bool>` that represents a predicate on rows, returns a Table with only the rows for which the predicate returns true. [cite cs111]
+
+```lua
+> selectRows(tableSF, [2, 0, 2, 1])
+|   name  | age | favorite-color  |
+|---------|-----|-----------------|
+| "Eve"   |  13 |          "red"  |
+| "Bob"   |  12 |         "blue"  |
+| "Eve"   |  13 |          "red"  |
+| "Alice" |  17 |        "green"  |
+> selectRows(tableGM, [2, 1])
+|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+|---------|-----|-------|-------|---------|-------|-------|-------|
+| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
+|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+```
+
+### Origins
+
+In R, `t1[selector,]`
+
+## (overload 2/2) `selectRows :: t1:Table * selector:Seq<Number> -> t2:Table`
+
+### Constraints
 
 __Requires__:__
 
@@ -335,9 +358,9 @@ __Ensures:__
 
 ### Description
 
-Select some rows of `t1`
+Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `Table` containing only those rows. [cite cs111]
 
-```
+```lua
 > selectRows(tableSF, [true, false, true])
 |   name  | age | favorite-color  |
 |---------|-----|-----------------|
@@ -365,11 +388,9 @@ Select some rows of `t1`
 
 In R, `t1[selector,]`
 
-## `selectColumns :: t1:Table * selector:ColumnSelector -> t2:Table`
+## (overload 1/3) `selectColumns :: t1:Table * selector:Seq<Bool> -> t2:Table`
 
-`selectColumns` is an family of operators. A column selector can be either a `Seq<Bool>`, a `Seq<Number>`, or a `Seq<ColName>`. A programming language may provde `selectColumns` as three distinct operators, as one operator with `ColumnSelector` being a tag or untag union, or as an overloaded operator.
-
-### Constraints (when `selector` is a `Seq<Bool>`)
+### Constraints
 
 __Requires__:__
 
@@ -380,8 +401,33 @@ __Ensures:__
 * `header(t2)` is a subsequence of `header(t1)`
 * for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
 * `schema(t2)` is included by `schema(t1)`
+
+### Description
+
+Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be kept, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`. [cite cs111]
+
+```lua
+> selectColumns(tableSF, [true, true, false])
+|   name  | age |
+|---------|-----|
+| "Bob"   |  12 |
+| "Alice" |  17 |
+| "Eve"   |  13 |
+> selectColumns(tableGF, [true, false, false, false, true, false, false, true])
+|   name   | midterm | final |
+|----------|---------|-------|
+|    "Bob" |      77 |    87 |
+|  "Alice" |      88 |    85 |
+|    "Eve" |      84 |    77 |
+```
+
+### Origins
+
+In R, `t1[,selector]`
+
+## (overload 2/3) `selectColumns :: t1:Table * selector:Seq<Number> -> t2:Table`
   
-### Constraints (when `selector` is a `Seq<Number>`)
+### Constraints
 
 __Requires__:__
 
@@ -394,7 +440,33 @@ __Ensures:__
 * for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
 * `schema(t2)` is included by `schema(t2)`
 
-### Constraints (when `selector` is a `Seq<ColName>`)
+### Description
+
+Consumes a `Table` and a `Seq<ColName>` containing column indexes, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
+
+
+```lua
+> selectColumns(tableSF, [2, 1])
+| favorite-color  | age |
+|-----------------|-----|
+|         "blue"  |  12 |
+|        "green"  |  17 |
+|          "red"  |  13 |
+> selectColumns(tableGF, [7, 0, 4])
+| final |   name   | midterm |
+|-------|----------|---------|
+|    87 |    "Bob" |      77 |
+|    85 |  "Alice" |      88 |
+|    77 |    "Eve" |      84 |
+```
+
+### Origins
+
+In R, `t1[,selector]`
+
+## (overload 3/3) `selectColumns :: t1:Table * selector:Seq<ColName> -> t2:Table`
+
+### Constraints
 
 __Requires__:__
 
@@ -408,33 +480,9 @@ __Ensures:__
 
 ### Description
 
-produce a new table containing only those columns referred to by `cs`. The order of the columns is as given in `cs`. e.g.
+Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`. [cite cs111]
 
-```
-> selectColumns(tableSF, [true, true, false])
-|   name  | age |
-|---------|-----|
-| "Bob"   |  12 |
-| "Alice" |  17 |
-| "Eve"   |  13 |
-> selectColumns(tableGF, [true, false, false, false, true, false, false, true])
-|   name   | midterm | final |
-|----------|---------|-------|
-|    "Bob" |      77 |    87 |
-|  "Alice" |      88 |    85 |
-|    "Eve" |      84 |    77 |
-> selectColumns(tableSF, [2, 1])
-| favorite-color  | age |
-|-----------------|-----|
-|         "blue"  |  12 |
-|        "green"  |  17 |
-|          "red"  |  13 |
-> selectColumns(tableGF, [7, 0, 4])
-| final |   name   | midterm |
-|-------|----------|---------|
-|    87 |    "Bob" |      77 |
-|    85 |  "Alice" |      88 |
-|    77 |    "Eve" |      84 |
+```lua
 > selectColumns(tableSF, ["favorite-color", "age"])
 | favorite-color  | age |
 |-----------------|-----|
@@ -452,7 +500,8 @@ produce a new table containing only those columns referred to by `cs`. The order
 ### Origins
 
 In R, `t1[,selector]`
-In CS111 Pyret, `select-columns(t, selector)`. The `selector` must be a list of column names.
+
+In CS111 Pyret, `select-columns(t, selector)`.
 
 ## `getColumnN :: t:Table * n:Number -> vs:List<Value>`
 
