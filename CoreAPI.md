@@ -61,7 +61,7 @@ access a row `r` at a particular column `c`, resulting in a particular value. e.
 
 In CS111, `get-value(r, c)`
 
-## `subsetBB :: t1:Table * bs1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
+## `subTableBB :: t1:Table * bs1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
 
 ### Constraints
 
@@ -82,12 +82,12 @@ __Ensures:__
 Select a sub-table. e.g.
 
 ```
-> subsetBB(tableSF, [true, false, true], [true, true, false])
+> subTableBB(tableSF, [true, false, true], [true, true, false])
 |    name | age |
 |---------|-----|
 |   "Bob" |     |
 |   "Eve" |  13 |
-> subsetBB(
+> subTableBB(
     tableGM,
     [false, false, true],
     [true, false, false, false, true, false, false, true])
@@ -100,7 +100,7 @@ Select a sub-table. e.g.
 
 In R, `t1[bs1, bs2]`
 
-## `subsetBN :: t1:Table * bs1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
+## `subTableBN :: t1:Table * bs1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
 
 ### Constraints
 
@@ -122,12 +122,12 @@ __Ensures:__
 Select a sub-table.
 
 ```
-> subsetBN(tableSF, [true, false, true], [0, 1])
+> subTableBN(tableSF, [true, false, true], [0, 1])
 |    name | age |
 |---------|-----|
 |   "Bob" |     |
 |   "Eve" |  13 |
-> subsetBN(tableGM, [false, false, true], [4, 7, 0])
+> subTableBN(tableGM, [false, false, true], [4, 7, 0])
 | midterm | final |    name |
 |---------|-------|---------|
 |      84 |    77 |   "Eve" |
@@ -137,7 +137,7 @@ Select a sub-table.
 
 In R, `t1[bs1, ns2]`
 
-## `subsetBC :: t1:Table * bs1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
+## `subTableBC :: t1:Table * bs1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
 
 ### Constraints
 
@@ -159,12 +159,12 @@ __Ensures:__
 Select a sub-table.
 
 ```
-> subsetBC(tableSF, [true, false, true], ["name", "age"])
+> subTableBC(tableSF, [true, false, true], ["name", "age"])
 |    name | age |
 |---------|-----|
 |   "Bob" |     |
 |   "Eve" |  13 |
-> subsetBC(tableGM, [false, false, true], ["midterm", "final", "name"])
+> subTableBC(tableGM, [false, false, true], ["midterm", "final", "name"])
 | midterm | final |    name |
 |---------|-------|---------|
 |      84 |    77 |   "Eve" |
@@ -174,7 +174,7 @@ Select a sub-table.
 
 In R, `t1[bs1, cs2]`
 
-## `subsetNB :: t1:Table * ns1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
+## `subTableNB :: t1:Table * ns1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
 
 ### Constraints
 
@@ -195,14 +195,14 @@ __Ensures:__
 Select a sub-table. e.g.
 
 ```
-> subsetNB(tableSF, [2, 0, 2, 1], [false, true, true])
+> subTableNB(tableSF, [2, 0, 2, 1], [false, true, true])
 | age | favorite-color  |
 |-----|-----------------|
 |  13 |          "red"  |
 |  12 |         "blue"  |
 |  13 |          "red"  |
 |  17 |        "green"  |
-> subsetNB(
+> subTableNB(
     tableGM,
     [2, 1],
     [true, false, false, false, true, false, false, true])
@@ -217,7 +217,7 @@ Select a sub-table. e.g.
 In R, `t1[ns1, bs2]`
 
 
-## `subsetNN :: t1:Table * ns1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
+## `subTableNN :: t1:Table * ns1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
 
 __Requiers:__
 
@@ -238,14 +238,14 @@ __Ensures:__
 Select a sub-table.
 
 ```
-> subsetNN(tableSF, [2, 0, 2, 1], [2, 1])
+> subTableNN(tableSF, [2, 0, 2, 1], [2, 1])
 | favorite-color  | age |
 |-----------------|-----|
 |          "red"  |  13 |
 |         "blue"  |  12 |
 |          "red"  |  13 |
 |        "green"  |  17 |
-> subsetNN(
+> subTableNN(
     tableGM,
     [2, 1],
     [4, 0, 7])
@@ -260,7 +260,7 @@ Select a sub-table.
 In R, `t1[ns1, ns2]`
 
 
-## `subsetNC :: t1:Table * ns1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
+## `subTableNC :: t1:Table * ns1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
 
 __Requiers:__
 
@@ -280,14 +280,14 @@ __Ensures:__
 Select a sub-table.
 
 ```
-> subsetNC(tableSF, [2, 0, 2, 1], ["favorite-color", "age"])
+> subTableNC(tableSF, [2, 0, 2, 1], ["favorite-color", "age"])
 | favorite-color  | age |
 |-----------------|-----|
 |          "red"  |  13 |
 |         "blue"  |  12 |
 |          "red"  |  13 |
 |        "green"  |  17 |
-> subsetNC(
+> subTableNC(
     tableGM,
     [2, 1],
     ["midterm", "name", "final"])
