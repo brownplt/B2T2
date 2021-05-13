@@ -2,6 +2,8 @@
 
 This file listed table operators that we gather from Python, R, LINQ, and Pyret communities.
 
+Pandas cheatsheet: https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
+
 Python pandas and R: https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html
 
 R tibbles: https://adv-r.hadley.nz/vectors-chap.html#tibble
@@ -16,25 +18,25 @@ Pyret as taught in Bootstrap project: https://bootstrapworld.org/materials/sprin
 
 ### Functions
 
-length
-ncols
-nrows
-header
-schema
-range
-rows
-concat
-insert
-
+- length
+- ncols
+- nrows
+- header
+- schema
+- range
+- rows
+- concat
+- insert
+- 
 ### Relations
 
-`x` has no duplicates
-`x` is equal to `y`
-`x` is not greater than `y`
-`x` is (not) included by `y`
-`x` is (not) in `y`
-`x` is a subsequence of `y` (not changing order)
-`x` is of type `y`
+- `x` has no duplicates
+- `x` is equal to `y`
+- `x` is not greater than `y`
+- `x` is (not) included by `y`
+- `x` is (not) in `y`
+- `x` is a subsequence of `y` (not changing order)
+- `x` is of type `y`
 
 ## `getValue :: r:Row * c:ColName -> v:Value`
 
