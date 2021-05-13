@@ -65,7 +65,7 @@ In CS111, `get-value(r, c)`
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `length(bs1)` is equal to `nrows(t1)`
 * `length(bs2)` is equal to `ncols(t1)`
@@ -104,7 +104,7 @@ In R, `t1[bs1, bs2]`
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `length(bs1)` is equal to `nrows(t1)`
 * `ns2` has no duplicates
@@ -141,7 +141,7 @@ In R, `t1[bs1, ns2]`
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `length(bs1)` is equal to `nrows(t1)`
 * `cs2` has no duplicates
@@ -178,7 +178,7 @@ In R, `t1[bs1, cs2]`
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * for all `n` in `ns1`, `n` is in `range(nrows(t1))`
 * `length(bs2)` is equal to `ncols(t1)`
@@ -219,7 +219,7 @@ In R, `t1[ns1, bs2]`
 
 ## `subTableNN :: t1:Table * ns1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
 
-__Requiers:__
+__Requires__:__
 
 * for all `n` in `ns1`, `n` is in `range(nrows(t1))`
 * `ns2` has no duplicates
@@ -262,7 +262,7 @@ In R, `t1[ns1, ns2]`
 
 ## `subTableNC :: t1:Table * ns1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
 
-__Requiers:__
+__Requires__:__
 
 * for all `n` in `ns1`, `n` is in `range(nrows(t1))`
 * `cs2` has no duplicates
@@ -307,7 +307,7 @@ In R, `t1[ns1, cs2]`
 
 ### Constraints (when `selector` is a `Seq<Bool>`)
 
-__Requiers:__
+__Requires__:__
 
 * `length(selector)` is equal to `nrows(t1)`
 
@@ -320,7 +320,7 @@ __Ensures:__
 
 ### Constraints (when `selector` is a `Seq<Number>`)
 
-__Requiers:__
+__Requires__:__
 
 * for all `n` in `selector`, `n` is in `range(nrows(t1))`
 
@@ -369,7 +369,7 @@ In R, `t1[selector,]`
 
 ### Constraints (when `selector` is a `Seq<Bool>`)
 
-__Requiers:__
+__Requires__:__
 
 * `length(selector)` is equal to `ncols(t1)`
 
@@ -381,7 +381,7 @@ __Ensures:__
   
 ### Constraints (when `selector` is a `Seq<Number>`)
 
-__Requiers:__
+__Requires__:__
 
 * `selector` has no duplicates
 * for all `n` in `selector`, `n` is in `range(ncols(t1))`
@@ -394,7 +394,7 @@ __Ensures:__
 
 ### Constraints (when `selector` is a `Seq<ColName>`)
 
-__Requiers:__
+__Requires__:__
 
 * `selector` has no duplicates
 * for all `c` in `selector`, `c` is in `header(t1)`
@@ -456,7 +456,7 @@ In CS111 Pyret, `select-columns(t, selector)`. The `selector` must be a list of 
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `n` is in `range(ncols(t))`
 
@@ -483,7 +483,7 @@ In R, `t[[n]]`
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `c` is in `header(t)`
 
@@ -514,7 +514,7 @@ In CS111 Pyret, `t.get-column(c)`.
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `n` is in `range(nrows(t))`
   
@@ -595,7 +595,7 @@ In R, `ncol(t)`
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 __Ensures:__
 
@@ -620,7 +620,7 @@ In R, `colnames(t)`
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `c` is not in `header(t1)`
 
@@ -668,7 +668,7 @@ Compute a new table by adding a new column to t1. The new column will be named a
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `header(r)` is equal to `header(t1)`
 * `schema(r)` is equal to `schema(t1)`
@@ -717,7 +717,7 @@ Compute a new table by adding a new row to `t1`. e.g.
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `c` is not in `header(t1)`
 * `length(vs)` is equal to `ncols(t1)`
@@ -759,7 +759,7 @@ Compute a new table by adding a new column to t1. e.g.
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 * `c` is in `header(t1)`
 
@@ -809,7 +809,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 ### Constraints
 
-__Requiers:__
+__Requires__:__
 
 __Ensures:__
 
