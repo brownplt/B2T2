@@ -44,9 +44,7 @@ black jelly beans and white ones.
 ```
 > eatBlackAndWhite =
     function(r):
-      r["black an
-      ### what's the bug
-      d white"] == true
+      r["black and white"] == true
     end
 > buildColumn(tableJN, "eat-black-and-white", eatBlackAndWhite)
 ```
