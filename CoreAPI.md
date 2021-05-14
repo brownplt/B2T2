@@ -37,7 +37,9 @@ Pyret as taught in Bootstrap project: https://bootstrapworld.org/materials/sprin
 - `x` is (not) in `y`
 - `x` is a subsequence of `y` (not changing order)
 - `x` is of type `y`
-
+- `x` is a subtype of `y`
+- `x` is categorical
+- `x` is distinct
 
 ## (overload 1/2) `selectRows :: t1:Table * selector:Seq<Bool> -> t2:Table`
 
@@ -60,17 +62,17 @@ Given a `Table` and a `Seq<Bool>` that represents a predicate on rows, returns a
 
 ```lua
 > selectRows(tableSF, [2, 0, 2, 1])
-|   name  | age | favorite-color  |
-|---------|-----|-----------------|
-| "Eve"   |  13 |          "red"  |
-| "Bob"   |  12 |         "blue"  |
-| "Eve"   |  13 |          "red"  |
-| "Alice" |  17 |        "green"  |
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Eve"   | 13  | "red"          |
+| "Bob"   | 12  | "blue"         |
+| "Eve"   | 13  | "red"          |
+| "Alice" | 17  | "green"        |
 > selectRows(tableGM, [2, 1])
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ### Origins
@@ -98,26 +100,26 @@ Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `
 
 ```lua
 > selectRows(tableSF, [true, false, true])
-|   name  | age | favorite-color  |
-|---------|-----|-----------------|
-| "Bob"   |  12 |         "blue"  |
-| "Eve"   |  13 |          "red"  |
+| name  | age | favorite-color |
+| ----- | --- | -------------- |
+| "Bob" | 12  | "blue"         |
+| "Eve" | 13  | "red"          |
 > selectRows(tableGM, [false, false, true])
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+| name  | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ----- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Eve" | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 > selectRows(tableSF, [2, 0, 2, 1])
-|   name  | age | favorite-color  |
-|---------|-----|-----------------|
-| "Eve"   |  13 |          "red"  |
-| "Bob"   |  12 |         "blue"  |
-| "Eve"   |  13 |          "red"  |
-| "Alice" |  17 |        "green"  |
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Eve"   | 13  | "red"          |
+| "Bob"   | 12  | "blue"         |
+| "Eve"   | 13  | "red"          |
+| "Alice" | 17  | "green"        |
 > selectRows(tableGM, [2, 1])
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ### Origins
@@ -144,17 +146,17 @@ Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be k
 
 ```lua
 > selectColumns(tableSF, [true, true, false])
-|   name  | age |
-|---------|-----|
-| "Bob"   |  12 |
-| "Alice" |  17 |
-| "Eve"   |  13 |
+| name    | age |
+| ------- | --- |
+| "Bob"   | 12  |
+| "Alice" | 17  |
+| "Eve"   | 13  |
 > selectColumns(tableGF, [true, false, false, false, true, false, false, true])
-|   name   | midterm | final |
-|----------|---------|-------|
-|    "Bob" |      77 |    87 |
-|  "Alice" |      88 |    85 |
-|    "Eve" |      84 |    77 |
+| name    | midterm | final |
+| ------- | ------- | ----- |
+| "Bob"   | 77      | 87    |
+| "Alice" | 88      | 85    |
+| "Eve"   | 84      | 77    |
 ```
 
 ### Origins
@@ -183,17 +185,17 @@ Consumes a `Table` and a `Seq<ColName>` containing column indexes, and produces 
 
 ```lua
 > selectColumns(tableSF, [2, 1])
-| favorite-color  | age |
-|-----------------|-----|
-|         "blue"  |  12 |
-|        "green"  |  17 |
-|          "red"  |  13 |
+| favorite-color | age |
+| -------------- | --- |
+| "blue"         | 12  |
+| "green"        | 17  |
+| "red"          | 13  |
 > selectColumns(tableGF, [7, 0, 4])
-| final |   name   | midterm |
-|-------|----------|---------|
-|    87 |    "Bob" |      77 |
-|    85 |  "Alice" |      88 |
-|    77 |    "Eve" |      84 |
+| final | name    | midterm |
+| ----- | ------- | ------- |
+| 87    | "Bob"   | 77      |
+| 85    | "Alice" | 88      |
+| 77    | "Eve"   | 84      |
 ```
 
 ### Origins
@@ -220,17 +222,17 @@ Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a 
 
 ```lua
 > selectColumns(tableSF, ["favorite-color", "age"])
-| favorite-color  | age |
-|-----------------|-----|
-|         "blue"  |  12 |
-|        "green"  |  17 |
-|          "red"  |  13 |
+| favorite-color | age |
+| -------------- | --- |
+| "blue"         | 12  |
+| "green"        | 17  |
+| "red"          | 13  |
 > selectColumns(tableGF, ["final", "name", "midterm"])
-| final |   name   | midterm |
-|-------|----------|---------|
-|    87 |    "Bob" |      77 |
-|    85 |  "Alice" |      88 |
-|    77 |    "Eve" |      84 |
+| final | name    | midterm |
+| ----- | ------- | ------- |
+| 87    | "Bob"   | 77      |
+| 85    | "Alice" | 88      |
+| 77    | "Eve"   | 84      |
 ```
 
 ### Origins
@@ -363,7 +365,7 @@ In CS111, `get-value(r, c)`
 
 ### Constraints
 
-require nothing
+__Requires:__
 
 __Ensures:__
 
@@ -390,7 +392,7 @@ Returns a `Number` representing the number of rows in the `Table`. [cite cs111]
 
 ### Constraints
 
-require nothing
+__Requires:__
 
 __Ensures:__
 
@@ -461,21 +463,21 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
       12 < getValue(r, "age") and getValue(r, "age") < 20
     end
 > buildColumn(tableSF, "is-teenager", isTeenagerBuilder)
-|   name  | age | favorite-color  | is-teenager |
-|---------|-----|-----------------|-------------|
-| "Bob"   |  12 |         "blue"  |       false |
-| "Alice" |  17 |        "green"  |        true |
-| "Eve"   |  13 |          "red"  |        true |
+| name    | age | favorite-color | is-teenager |
+| ------- | --- | -------------- | ----------- |
+| "Bob"   | 12  | "blue"         | false       |
+| "Alice" | 17  | "green"        | true        |
+| "Eve"   | 13  | "red"          | true        |
 > didWellInFinal =
     function(r):
       85 <= getValue(r, "final")
     end
 > buildColumn(tableGF, "did-well-in-final", didWellInFinal)
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | did-well-in-final |
-|---------|-----|-------|-------|---------|-------|-------|-------|-------------------|
-|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |              true |
-| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |              true |
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |             false |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | did-well-in-final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ----------------- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | true              |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    | true              |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | false             |
 ```
 
 ### Origin
@@ -508,24 +510,24 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
     [row: 
       ("name", "Colton"), ("age", 19),
       ("favorite-color", "blue")])
-|   name   | age | favorite-color  |
-|----------|-----|-----------------|
-|    "Bob" |  12 |         "blue"  |
-|  "Alice" |  17 |        "green"  |
-|    "Eve" |  13 |          "red"  |
-| "Colton" |  19 |         "blue"  |
+| name     | age | favorite-color |
+| -------- | --- | -------------- |
+| "Bob"    | 12  | "blue"         |
+| "Alice"  | 17  | "green"        |
+| "Eve"    | 13  | "red"          |
+| "Colton" | 19  | "blue"         |
 > addRow(
     tableGF,
     [row:
       ("name", "Colton"), ("age", 19),
       ("quiz1", 8), ("quiz2", 9), ("midterm", 73),
       ("quiz3", 7), ("quiz4", 9), ("final", 64)])
-|     name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|----------|-----|-------|-------|---------|-------|-------|-------|
-|    "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |
-|  "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
-|    "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
-| "Colton" |  19 |     8 |     9 |      73 |     7 |     9 |    64 |
+| name     | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| -------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"    | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice"  | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"    | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
+| "Colton" | 19  | 8     | 9     | 73      | 7     | 9     | 64    |
 ```
 
 ### origins
@@ -555,18 +557,18 @@ Consumes a `ColName` representing a column name and a `Seq` of values and produc
 ```
 > hairColor = ["brown", "red", "blonde"]
 > addColumn(tableSF, "hair-color", hairColor)
-|   name  | age | favorite-color  | hair-color |
-|---------|-----|-----------------|------------|
-| "Bob"   |  12 |         "blue"  |    "brown" |
-| "Alice" |  17 |        "green"  |      "red" |
-| "Eve"   |  13 |          "red"  |   "blonde" |
+| name    | age | favorite-color | hair-color |
+| ------- | --- | -------------- | ---------- |
+| "Bob"   | 12  | "blue"         | "brown"    |
+| "Alice" | 17  | "green"        | "red"      |
+| "Eve"   | 13  | "red"          | "blonde"   |
 > presentation = [9, 9, 6]
 > addColumn(tableGF, "presentation", presentation)
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | presentation |
-|---------|-----|-------|-------|---------|-------|-------|-------|--------------|
-|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |            9 |
-| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |            9 |
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |            6 |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | presentation |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ------------ |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | 9            |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    | 9            |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 6            |
 ```
 
 ### origins
@@ -599,11 +601,11 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
       Strings.concat(name, “ Smith”)
     end
 > transformColumn(tableSF, “name”, addLastName)
-|          name | age |  favorite-color |
-|---------------|-----|-----------------|
-|   "Bob Smith" |  12 |         "blue"  |
-| "Alice Smith" |  17 |        "green"  |
-|   "Eve Smith" |  13 |          "red"  |
+| name          | age | favorite-color |
+| ------------- | --- | -------------- |
+| "Bob Smith"   | 12  | "blue"         |
+| "Alice Smith" | 17  | "green"        |
+| "Eve Smith"   | 13  | "red"          |
 > quizScoreToPassFail =
     lam(score):
       if score <= 6:
@@ -613,11 +615,11 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
       end
     end
 > transformColumn(tableGF, "quiz1", quizScoreToPassFail)
-|    name | age |  quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|--------|-------|---------|-------|-------|-------|
-|   "Bob" |  12 | "pass" |     9 |      77 |     7 |     9 |    87 |
-| "Alice" |  17 | "fail" |     8 |      88 |     8 |     7 |    85 |
-|   "Eve" |  13 | "fail" |     9 |      84 |     8 |     8 |    77 |
+| name    | age | quiz1  | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ------ | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | "pass" | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | "fail" | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | "fail" | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ### origins
@@ -648,24 +650,280 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
       getValue(r, “age”) < 15
     end
 > filter(tableSF, ageUnderFifteen)
-|  name | age | favorite-color |
-|-------|-----|----------------|
-| "Bob" |  12 |         "blue" |
-| "Eve" |  13 |          "red" |
+| name  | age | favorite-color |
+| ----- | --- | -------------- |
+| "Bob" | 12  | "blue"         |
+| "Eve" | 13  | "red"          |
 > nameLongerThan3Letters =
     lam(r):
       length(getValue(r, “name)) > 3
     end
 > filter(tableGF, nameLongerThan3Letters)
-|    name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-|---------|-----|-------|-------|---------|-------|-------|-------|
-|   "Bob" |  12 |     8 |     9 |      77 |     7 |     9 |    87 |
-| "Alice" |  17 |     6 |     8 |      88 |     8 |     7 |    85 |
-|   "Eve" |  13 |     7 |     9 |      84 |     8 |     8 |    77 |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ### origins
 
 * In CS111 Pyret, `filter-with(t1, f)`
 * In Bootstrap Pyret, `t1.filter(f)`
+
+
+## `sort :: t1:Table * c:ColName * b:Boolean -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- `c` is in `header(t1)`
+- `schema(t1)[c]` is a subtype of `Number`
+
+__Ensures:__
+
+- `nrows(t2)` is equal to `nrows(t1)`
+- `ncols(t2)` is equal to `ncols(t1)`
+- `header(t2)` is equal to `header(t1)`
+- `schema(t2)` is equal to `schema(t1)`
+- If `b` is equal to `true` then `getColumn(t2, c)` is in ascending order
+- If `b` is equal to `false` then `getColumn(t2, c)` is in descending order
+
+### Description
+
+Given a `Table` and the name of a column in that `Table`, return a `Table` with the same rows ordered based on the named column. If `b` is `true`, the `Table` will be sorted in ascending order, otherwise it will be in descending order. [cite cs111]
+
+```lua
+> sort(tableSF, "age", true)
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+| "Eve"   | 13  | "red"          |
+| "Alice" | 17  | "green"        |
+> sort(tableGF)
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
+```
+
+### origins
+
+- In cs111 Pyret, `sort-by(t, c, b)`
+- In Bootstrap Pyret, `t.order-by(c, b)`
+
+## `drop :: t1:Table * c:ColName -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- `c` in `header(t1)`
+
+__Ensures:__
+
+- `nrows(t2)` is equal to `nrows(t1)`
+- `ncols(t2)` is equal to `ncols(t1) - 1`
+- `header(t2)` is a subsequence of `header(t1)`
+- `c` is not in `header(t2)`
+- `schema(t2)` is included by `schema(t1)`
+- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+
+### Description
+
+Returns a `Table` that is the same as `t`, except without the column whose name is `c`. [cite cs111]
+
+```lua
+> drop(tableSF, "age")
+| name    | favorite-color |
+| ------- | -------------- |
+| "Bob"   | "blue"         |
+| "Alice" | "green"        |
+| "Eve"   | "red"          |
+> drop(tableGF, "final")
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     |
+```
+
+### origins
+
+- In pandas, `del t[c]`
+- In cs111 Pyret, `t.drop(c)`
+
+## `count :: t1:Table * c :ColName -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- `c` is in `header(t1)`
+- Either 
+  - `schema(t1)[c]` is categorical
+
+__Ensures:__
+
+- `header(t2)` is equal to `["value", "count"]`
+- `schema(t2)["value"]` is equal to `schema(t1)[c]`
+- `schema(t2)["count"]` is equal to `Number`
+
+### Description
+
+Takes a `Table` and a `ColName` representing the name of a column in that `Table`. Produces a `Table` that summarizes how many rows have each value in the given column. [cite cs111]
+
+```lua
+> count(tableSF, "favorite-color")
+| value   | count |
+| ------- | ----- |
+| "blue"  | 1     |
+| "green" | 1     |
+| "red"   | 1     |
+> count(tableGF, "age")
+| value | count |
+| ----- | ----- |
+| 12    | 1     |
+| 17    | 1     |
+| 13    | 1     |
+```
+
+### origins
+
+- In cs111 Pyret, `count(t, c)`
+
+## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
+
+Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram. [cite cs111]
+
+### Constraints
+
+__Requires:__
+
+- `c` is in `header(t)`
+- `schema(t)[c]` is a subtype of `Number`
+
+__Ensures:__
+
+### origins
+
+- In cs111 Pyret, `histogram(t, c, n)`
+
+## `scatterPlot :: t:Table * c1:ColName * c2:ColName -> i:Image`
+
+Displays an `Image` of a scatter plot from the given table. `c1` names the column in `t` to use for x-values, and `c2` names the column in `t` to use for y-values. Both columns must contain `Number` values. [cite cs111]
+
+### Constraints
+
+__Requires:__
+
+- `c1` is in `header(t)`
+- `c2` is in `header(t)`
+- `schema(t)[c1]` is a subtype of `Number`
+- `schema(t)[c2]` is a subtype of `Number`
+
+__Ensures:__
+
+### origins
+
+- In cs111 Pyret, `scatter-plot(t, c1, c2)`
+
+## `lrPlot :: t:Table * c1:ColName * c2:ColName -> i:Image`
+
+Like a call to `scatterPlot` with the same inputs. The difference is that a linear regression will be attempted on the elements of the plot, and a regression line will the be drawn over the data. [cite cs111]
+
+### Constraints
+
+__Requires:__
+
+- `c1` is in `header(t)`
+- `c2` is in `header(t)`
+- `schema(t)[c1]` is a subtype of `Number`
+- `schema(t)[c2]` is a subtype of `Number`
+
+__Ensures:__
+
+### origins
+
+- In cs111 Pyret, `lr-plot(t, c1, c2)`
+
+## `pieChart :: t:Table * c1:ColName * c2:ColName -> i:Image`
+
+Display an `Image` of a pie-chart from the given `Table` (one slice per row). `c1` is the label to use for the chart, and `c2` names the column of the `Table` to use for values in the pie chart. [cite cs111]
+
+### Constraints
+
+__Requires:__
+
+- `c1` is in `header(t)`
+- `c2` is in `header(t)`
+- `schema(t)[c1]` is a subtype of `String`
+- `schema(t)[c2]` is a subtype of non-negative `Number`
+- `getColumn(t, c1)` is distinct.
+
+__Ensures:__
+
+### origins
+
+- In cs111 Pyret, `pie-chart(t, c1, c2)`
+
+## `barChart :: t:Table * c1:ColName * c2:ColName -> i:Image`
+
+### Constraints
+
+__Requires:__
+
+- `c1` is in `header(t)`
+- `c2` is in `header(t)`
+- `schema(t)[c1]` is a subtype of `String`
+- `schema(t)[c2]` is a subtype of non-negative `Number`
+- `getColumn(t, c1)` is distinct.
+
+__Ensures:__
+
+### Description
+
+Displays an `Image` of a bar-chart from the given `Table` (one bar per row). `c1` names the column of the Table to use for labels, and `c2` names the column of the `Table` to use for values in the bar chart. [cite cs111]
+
+### origins
+
+- In cs111 Pyret, `bar-chart(t, c1, c2)`
+
+## `freqBarChart :: t:Table * c:ColName -> Image`
+
+### Constraints
+
+__Requires:__
+
+- `c` is in `header(t)`
+- `schema(t)[c]` is categorical
+
+### Description
+
+Display an `Image` of a frequency bar-chart from the given `Table`. There is one bar for each unique value of the column with name `c` (showing the number of occurrences of that value). [cite cs111]
+
+### origins
+
+- In cs111 Pyret, `freq-bar-chart(t, c)`
+
+## `boxPlot :: t:Table * c:ColName -> Image`
+
+### Constraints
+
+__Requires:__
+
+- `c` is in `header(t)`
+- `schema(t)[c]` is categorical
+
+__Ensures:__
+
+### Description
+
+Produces an `Image` of a box plot of the values in the column named `c` in the `Table`. A box plot shows the minimum, maximum, and median values of a column, as well as the first (lowest) and third quartiles of the dataset; this is helpful for seeing the variation in a dataset. [cite cs111]
+
+### origins
+
+- In cs111 Pyret, `box-plot(t, c)`
 
