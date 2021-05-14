@@ -1,6 +1,6 @@
 ## Introduction
 
-This file listed table operators that we gather from Python, R, LINQ, and Pyret communities.
+This file lists table operators that we gather from Python, R, LINQ, and Pyret communities.
 
 Pandas cheatsheet: https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
 
@@ -239,328 +239,9 @@ In R, `t1[,selector]`
 
 In CS111 Pyret, `select-columns(t, selector)`.
 
-## `getValue :: r:Row * c:ColName -> v:Value`
+## `subTable :: t1:Table * rowSelector:Seq * columnSelector:Seq -> t2:Table`
 
-### Constraints
-
-__Requires:__
-
-* `c` is in header(r)
-
-__Ensures:__
-
-* `v` is of type `schema(r)[c]`
-
-### Description
-
-Retrieve the value for the column `c` in the row `r`. [cite cs111]
-
-```
-> getValue([row: ("name", "Bob"),  ("age", 12)], "age")
-12
-```
-
-### Origins
-
-In CS111, `get-value(r, c)`
-
-## (overload 1/6) `subTable :: t1:Table * bs1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
-
-### Constraints
-
-__Requires:__
-
-* `length(bs1)` is equal to `nrows(t1)`
-* `length(bs2)` is equal to `ncols(t1)`
-
-__Ensures:__
-
-* `rows(t2)` is a subsequence of `rows(t1)`
-* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `bs1[i]` is equal to `true`
-* for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs2[i]` is equal to `true`
-* `schema(t2)` is included by `schema(t1)`
-
-### Description
-
-Select a sub-table. e.g.
-
-```
-> subTable(tableSF, [true, false, true], [true, true, false])
-|    name | age |
-|---------|-----|
-|   "Bob" |     |
-|   "Eve" |  13 |
-> subTable(
-    tableGM,
-    [false, false, true],
-    [true, false, false, false, true, false, false, true])
-|    name | midterm | final |
-|---------|---------|-------|
-|   "Eve" |      84 |    77 |
-```
-
-### Origins
-
-In R, `t1[bs1, bs2]`
-
-## (overload 2/6) `subTable :: t1:Table * bs1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
-
-### Constraints
-
-__Requires:__
-
-* `length(bs1)` is equal to `nrows(t1)`
-* `ns2` has no duplicates
-* for all `n` in `ns2`, `n` is in `range(ncols(t1))`
-
-__Ensures:__
-
-* `rows(t2)` is a subsequence of `rows(t1)`
-* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `bs1[i]` is equal to `true`
-* `length(header(t2))` is equal to `length(selector)`for all `i` in `range(length(ns2))`, `header(t2)[i]` is equal to `header(t1)[ns2[i]]`
-* `schema(t2)` is included by `schema(t2)`
-
-### Description
-
-Select a sub-table.
-
-```
-> subTable(tableSF, [true, false, true], [0, 1])
-|    name | age |
-|---------|-----|
-|   "Bob" |     |
-|   "Eve" |  13 |
-> subTable(tableGM, [false, false, true], [4, 7, 0])
-| midterm | final |    name |
-|---------|-------|---------|
-|      84 |    77 |   "Eve" |
-```
-
-### Origins
-
-In R, `t1[bs1, ns2]`
-
-## (overload 3/6) `subTable :: t1:Table * bs1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
-
-### Constraints
-
-__Requires:__
-
-* `length(bs1)` is equal to `nrows(t1)`
-* `cs2` has no duplicates
-* for all `c` in `cs2`, `c` is in `header(t1)`
-
-__Ensures:__
-
-* `rows(t2)` is a subsequence of `rows(t1)`
-* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `bs1[i]` is equal to `true`
-* `header(t2)` is equal to `cs` 
-* `schema(t2)` is included by `schema(t2)`
-
-### Description
-
-Select a sub-table.
-
-```
-> subTable(tableSF, [true, false, true], ["name", "age"])
-|    name | age |
-|---------|-----|
-|   "Bob" |     |
-|   "Eve" |  13 |
-> subTable(tableGM, [false, false, true], ["midterm", "final", "name"])
-| midterm | final |    name |
-|---------|-------|---------|
-|      84 |    77 |   "Eve" |
-```
-
-### Origins
-
-In R, `t1[bs1, cs2]`
-
-## (overload 4/6) `subTable :: t1:Table * ns1:Seq<Boolean> * bs2:Seq<Boolean> -> t2:Table`
-
-### Constraints
-
-__Requires:__
-
-* for all `n` in `ns1`, `n` is in `range(nrows(t1))`
-* `length(bs2)` is equal to `ncols(t1)`
-
-__Ensures:__
-
-* `nrows(t2)` is equal to `length(ns1)`
-* for all `i` in `range(length(ns1))`, `rows(t2)[i]` is equal to `rows(t1)[ns1[i]]`
-* for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs2[i]` is equal to `true`
-* `schema(t2)` is included by `schema(t1)`
-
-### Description
-
-Select a sub-table. e.g.
-
-```
-> subTable(tableSF, [2, 0, 2, 1], [false, true, true])
-| age | favorite-color  |
-|-----|-----------------|
-|  13 |          "red"  |
-|  12 |         "blue"  |
-|  13 |          "red"  |
-|  17 |        "green"  |
-> subTable(
-    tableGM,
-    [2, 1],
-    [true, false, false, false, true, false, false, true])
-|    name | midterm | final |
-|---------|---------|-------|
-|   "Eve" |      84 |    77 |
-| "Alice" |      88 |    85 |
-```
-
-### Origins
-
-In R, `t1[ns1, bs2]`
-
-
-## (overload 5/6) `subTable :: t1:Table * ns1:Seq<Boolean> * ns2:Seq<Number> -> t2:Table`
-
-__Requires:__
-
-* for all `n` in `ns1`, `n` is in `range(nrows(t1))`
-* `ns2` has no duplicates
-* for all `n` in `ns2`, `n` is in `range(ncols(t1))`
-
-__Ensures:__
-
-* `nrows(t2)` is equal to `length(ns1)`
-* for all `i` in `range(length(ns1))`, `rows(t2)[i]` is equal to `rows(t1)[ns1[i]]`
-* `length(header(t2))` is equal to `length(selector)`
-* for all `i` in `range(length(ns2))`, `header(t2)[i]` is equal to `header(t1)[ns2[i]]`
-* `schema(t2)` is included by `schema(t2)`
-
-### Description
-
-Select a sub-table.
-
-```
-> subTable(tableSF, [2, 0, 2, 1], [2, 1])
-| favorite-color  | age |
-|-----------------|-----|
-|          "red"  |  13 |
-|         "blue"  |  12 |
-|          "red"  |  13 |
-|        "green"  |  17 |
-> subTable(
-    tableGM,
-    [2, 1],
-    [4, 0, 7])
-| midterm |    name | final |
-|---------|---------|-------|
-|      84 |   "Eve" |    77 |
-|      88 | "Alice" |    85 |
-```
-
-### Origins
-
-In R, `t1[ns1, ns2]`
-
-
-## (overload 6/6) `subTable :: t1:Table * ns1:Seq<Boolean> * cs2:Seq<ColName> -> t2:Table`
-
-__Requires:__
-
-* for all `n` in `ns1`, `n` is in `range(nrows(t1))`
-* `cs2` has no duplicates
-* for all `c` in `cs2`, `c` is in `header(t1)`
-
-__Ensures:__
-
-* `nrows(t2)` is equal to `length(ns1)`
-* for all `i` in `range(length(ns1))`, `rows(t2)[i]` is equal to `rows(t1)[ns1[i]]`
-* `header(t2)` is equal to `cs` 
-* `schema(t2)` is included by `schema(t2)`
-
-### Description
-
-Select a sub-table.
-
-```
-> subTable(tableSF, [2, 0, 2, 1], ["favorite-color", "age"])
-| favorite-color  | age |
-|-----------------|-----|
-|          "red"  |  13 |
-|         "blue"  |  12 |
-|          "red"  |  13 |
-|        "green"  |  17 |
-> subTable(
-    tableGM,
-    [2, 1],
-    ["midterm", "name", "final"])
-| midterm |    name | final |
-|---------|---------|-------|
-|      84 |   "Eve" |    77 |
-|      88 | "Alice" |    85 |
-```
-
-### Origins
-
-In R, `t1[ns1, cs2]`
-
-## `getColumnN :: t:Table * n:Number -> vs:List<Value>`
-
-### Constraints
-
-__Requires:__
-
-* `n` is in `range(ncols(t))`
-
-__Ensures:__
-
-* for all `v` in `vs`, `v` is of type `schema(t)[header(t)[n]]`
-
-### Description
-
-Extract a column out of a table t by a column index. e.g.
-
-```
-> getColumnN(tableSF, 1)
-[12, 17, 13]
-> getColumnN(tableGF, 0)
-["Bob", "Alice", "Eve"]
-```
-
-### Origins
-
-In R, `t[[n]]`
-
-## `getColumnC :: t:Table * c:ColName -> vs:List<Value>`
-
-### Constraints
-
-__Requires:__
-
-* `c` is in `header(t)`
-
-__Ensures:__
-
-* for all `v` in `vs`, `v` is of type `schema(t)[c]`
-
-### Description
-
-Extract a column out of a table t by a column name. e.g.
-
-```
-> getColumnC(tableSF, "age")
-[12, 17, 13]
-> getColumnC(tableGF, "name")
-["Bob", "Alice", "Eve"]
-```
-
-### Origins
-
-In Python pandas, `t[c]`.
-
-In R, `t[[c]]`.
-
-In CS111 Pyret, `t.get-column(c)`.
+`subTable(t, x, y)` is defined as `selectColumns(selectRows(t, x), y)`. Given that `selectRows` has 2 overloadings and that `selectColumns` has 3, the `subTable` function has 6 overloadings. Each of the 6 overloadings has the constraints given by combining the constraints of the corresponding `selectRows` and `selectColumns` in the obvious way.
 
 ## `getRow :: t:Table * n:Number -> r:Row`
 
@@ -593,6 +274,91 @@ Extract a row out of a table by a numeric index. E.g.
 * In R, `t[n,]`. The output is a data frame.
 * In CS111 Pyret, `get-row(t, n)`
 
+## (overloading 1/2) `getColumn :: t:Table * n:Number -> vs:Seq<Value>`
+
+### Constraints
+
+__Requires:__
+
+* `n` is in `range(ncols(t))`
+
+__Ensures:__
+
+* for all `v` in `vs`, `v` is of type `schema(t)[header(t)[n]]`
+
+### Description
+
+Returns a `Seq` of the values in the indexed column in `t`. [cite cs111]
+
+```
+> getColumn(tableSF, 1)
+[12, 17, 13]
+> getColumn(tableGF, 0)
+["Bob", "Alice", "Eve"]
+```
+
+### Origins
+
+- In R, `t[[n]]`
+
+## (overloading 2/2) `getColumn :: t:Table * c:ColName -> vs:Seq<Value>`
+
+### Constraints
+
+__Requires:__
+
+* `c` is in `header(t)`
+
+__Ensures:__
+
+* for all `v` in `vs`, `v` is of type `schema(t)[c]`
+
+### Description
+
+Returns a `Seq` of the values in the named column in `t`. [cite cs111]
+
+```
+> getColumn(tableSF, "age")
+[12, 17, 13]
+> getColumn(tableGF, "name")
+["Bob", "Alice", "Eve"]
+```
+
+### Origins
+
+In Python pandas, `t[c]`.
+
+In R, `t[[c]]`.
+
+In CS111 Pyret, `t.get-column(c)`.
+
+## `getValue :: r:Row * c:ColName -> v:Value`
+
+### Constraints
+
+__Requires:__
+
+* `c` is in header(r)
+
+__Ensures:__
+
+* `v` is of type `schema(r)[c]`
+
+### Description
+
+Retrieve the value for the column `c` in the row `r`. [cite cs111]
+
+```
+> getValue([row: ("name", "Bob"),  ("age", 12)], "age")
+12
+```
+
+### Origins
+
+In CS111, `get-value(r, c)`
+
+
+
 ## `nrows :: t:Table -> n:Number`
 
 ### Constraints
@@ -605,7 +371,7 @@ __Ensures:__
 
 ### Description
 
-Compute the number of rows in table t. e.g.
+Returns a `Number` representing the number of rows in the `Table`. [cite cs111]
 
 ```
 > nrows(tableSF)
@@ -616,7 +382,9 @@ Compute the number of rows in table t. e.g.
 
 ### Origins
 
-In R, `nrow(t)`
+- In R, `nrow(t)`
+- In CS111 Pyret, `t.length()`
+
 
 ## `ncols :: t:Table -> n:Number`
 
@@ -630,8 +398,7 @@ __Ensures:__
 
 ### Description
 
-Compute the number of columns in table t. e.g.
-
+Returns a `Number` representing the number of columns in the `Table`. [cite cs111]
 ```
 > ncols(tableSF)
 3
@@ -643,7 +410,7 @@ Compute the number of columns in table t. e.g.
 
 In R, `ncol(t)`
 
-## `header :: t:Table -> cs:List<ColName>`
+## `header :: t:Table -> cs:Seq<ColName>`
 
 ### Constraints
 
@@ -655,7 +422,7 @@ __Ensures:__
 
 ### Description
 
-Compute the header. e.g.
+Returns a `Seq` representing the column names in the `Table`.
 
 ```
 > header(tableSF)
@@ -686,7 +453,7 @@ __Ensures:__
 
 ### Description
 
-Compute a new table by adding a new column to t1. The new column will be named after c. And its values are computed by f from each row of t1. E.g.
+Consumes an existing `Table` and produces a new `Table` containing an additional column with the given `ColName`, using `f` to produce the values for that column, once for each row. [cite cs111]
 
 ```lua
 > isTeenagerBuilder =
@@ -733,7 +500,7 @@ __Ensures:__
 
 ### Description
 
-Compute a new table by adding a new row to `t1`. e.g.
+Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows from the original table followed by the given `Row`. [cite cs111]
 
 ```
 > addRow(
@@ -765,7 +532,7 @@ Compute a new table by adding a new row to `t1`. e.g.
 
 * In CS111 Pyret, `add-row(t1,r)`
 
-## `addColumn :: t1:Table * c:ColName * vs:List<Value> -> t2:Table`
+## `addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table`
 
 ### Constraints
 
@@ -783,7 +550,7 @@ __Ensures:__
 
 ### Description
 
-Compute a new table by adding a new column to t1. e.g.
+Consumes a `ColName` representing a column name and a `Seq` of values and produces a new `Table` with the columns of the input `Table` followed by a column with the given name and values. Note that the length of `vs` must equal the length of the `Table`. [cs111]
 
 ```
 > hairColor = ["brown", "red", "blonde"]
@@ -824,7 +591,7 @@ __Ensures:__
 
 ### Description
 
-Update a column in `t1`. For each row, `f` maps from the old value to the new one. E.g.
+Consumes a `Table`, a `ColName` representing a column name, and a transformation function and produces a new `Table` where the transformation function has been applied to all values in the named column. [cite cs111]
 
 ```
 > addLastName =
@@ -873,7 +640,7 @@ __Ensures:__
 
 ### Description
 
-For each row of t1, keep those satisfy f and delete the others. E.g.
+Given a `Table` and a predicate on rows, returns a `Table` with only the rows for which the predicate returns `true`. [cite cs111]
 
 ```
 > ageUnderFifteen =
