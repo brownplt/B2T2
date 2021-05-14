@@ -271,7 +271,7 @@ Extract a row out of a table by a numeric index. E.g.
   ("quiz3", 8), ("quiz4", 7), ("final", 85)]
 ```
 
-### origins
+### Origins
 
 * In R, `t[n,]`. The output is a data frame.
 * In CS111 Pyret, `get-row(t, n)`
@@ -433,7 +433,7 @@ Returns a `Seq` representing the column names in the `Table`.
 ["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
 ```
 
-### origins
+### Origins
 
 In R, `colnames(t)`
 
@@ -530,7 +530,7 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 | "Colton" | 19  | 8     | 9     | 73      | 7     | 9     | 64    |
 ```
 
-### origins
+### Origins
 
 * In CS111 Pyret, `add-row(t1,r)`
 
@@ -571,7 +571,7 @@ Consumes a `ColName` representing a column name and a `Seq` of values and produc
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 6            |
 ```
 
-### origins
+### Origins
 
 * In CS111 Pyret, `add-col(t, c, vs)`
 * In Python pandas, `t[c] = vs`. If `c` is already in `t`, the old column is replaced with `vs` and `c` keeps its position in the header. 
@@ -622,7 +622,7 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
 | "Eve"   | 13  | "fail" | 9     | 84      | 8     | 8     | 77    |
 ```
 
-### origins
+### Origins
 
 In CS111 Pyret, `transform-column(t, c, f)`
 
@@ -666,7 +666,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
-### origins
+### Origins
 
 * In CS111 Pyret, `filter-with(t1, f)`
 * In Bootstrap Pyret, `t1.filter(f)`
@@ -709,7 +709,7 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
-### origins
+### Origins
 
 - In cs111 Pyret, `sort-by(t, c, b)`
 - In Bootstrap Pyret, `t.order-by(c, b)`
@@ -750,7 +750,7 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     |
 ```
 
-### origins
+### Origins
 
 - In pandas, `del t[c]`
 - In cs111 Pyret, `t.drop(c)`
@@ -790,7 +790,7 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 | 13    | 1     |
 ```
 
-### origins
+### Origins
 
 - In cs111 Pyret, `count(t, c)`
 
@@ -807,7 +807,7 @@ __Requires:__
 
 __Ensures:__
 
-### origins
+### Origins
 
 - In cs111 Pyret, `histogram(t, c, n)`
 
@@ -826,7 +826,7 @@ __Requires:__
 
 __Ensures:__
 
-### origins
+### Origins
 
 - In cs111 Pyret, `scatter-plot(t, c1, c2)`
 
@@ -845,7 +845,7 @@ __Requires:__
 
 __Ensures:__
 
-### origins
+### Origins
 
 - In cs111 Pyret, `lr-plot(t, c1, c2)`
 
@@ -865,7 +865,7 @@ __Requires:__
 
 __Ensures:__
 
-### origins
+### Origins
 
 - In cs111 Pyret, `pie-chart(t, c1, c2)`
 
@@ -887,7 +887,7 @@ __Ensures:__
 
 Displays an `Image` of a bar-chart from the given `Table` (one bar per row). `c1` names the column of the Table to use for labels, and `c2` names the column of the `Table` to use for values in the bar chart. [cite cs111]
 
-### origins
+### Origins
 
 - In cs111 Pyret, `bar-chart(t, c1, c2)`
 
@@ -904,7 +904,7 @@ __Requires:__
 
 Display an `Image` of a frequency bar-chart from the given `Table`. There is one bar for each unique value of the column with name `c` (showing the number of occurrences of that value). [cite cs111]
 
-### origins
+### Origins
 
 - In cs111 Pyret, `freq-bar-chart(t, c)`
 
@@ -923,7 +923,7 @@ __Ensures:__
 
 Produces an `Image` of a box plot of the values in the column named `c` in the `Table`. A box plot shows the minimum, maximum, and median values of a column, as well as the first (lowest) and third quartiles of the dataset; this is helpful for seeing the variation in a dataset. [cite cs111]
 
-### origins
+### Origins
 
 - In cs111 Pyret, `box-plot(t, c)`
 
