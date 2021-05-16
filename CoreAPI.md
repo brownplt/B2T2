@@ -2,6 +2,10 @@
 
 This file lists table operators that we gather from Python, R, LINQ, and Pyret communities.
 
+We included operators in __Pyret taught in Brown CS111__. These operators are found by walking through [this document](https://hackmd.io/@cs111/table). All operators described in the linked document are included, except `sum`, `mean`, `median`, `modes`, and `stdev`. These operators are excluded because their constraints on arguments and results are simple and have been illustrated by other operators.
+
+We included operators in __Pyret taught in the Data Science curriculumn of the Bootstrap project__. These operator are found by walking through the "Language Table"s in [this document](https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml). We only include functions and methods that look table-related. Methods are described in [Pyret's official document](https://www.pyret.org/docs/latest/tables.html). Functions are defined in [a Bootstrap Pyret module](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB).
+
 Pandas cheatsheet: https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
 
 Python pandas and R: https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html
@@ -9,10 +13,6 @@ Python pandas and R: https://pandas.pydata.org/pandas-docs/stable/getting_starte
 R tibbles: https://adv-r.hadley.nz/vectors-chap.html#tibble
 
 R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html
-
-(Everthing included) Pyret as taught in Brown CS111: https://hackmd.io/@cs111/table
-
-(Everything included) Pyret as taught in Bootstrap project: https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml (See also [their tables library](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB))
 
 ## Terminologies
 
