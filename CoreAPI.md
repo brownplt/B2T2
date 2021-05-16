@@ -832,7 +832,7 @@ __Ensures:__
 
 ### Notes
 
-- `lr-plot` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented in this file.
+- `lr-plot` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
 
 ## `pieChart :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
@@ -854,27 +854,9 @@ __Ensures:__
 
 - In cs111 Pyret, `pie-chart(t, c1, c2)`
 
-## `barChart :: t:Table * c1:ColName * c2:ColName -> i:Image`
+### Notes
 
-### Constraints
-
-__Requires:__
-
-- `c1` is in `header(t)`
-- `c2` is in `header(t)`
-- `schema(t)[c1]` is a subtype of `String`
-- `schema(t)[c2]` is a subtype of non-negative `Number`
-- `getColumn(t, c1)` is distinct.
-
-__Ensures:__
-
-### Description
-
-Displays an `Image` of a bar-chart from the given `Table` (one bar per row). `c1` names the column of the Table to use for labels, and `c2` names the column of the `Table` to use for values in the bar chart. [cite cs111]
-
-### Origins
-
-- In cs111 Pyret, `bar-chart(t, c1, c2)`
+- `bar-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
 
 ## `freqBarChart :: t:Table * c:ColName -> Image`
 
