@@ -830,24 +830,9 @@ __Ensures:__
 
 - In cs111 Pyret, `scatter-plot(t, c1, c2)`
 
-## `lrPlot :: t:Table * c1:ColName * c2:ColName -> i:Image`
+### Notes
 
-Like a call to `scatterPlot` with the same inputs. The difference is that a linear regression will be attempted on the elements of the plot, and a regression line will the be drawn over the data. [cite cs111]
-
-### Constraints
-
-__Requires:__
-
-- `c1` is in `header(t)`
-- `c2` is in `header(t)`
-- `schema(t)[c1]` is a subtype of `Number`
-- `schema(t)[c2]` is a subtype of `Number`
-
-__Ensures:__
-
-### Origins
-
-- In cs111 Pyret, `lr-plot(t, c1, c2)`
+- `lr-plot` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented in this file.
 
 ## `pieChart :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
