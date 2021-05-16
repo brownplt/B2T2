@@ -10,9 +10,9 @@ R tibbles: https://adv-r.hadley.nz/vectors-chap.html#tibble
 
 R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html
 
-Pyret as taught in Brown CS111: https://hackmd.io/@cs111/table
+(Everthing included) Pyret as taught in Brown CS111: https://hackmd.io/@cs111/table
 
-Pyret as taught in Bootstrap project: https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml
+(Everything included) Pyret as taught in Bootstrap project: https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml (See also [their tables library](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB))
 
 ## Terminologies
 
@@ -245,6 +245,40 @@ In CS111 Pyret, `select-columns(t, selector)`.
 
 `subTable(t, x, y)` is defined as `selectColumns(selectRows(t, x), y)`. Given that `selectRows` has 2 overloadings and that `selectColumns` has 3, the `subTable` function has 6 overloadings. Each of the 6 overloadings has the constraints given by combining the constraints of the corresponding `selectRows` and `selectColumns` in the obvious way.
 
+## `randomRows :: t1:Table * n:Number -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- `n` is not greater than `nrows(t1)`
+
+__Ensures:__
+
+- `header(t2)` is equal to `header(t1)`
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `n`
+- `ncols(t2)` is equal to `ncols(t1)`
+
+### Description
+
+Sample `n` observations (rows) from table `t1` without replacement.
+
+```lua
+> randomRows(tableSF, 0)
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+> randomRows(tableGM, 2)
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
+| "Alice" | 17  | 6     | 8     | 88      |       | 7     | 85    |
+```
+
+### Origins
+
+- In Bootstrap Pyret, `random-rows(t, n)`
+
 ## `getRow :: t:Table * n:Number -> r:Row`
 
 ### Constraints
@@ -275,6 +309,7 @@ Extract a row out of a table by a numeric index. E.g.
 
 * In R, `t[n,]`. The output is a data frame.
 * In CS111 Pyret, `get-row(t, n)`
+* In Bootstrap Pyret, `t.row-n(n)`
 
 ## (overloading 1/2) `getColumn :: t:Table * n:Number -> vs:Seq<Value>`
 
@@ -357,9 +392,8 @@ Retrieve the value for the column `c` in the row `r`. [cite cs111]
 
 ### Origins
 
-In CS111, `get-value(r, c)`
-
-
+- In CS111 Pyret, `r[c]`
+- In Bootstrap Pyret, `r[c]`
 
 ## `nrows :: t:Table -> n:Number`
 
@@ -714,7 +748,7 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 - In cs111 Pyret, `sort-by(t, c, b)`
 - In Bootstrap Pyret, `t.order-by(c, b)`
 
-## `drop :: t1:Table * c:ColName -> t2:Table`
+## `deleteColumn :: t1:Table * c:ColName -> t2:Table`
 
 ### Constraints
 
@@ -736,13 +770,13 @@ __Ensures:__
 Returns a `Table` that is the same as `t`, except without the column whose name is `c`. [cite cs111]
 
 ```lua
-> drop(tableSF, "age")
+> deleteColumn(tableSF, "age")
 | name    | favorite-color |
 | ------- | -------------- |
 | "Bob"   | "blue"         |
 | "Alice" | "green"        |
 | "Eve"   | "red"          |
-> drop(tableGF, "final")
+> deleteColumn(tableGF, "final")
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     |
@@ -755,7 +789,7 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 - In pandas, `del t[c]`
 - In cs111 Pyret, `t.drop(c)`
 
-## `count :: t1:Table * c :ColName -> t2:Table`
+## `count :: t1:Table * c:ColName -> t2:Table`
 
 ### Constraints
 
@@ -792,7 +826,8 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 
 ### Origins
 
-- In cs111 Pyret, `count(t, c)`
+- In CS111 Pyret, `count(t, c)`
+- In Bootstrap Pyret, `count(t, c)`
 
 ## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
 
@@ -809,7 +844,8 @@ __Ensures:__
 
 ### Origins
 
-- In cs111 Pyret, `histogram(t, c, n)`
+- In CS111 Pyret, `histogram(t, c, n)`
+- In Bootstrap Pyret, `histogram(t, c, n)`
 
 ## `scatterPlot :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
@@ -828,11 +864,13 @@ __Ensures:__
 
 ### Origins
 
-- In cs111 Pyret, `scatter-plot(t, c1, c2)`
+- In CS111 Pyret, `scatter-plot(t, c1, c2)`
 
 ### Notes
 
 - `lr-plot` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `scatter-plot` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `lr-plot` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
 
 ## `pieChart :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
@@ -852,7 +890,7 @@ __Ensures:__
 
 ### Origins
 
-- In cs111 Pyret, `pie-chart(t, c1, c2)`
+- In CS111 Pyret, `pie-chart(t, c1, c2)`
 
 ### Notes
 
@@ -874,6 +912,11 @@ Display an `Image` of a frequency bar-chart from the given `Table`. There is one
 ### Origins
 
 - In cs111 Pyret, `freq-bar-chart(t, c)`
+  
+### Notes
+
+- `pie-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `bar-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
 
 ## `boxPlot :: t:Table * c:ColName -> Image`
 
