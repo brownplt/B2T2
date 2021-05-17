@@ -39,9 +39,11 @@ R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.htm
 - `x` is of type `y`
 - `x` is a subtype of `y`
 - `x` is categorical
-- `x` is distinct
+- `x` containts distint elements
+- `x` is non-negative
+- `x` is negative
 
-## (overload 1/2) `selectRows :: t1:Table * selector:Seq<Bool> -> t2:Table`
+## (overload 1/2) `selectRows :: t1:Table * selector:Seq<Boolean> -> t2:Table`
 
 ### Constraints
 
@@ -58,7 +60,7 @@ __Ensures:__
 
 ### Description
 
-Given a `Table` and a `Seq<Bool>` that represents a predicate on rows, returns a Table with only the rows for which the predicate returns true. [cite cs111]
+Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, returns a Table with only the rows for which the predicate returns true. [cite cs111]
 
 ```lua
 > selectRows(tableSF, [2, 0, 2, 1])
@@ -77,7 +79,8 @@ Given a `Table` and a `Seq<Bool>` that represents a predicate on rows, returns a
 
 ### Origins
 
-In R, `t1[selector,]`
+- In R, `t1[selector,]`
+- In pandas, `t1.iloc[selector]`
 
 ## (overload 2/2) `selectRows :: t1:Table * selector:Seq<Number> -> t2:Table`
 
@@ -124,9 +127,11 @@ Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `
 
 ### Origins
 
-In R, `t1[selector,]`
+- In R, `t1[selector,]`
+- In pandas, `t1.iloc[selector]`
 
-## (overload 1/3) `selectColumns :: t1:Table * selector:Seq<Bool> -> t2:Table`
+
+## (overload 1/3) `selectColumns :: t1:Table * selector:Seq<Boolean> -> t2:Table`
 
 ### Constraints
 
@@ -237,15 +242,49 @@ Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a 
 
 ### Origins
 
-In R, `t1[,selector]`
+- In R, `t1[,selector]`
+- In CS111 Pyret, `select-columns(t, selector)`.
 
-In CS111 Pyret, `select-columns(t, selector)`.
+### Notes
+
+- This function is similar to `select` in R
+- This function is similar to `DataFrame.loc` in pandas.
 
 ## `subTable :: t1:Table * rowSelector:Seq * columnSelector:Seq -> t2:Table`
 
-`subTable(t, x, y)` is defined as `selectColumns(selectRows(t, x), y)`. Given that `selectRows` has 2 overloadings and that `selectColumns` has 3, the `subTable` function has 6 overloadings. Each of the 6 overloadings has the constraints given by combining the constraints of the corresponding `selectRows` and `selectColumns` in the obvious way.
+`subTable(t, x, y)` is defined as `selectColumns(selectRows(t, x), y)`. This function has 6 overloadings because `selectRows` has 2 overloadings and that `selectColumns` has 3. Each of the 6 overloadings has the constraints given by combining the constraints of the corresponding `selectRows` and `selectColumns` in the obvious way.
 
-## `randomRows :: t1:Table * n:Number -> t2:Table`
+## `head :: t1:Table * n:Number -> t2:Table`
+
+### Constraints
+
+requires:
+
+- if `n` is non-negative then `n` is not greater than `nrows(t1)`
+- if `n` is negative then `- n` is not greater than `nrows(t1)`
+
+ensures:
+
+- `header(t2)` is equal to `header(t1)`
+- `schema(t2)` is equal to `schema(t1)`
+- if `n` is non-negative then `nrows(t2)` is equal to `n`
+- if `n` is negative then `nrows(t2)` is equal to `nrows(t1) + n`
+- `ncols(t2)` is equal to `ncols(t1)`
+- for all `i` in `range(nrows(t2))`, `getRow(t2, i)` is equal to `getRow(t1, i)`
+
+### Description
+
+This function returns the first `n` rows for the object based on position. It is useful for quickly testing if your object has the right type of data in it. For negative values of `n`, this function returns all rows except the last `n` rows. [cite pandas]
+
+### Origins
+
+- In pandas, `t1.head(n)`
+
+### Note
+
+- This function is similar to `head(t1, n = n)` in R.
+
+## `sampleRows :: t1:Table * n:Number -> t2:Table`
 
 ### Constraints
 
@@ -265,10 +304,10 @@ __Ensures:__
 Sample `n` observations (rows) from table `t1` without replacement.
 
 ```lua
-> randomRows(tableSF, 0)
+> sampleRows(tableSF, 0)
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
-> randomRows(tableGM, 2)
+> sampleRows(tableGM, 2)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
@@ -277,6 +316,7 @@ Sample `n` observations (rows) from table `t1` without replacement.
 
 ### Origins
 
+- In pandas, `t.sample(n=n)`.
 - In Bootstrap Pyret, `random-rows(t, n)`
 
 ## `getRow :: t:Table * n:Number -> r:Row`
@@ -289,13 +329,13 @@ __Requires:__
   
 __Ensures:__
 
-* `r` is equal to `rows(t)[n]`
+* `r` is equal to `getRow(t, n)`
 
 ### Description
 
 Extract a row out of a table by a numeric index. E.g.
 
-```
+```lua
 > getRow(tableSF, 0)
 [row: ("name", "Bob"), ("age", 12), ("favorite-color", "blue")]
 > getRow(tableGF, 1)
@@ -327,7 +367,7 @@ __Ensures:__
 
 Returns a `Seq` of the values in the indexed column in `t`. [cite cs111]
 
-```
+```lua
 > getColumn(tableSF, 1)
 [12, 17, 13]
 > getColumn(tableGF, 0)
@@ -354,7 +394,7 @@ __Ensures:__
 
 Returns a `Seq` of the values in the named column in `t`. [cite cs111]
 
-```
+```lua
 > getColumn(tableSF, "age")
 [12, 17, 13]
 > getColumn(tableGF, "name")
@@ -385,7 +425,7 @@ __Ensures:__
 
 Retrieve the value for the column `c` in the row `r`. [cite cs111]
 
-```
+```lua
 > getValue([row: ("name", "Bob"),  ("age", 12)], "age")
 12
 ```
@@ -409,7 +449,7 @@ __Ensures:__
 
 Returns a `Number` representing the number of rows in the `Table`. [cite cs111]
 
-```
+```lua
 > nrows(tableSF)
 3
 > nrows(tableSM)
@@ -435,7 +475,7 @@ __Ensures:__
 ### Description
 
 Returns a `Number` representing the number of columns in the `Table`. [cite cs111]
-```
+```lua
 > ncols(tableSF)
 3
 > ncols(tableSM)
@@ -446,7 +486,34 @@ Returns a `Number` representing the number of columns in the `Table`. [cite cs11
 
 In R, `ncol(t)`
 
-## `header :: t:Table -> cs:Seq<ColName>`
+## `shape :: t:Table -> (n1:Number * n2:Number)
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+- `n1` is equal to `nrows(t)`
+- `n2` is equal to `ncols(t)`
+
+### Description
+
+Return a tuple representing the dimensionality of the `Table`. [cite pandas]
+
+```lua
+> shape(tableSF)
+(3, 3)
+> shape(tableGF)
+(3, 8)
+```
+
+### Origins
+
+- In pandas, `t.shape`
+- In R, `dim(t)`
+
+## (overload 1/2) `header :: t:Table -> cs:Seq<ColName>`
 
 ### Constraints
 
@@ -460,10 +527,35 @@ __Ensures:__
 
 Returns a `Seq` representing the column names in the `Table`.
 
-```
+```lua
 > header(tableSF)
 ["name", "age", "favorite-color"]
 > header(tableGF)
+["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
+```
+
+### Origins
+
+In R, `colnames(t)`
+
+## (overload 2/2) `header :: r:Row -> cs:Seq<ColName>`
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+* `cs` is equal to `header(r)`
+
+### Description
+
+Returns a `Seq` representing the column names in the `Row`.
+
+```lua
+> header(getRow(tableSF, 0))
+["name", "age", "favorite-color"]
+> header(getRow(tableGF, 0))
 ["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
 ```
 
@@ -538,7 +630,7 @@ __Ensures:__
 
 Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows from the original table followed by the given `Row`. [cite cs111]
 
-```
+```lua
 > addRow(
     tableSF,
     [row: 
@@ -588,7 +680,7 @@ __Ensures:__
 
 Consumes a `ColName` representing a column name and a `Seq` of values and produces a new `Table` with the columns of the input `Table` followed by a column with the given name and values. Note that the length of `vs` must equal the length of the `Table`. [cs111]
 
-```
+```lua
 > hairColor = ["brown", "red", "blonde"]
 > addColumn(tableSF, "hair-color", hairColor)
 | name    | age | favorite-color | hair-color |
@@ -629,7 +721,7 @@ __Ensures:__
 
 Consumes a `Table`, a `ColName` representing a column name, and a transformation function and produces a new `Table` where the transformation function has been applied to all values in the named column. [cite cs111]
 
-```
+```lua
 > addLastName =
     lam(name):
       Strings.concat(name, “ Smith”)
@@ -678,7 +770,7 @@ __Ensures:__
 
 Given a `Table` and a predicate on rows, returns a `Table` with only the rows for which the predicate returns `true`. [cite cs111]
 
-```
+```lua
 > ageUnderFifteen =
     lam(r):
       getValue(r, “age”) < 15
@@ -702,8 +794,13 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 
 ### Origins
 
-* In CS111 Pyret, `filter-with(t1, f)`
-* In Bootstrap Pyret, `t1.filter(f)`
+- In CS111 Pyret, `filter-with(t1, f)`
+- In Bootstrap Pyret, `t1.filter(f)`
+
+### Notes
+
+- This function is similar to `DataFrame.query` in pandas.
+- This function is similar to `filter` in R.
 
 
 ## `sort :: t1:Table * c:ColName * b:Boolean -> t2:Table`
@@ -748,7 +845,7 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 - In cs111 Pyret, `sort-by(t, c, b)`
 - In Bootstrap Pyret, `t.order-by(c, b)`
 
-## `deleteColumn :: t1:Table * c:ColName -> t2:Table`
+## `dropColumn :: t1:Table * c:ColName -> t2:Table`
 
 ### Constraints
 
@@ -770,13 +867,13 @@ __Ensures:__
 Returns a `Table` that is the same as `t`, except without the column whose name is `c`. [cite cs111]
 
 ```lua
-> deleteColumn(tableSF, "age")
+> dropColumn(tableSF, "age")
 | name    | favorite-color |
 | ------- | -------------- |
 | "Bob"   | "blue"         |
 | "Alice" | "green"        |
 | "Eve"   | "red"          |
-> deleteColumn(tableGF, "final")
+> dropColumn(tableGF, "final")
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     |
@@ -788,6 +885,86 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 
 - In pandas, `del t[c]`
 - In cs111 Pyret, `t.drop(c)`
+
+## `dropColumns :: t1:Table * cs:Seq<ColName> -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- for all `c` in `cs`, `c` is in `header(t1)`
+- `cs` contains distinct elements
+
+__Ensures:__
+
+- `nrows(t2)` is equal to `nrows(t1)`
+- `ncols(t2)` is equal to `ncols(t1) - length(cs)`
+- `header(t2)` is a subsequence of `header(t1)`
+- for all `c` in `cs`, `c` is not in `header(t2)`
+- `schema(t2)` is included by `schema(t1)`
+- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+
+### Description
+
+Returns a `Table` that is the same as `t`, except without the columns whose name is in `cs`. [cite cs111]
+
+```lua
+> dropColumns(tableSF, ["age"])
+| name    | favorite-color |
+| ------- | -------------- |
+| "Bob"   | "blue"         |
+| "Alice" | "green"        |
+| "Eve"   | "red"          |
+> dropColumns(tableGF, ["final", "midterm"])
+| name    | age | quiz1 | quiz2 | quiz3 | quiz4 |
+| ------- | --- | ----- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 7     | 9     |
+| "Alice" | 17  | 6     | 8     | 8     | 7     |
+| "Eve"   | 13  | 7     | 9     | 8     | 8     |
+```
+
+### Origins
+
+- In R, `select(df, -cs)`. The negation symbol makes the selection dropping.
+- In Python pandas, `t1.drop(cs, axis=1)`
+
+## `distinct :: t1:Table -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+- `header(t2)` is equal to `header(t1)`
+- `schema(t2)` is equal to `schema(t1)`
+- `ncols(t2)` is equal to `ncols(t1)`
+- `nrows(t2)` is not greater than `nrowsr(t1)`
+- for all `i` and `j` in `range(nrows(t2))` if `i` is not equal to `j` then `getRow(t2, i)` is not equal to `getRow(t2, j)`
+- for all `i1` in `range(nrows(t2))`, there exists an `i2` such that `getRow(t2, i2)` is equal to `getRow(t1, i1)`
+
+### Description
+
+Retain only unique/distinct rows from an input `Table`. [cite R]
+
+```lua
+> distinct(tableSF)
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+| "Alice" | 17  | "green"        |
+| "Eve"   | 13  | "red"          |
+> distinct(selectColumns(tableGF, ["quiz3"]))
+| quiz3 |
+| ----- |
+| 7     |
+| 8     |
+```
+
+### Origins
+
+- In R, `distinct(t1)`
+- In pandas, `t1.drop_duplicates()`
 
 ## `count :: t1:Table * c:ColName -> t2:Table`
 
