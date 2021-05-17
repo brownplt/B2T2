@@ -44,10 +44,10 @@ We are going to use four tables throughout our benchmark.
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
 ```
 
-`tableJN`: a jelly bean table that contains only numeric data
+`tableJB`: a jelly bean table that contains only boolean data
 
 ```
-> tableJN
+> tableJB
 | get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
 | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
 | true     | false | false | false | true  | false  | false | true   | false | false  |
