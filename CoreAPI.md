@@ -1,6 +1,17 @@
-## Introduction
+# Core API
 
-This file lists table operators that we gather from Python, R, LINQ, and Pyret communities.
+This file aims at providing a collection of table-processing operators, such that people can compare programming medias on their
+
+- __expressiveness:__ is an operators provided in one media but not the other?
+- __enforcement of constraints:__ how many of the required constraints are enforced? How many of the ensured constraints are communicated to the type system?
+
+To make the comparision useful, we set up the following guidelines on collecting operators
+
+- gather operators from real-world programming medias. So far we gather operators from SQL, LINQ, Python pandas, R TidyVerse, and Pyret.
+- must include basic operators (e.g. insertion / deletion of rows / columns). 
+- include operators that impose interesting constraints. Examples of these operators include `pivot_table` in pandas and `pivot_longer` and `pivot_wider` in TidyVerse.
+- ignore operators that can be defined by simple composition of included operators. Otherwise this file can grow too large.
+- if two operators impose similar constraints, we include only one of them and mention in its document the other operator.
 
 We included operators in __Pyret taught in Brown CS111__. These operators are found by walking through [this document](https://hackmd.io/@cs111/table). All operators described in the linked document are included, except `sum`, `mean`, `median`, `modes`, and `stdev`. These operators are excluded because their constraints on arguments and results are simple and have been illustrated by other operators.
 
