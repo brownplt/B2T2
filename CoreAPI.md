@@ -1,5 +1,7 @@
 # Core API
 
+[Note: this section should be considered as an internal note that helps KC decide if an opeartor should be included and, if yes, how.]
+
 This file aims at providing a collection of table-processing operators, such that people can compare programming medias on their
 
 - __expressiveness:__ is an operators provided in one media but not the other?
