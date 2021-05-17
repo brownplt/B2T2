@@ -621,8 +621,64 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
 
 ### Origin
 
-* In CS111 Pyret, `build-column(t, c, f)`.
-* In Bootstrap Pyret, `t.build-column(c, f)`
+- In Python, `t.assign(c=f)`, where `c` must be a literal column name. If `c` is already in `t`, the old column will be updated.
+- In R, `mutate(t, c=f)`, where `c` must be a literal column name. If `c` is already in `t`, the old column will be updated.
+- In CS111 Pyret, `build-column(t, c, f)`.
+- In Bootstrap Pyret, `t.build-column(c, f)`
+
+## `updateColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+* `c` is in `header(t1)`
+
+__Ensures:__
+
+* `header(r)` is equal to `header(t1)`
+* `schema(r)` is equal to `schema(t1)`
+* `header(t2)` is equal to `header(t1)`
+* `v` is of type `schema(t2)[c]`
+* for all `c` in `header(t1)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+
+### Description
+
+Consumes an existing `Table` and produces a new `Table` with the named column updated, using `f` to produce the values for that column, once for each row. [cite cs111]
+
+```lua
+> abstractAge =
+    function(r):
+      if (getValue(r, "age") <= 12):
+        "kid"
+      else if (getValue(r, "age") <= 19):
+        "teenager"
+      else:
+        "adult"
+      end
+    end
+> updateColumn(tableSF, "age", abstractAge)
+| name    | age        | favorite-color | is-teenager |
+| ------- | ---------- | -------------- | ----------- |
+| "Bob"   | "kid"      | "blue"         | false       |
+| "Alice" | "teenager" | "green"        | true        |
+| "Eve"   | "teenager" | "red"          | true        |
+> abstractFinal =
+    function(r):
+      85 <= getValue(r, "final")
+    end
+> updateColumn(tableGF, "did-well-in-final", didWellInFinal)
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | true  |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | true  |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | false |
+```
+
+### Origin
+
+- In Python, `t.assign(c=f)`, where `c` must be a literal column name. If `c` is not in `t`, a new column will be added.
+- In R, `mutate(t, c=f)`, where `c` must be a literal column name. If `c` is not in `t`, a new column will be added.
 
 ## `addRow :: t1:Table * r:Row -> t2:Table`
 
@@ -855,8 +911,49 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 
 ### Origins
 
+- In Python pandas, `t.sort_values(c, ascending=b)`
+- In R, `arrange(t, c)` if `b` is `true`.
+- In R, `arrange(t, desc(c))` if `b` is `false`.
 - In cs111 Pyret, `sort-by(t, c, b)`
 - In Bootstrap Pyret, `t.order-by(c, b)`
+
+## `sortByColumns :: t1:Table * cs:Seq<ColName> -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- for all `c` in `cs`, `c` is in `header(t1)`
+- `cs` contains no duplicates
+- `schema(t1)[c]` is a subtype of `Number`
+
+__Ensures:__
+
+- `nrows(t2)` is equal to `nrows(t1)`
+- `ncols(t2)` is equal to `ncols(t1)`
+- `header(t2)` is equal to `header(t1)`
+- `schema(t2)` is equal to `schema(t1)`
+
+[TODO: how to specify the order of rows in t2?]
+
+### Description
+
+Given a `Table` and a sequence of column names in that `Table`, return a `Table` with the same rows ordered based on the named columns. [cite cs111]
+
+```lua
+> sort(tableSF, ["age"])
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+| "Eve"   | 13  | "red"          |
+| "Alice" | 17  | "green"        |
+> sort(tableGF, ["quiz2", "quiz1",])
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+```
 
 ## `dropColumn :: t1:Table * c:ColName -> t2:Table`
 
