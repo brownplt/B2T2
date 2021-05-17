@@ -1116,6 +1116,136 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 - In CS111 Pyret, `count(t, c)`
 - In Bootstrap Pyret, `count(t, c)`
 
+## `groupByO :: t1:Table * c:ColName -> t2:Table`
+
+### Constraints
+
+requires:
+
+- `c` is in `header(t1)`
+- `schema(t1)[c]` is categorical
+
+ensures:
+
+- `header(t2)` is equal to `["key", "members"]`
+- `schema(t2)["key"]` is equal to `schema(t1)[c]`
+- `schema(t2)["members"]` is a subtype of `Table`
+- for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `header(t1)`
+- for all `t` in `getColumn(t2, "members")`, `schema(t)` is equal to `schema(t1)`
+
+### Description
+
+Catagorize rows of the input table into groups by the key of each row. The key is computed by accessing the named column. 
+
+```lua
+> groupByO(tableSF, "favorite-color")
+| key     | members  |
+| ------- | -------- |
+| "blue"  | <table1> | 
+| "green" | <table2> |
+| "red"   | <table3> |
+<table1> =
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+<table2> =
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Alice" | 17  | "green"        |
+<table3> =
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Eve"   | 13  | "red"          |
+> groupByO(tableJN, "brown")
+| key   | members  |
+| ----- | -------- |
+| true  | <table1> | 
+| false | <table2> |
+<table1> =
+| get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
+| -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
+| true     | false | false | false | true  | false  | false | true   | false | false  |
+| true     | false | true  | false | true  | true   | false | false  | false | false  |
+| false    | false | false | false | true  | false  | false | false  | true  | false  |
+| false    | false | false | false | false | true   | false | false  | false | false  |
+| false    | false | false | false | false | true   | false | false  | true  | false  |
+| true     | false | true  | false | false | false  | false | true   | true  | false  |
+| false    | false | true  | false | false | false  | false | false  | true  | false  |
+| true     | false | false | false | false | false  | false | true   | false | false  |
+<table2> =
+| get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
+| -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
+| true     | false | false | false | false | false  | true  | true   | false | false  |
+| false    | true  | false | false | false | true   | true  | false  | true  | false  |
+```
+
+### Notes
+
+- In LINQ, `GroupBy`
+  
+## `groupByS :: t1:Table * c:ColName -> t2:Table`
+
+### Constraints
+
+requires:
+
+- `c` is in `header(t1)`
+- `schema(t1)[c]` is categorical
+
+ensures:
+
+- `header(t2)` is equal to `["key", "members"]`
+- `schema(t2)["key"]` is equal to `schema(t1)[c]`
+- `schema(t2)["members"]` is a subtype of `Table`
+- for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `remove(header(t1), c)`
+- for all `t` in `getColumn(t2, "members")`, `schema(t)` is included by `schema(t1)`
+
+### Description
+
+Similar to `groupByO` but the named column is removed in the output.
+
+```lua
+> groupByS(tableSF, "favorite-color")
+| key     | members  |
+| ------- | -------- |
+| "blue"  | <table1> | 
+| "green" | <table2> |
+| "red"   | <table3> |
+<table1> =
+| name    | age |
+| ------- | --- |
+| "Bob"   | 12  |
+<table2> =
+| name    | age |
+| ------- | --- |
+| "Alice" | 17  |
+<table3> =
+| name    | age |
+| ------- | --- |
+| "Eve"   | 13  |
+> groupByS(tableJN, "brown")
+| key   | members  |
+| ----- | -------- |
+| true  | <table1> | 
+| false | <table2> |
+<table1> =
+| get-acne | red   | black | white | green | yellow | orange | pink  | purple |
+| -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ |
+| true     | false | false | false | true  | false  | true   | false | false  |
+| true     | false | true  | false | true  | true   | false  | false | false  |
+| false    | false | false | false | true  | false  | false  | true  | false  |
+| false    | false | false | false | false | true   | false  | false | false  |
+| false    | false | false | false | false | true   | false  | true  | false  |
+| true     | false | true  | false | false | false  | true   | true  | false  |
+| false    | false | true  | false | false | false  | false  | true  | false  |
+| true     | false | false | false | false | false  | true   | false | false  |
+<table2> =
+| get-acne | red   | black | white | green | yellow | orange | pink  | purple |
+| -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ |
+| true     | false | false | false | false | false  | true   | false | false  |
+| false    | true  | false | false | false | true   | false  | true  | false  |
+```
+
 ## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
 
 Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram. [cite cs111]
