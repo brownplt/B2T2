@@ -15,6 +15,39 @@ This example defines a function that randomly sample rows of a table. This funct
 | "Alice" | 17  | 6     | 8     | 88      |       | 7     | 85    |
 ```
 
+## GroupBy
+
+This example defines two group-by functions. Ideally, they should have the same constraints as in Table API.
+
+```lua
+> groupByO =
+    function(t, c):
+      keys = addColumn(emptyTable, "key", distinct(getColumn(t, c)))
+      makeSubTable =
+        function(r):
+          filter(t, 
+            function(r): 
+              getValue(r, c) == k
+            end)
+        end
+      buildColumn(keys, makeSubTable)
+    end
+> groupByS =
+    function(t, c):
+      keys = addColumn(emptyTable, "key", distinct(getColumn(t, c)))
+      makeSubTable =
+        function(r):
+          sub =
+            filter(t, 
+              function(r): 
+                getValue(r, c) == k
+              end)
+          dropColumn(sub, c)
+        end
+      buildColumn(keys, makeSubTable)
+    end
+```
+
 ## Gradebook
 
 This example computes the average quiz score for each student in `tableGF`. This example is interesting because the type system needs to understand the connection between the pattern of quiz column names (i.e. `startsWith(..., "quiz")`) and the type of those columns (i.e. numeric).
