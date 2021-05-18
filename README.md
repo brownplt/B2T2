@@ -1,6 +1,6 @@
 # B2T2
 
-The Brown Benchmark for Tabular Tables.
+The Brown Benchmark for Table Types.
 
 ## What is a Table?
 
