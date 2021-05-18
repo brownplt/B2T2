@@ -17,7 +17,7 @@ This example defines a function that randomly sample rows of a table. This funct
 
 ## GroupBy
 
-This example defines two group-by functions. Ideally, they should have the same constraints as in Table API.
+This example defines two group-by functions. `groupByO` catagorizes rows of the input table into groups by the key of each row. The key is computed by accessing the named column. `groupByS` is similar to `groupByO` but the named column is removed in the output. Ideally, they should have the same constraints as in Table API.
 
 ```lua
 > groupByO =
