@@ -1,14 +1,14 @@
-## randomRows
+## sampleRows
 
 This example defines a function that randomly sample rows of a table. This function might be interesting when working with tidy tables, where each row is one observation.
 
 ```lua
-> randomRows =
+> sampleRows =
     function(t, n):
       indexes = sample(range(nrows(t)), n)
       selectRowsByNumbers(t, indexes)
     end
-> randomRows(tableGM, 2)
+> sampleRows(tableGM, 2)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
