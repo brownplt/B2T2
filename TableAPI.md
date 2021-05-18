@@ -56,24 +56,23 @@ R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.htm
 - `x` is non-negative
 - `x` is negative
 
-## (overload 1/2) `selectRows :: t1:Table * selector:Seq<Boolean> -> t2:Table`
+## (overload 1/2) `selectRows :: t1:Table * selector:Seq<Number> -> t2:Table`
 
 ### Constraints
 
 __Requires:__
 
-* `length(selector)` is equal to `nrows(t1)`
+* for all `n` in `selector`, `n` is in `range(nrows(t1))`
 
 __Ensures:__
 
-* `rows(t2)` is a subsequence of `rows(t1)`
-* for all `i` in `range(nrows(t1))`, `rows(t1)[i]` is in `rows(t2)` if and only if `selector[i]` is equal to `true`
 * `header(t2)` is equal to `header(t1)`
-* `schema(t2)` is equal to `schema(t2)`
+* `schema(t2)` is equal to `schema(t1)`
+* `nrows(t2)` is equal to `length(selector)`
 
 ### Description
 
-Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, returns a Table with only the rows for which the predicate returns true. [cite cs111]
+Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `Table` containing only those rows. [cite cs111]
 
 ```lua
 > selectRows(tableSF, [2, 0, 2, 1])
@@ -95,24 +94,23 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 - In R, `t1[selector,]`
 - In pandas, `t1.iloc[selector]`
 
-## (overload 2/2) `selectRows :: t1:Table * selector:Seq<Number> -> t2:Table`
+## (overload 2/2) `selectRows :: t1:Table * selector:Seq<Boolean> -> t2:Table`
 
 ### Constraints
 
 __Requires:__
 
-* for all `n` in `selector`, `n` is in `range(nrows(t1))`
+* `length(selector)` is equal to `nrows(t1)`
 
 __Ensures:__
 
-* `nrows(t2)` is equal to `length(selector)`
-* for all `i` in `range(length(selector))`, `rows(t2)[i]` is equal to `rows(t1)[selector[i]]`
 * `header(t2)` is equal to `header(t1)`
-* `schema(t2)` is equal to `schema(t2)`
+* `schema(t2)` is equal to `schema(t1)`
+* `nrows(t2)` is not greater than `nrows(t1)`
 
 ### Description
 
-Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `Table` containing only those rows. [cite cs111]
+Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, returns a `Table` with only the rows for which the predicate returns true. [cite cs111]
 
 ```lua
 > selectRows(tableSF, [true, false, true])
@@ -142,7 +140,6 @@ Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `
 
 - In R, `t1[selector,]`
 - In pandas, `t1.iloc[selector]`
-
 
 ## (overload 1/3) `selectColumns :: t1:Table * selector:Seq<Boolean> -> t2:Table`
 
