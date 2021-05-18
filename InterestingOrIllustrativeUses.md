@@ -76,7 +76,7 @@ This example computes the average quiz score for each student in `tableGF`. This
 
 ## Jelly Bean Homogeneous
 
-This example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `tableJB`, is homogeneous because all of its columns contain Boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `tableJM`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
+Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `tableJB`, is homogeneous because all of its columns contain Boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `tableJM`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
 
 ```lua
 > pHacking =
