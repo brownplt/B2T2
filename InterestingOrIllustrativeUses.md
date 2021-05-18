@@ -23,28 +23,28 @@ This example defines two group-by functions. `groupByO` catagorizes rows of the 
 > groupByO =
     function(t, c):
       keys = addColumn(emptyTable, "key", distinct(getColumn(t, c)))
-      makeSubTable =
+      makeGroup =
         function(r):
           filter(t, 
             function(r): 
               getValue(r, c) == k
             end)
         end
-      buildColumn(keys, makeSubTable)
+      buildColumn(keys, makeGroup)
     end
 > groupByS =
     function(t, c):
       keys = addColumn(emptyTable, "key", distinct(getColumn(t, c)))
-      makeSubTable =
+      makeGroup =
         function(r):
-          sub =
+          g =
             filter(t, 
               function(r): 
                 getValue(r, c) == k
               end)
-          dropColumn(sub, c)
+          dropColumn(g, c)
         end
-      buildColumn(keys, makeSubTable)
+      buildColumn(keys, makeGroup)
     end
 ```
 
