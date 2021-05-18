@@ -46,7 +46,7 @@ R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.htm
 - `x` has no duplicates
 - `x` is equal to `y`
 - `x` is not greater than `y`
-- `x` is (not) included by `y`
+- `x` is (not) included in `y`
 - `x` is (not) in `y`
 - `x` is a subsequence of `y` (not changing order)
 - `x` is of type `y`
@@ -156,7 +156,7 @@ __Ensures:__
 
 * `header(t2)` is a subsequence of `header(t1)`
 * for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
-* `schema(t2)` is included by `schema(t1)`
+* `schema(t2)` is included in `schema(t1)`
 
 ### Description
 
@@ -194,7 +194,7 @@ __Ensures:__
 
 * `length(header(t2))` is equal to `length(selector)`
 * for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
-* `schema(t2)` is included by `schema(t2)`
+* `schema(t2)` is included in `schema(t2)`
 
 ### Description
 
@@ -232,7 +232,7 @@ __Requires:__
 __Ensures:__
 
 * `header(t2)` is equal to `cs` 
-* `schema(t2)` is included by `schema(t2)`
+* `schema(t2)` is included in `schema(t2)`
 
 ### Description
 
@@ -741,7 +741,7 @@ __Requires:__
 __Ensures:__
 
 * `header(t2)` is equal to `concat(header(t1), [c])`
-* `schema(t1)` is included by `schema(t2)`
+* `schema(t1)` is included in `schema(t2)`
 * for all `v` in `vs`, `vs` is of type `schema(t2)[c]`
 * `nrows(t2)` is equal to `nrows(t1)`
 
@@ -969,7 +969,7 @@ __Ensures:__
 - `ncols(t2)` is equal to `ncols(t1) - 1`
 - `header(t2)` is a subsequence of `header(t1)`
 - `c` is not in `header(t2)`
-- `schema(t2)` is included by `schema(t1)`
+- `schema(t2)` is included in `schema(t1)`
 - for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 ### Description
@@ -1011,7 +1011,7 @@ __Ensures:__
 - `ncols(t2)` is equal to `ncols(t1) - length(cs)`
 - `header(t2)` is a subsequence of `header(t1)`
 - for all `c` in `cs`, `c` is not in `header(t2)`
-- `schema(t2)` is included by `schema(t1)`
+- `schema(t2)` is included in `schema(t1)`
 - for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 ### Description
@@ -1198,7 +1198,7 @@ ensures:
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
 - `schema(t2)["members"]` is a subtype of `Table`
 - for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `remove(header(t1), c)`
-- for all `t` in `getColumn(t2, "members")`, `schema(t)` is included by `schema(t1)`
+- for all `t` in `getColumn(t2, "members")`, `schema(t)` is included in `schema(t1)`
 
 ### Description
 
