@@ -48,7 +48,7 @@ This example defines two group-by functions. `groupByO` catagorizes rows of the 
     end
 ```
 
-## Gradebook
+## Gradebook 1
 
 This example computes the average quiz score for each student in `tableGF`. This example is interesting because the type system needs to understand the connection between the pattern of quiz column names (i.e. `startsWith(..., "quiz")`) and the type of those columns (i.e. numeric).
 
@@ -65,6 +65,37 @@ This example computes the average quiz score for each student in `tableGF`. This
           end)
       scores = map(fields, second)
       sum(scores) / length(scores)
+    end)
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | average-quiz |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ------------ |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | 8.25         |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    | 7.25         |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 8            |
+```
+
+## Gradebook 2
+
+This example also computes the average quiz score for each student in `tableGF`. It computes quiz column names by concatenating `"quiz"` with numbers. This example is interesting because the type system needs to understand the connection between the compute column names and the type of those columns (i.e. numeric).
+
+```lua
+> quizColNames = 
+    map(
+      range(4),
+      function(i):
+        concat("quiz", colNameOfNumber(i))
+      end)
+> quizTable = selectColumns(tableGF, quizColNames)
+> quizAndAverage =
+    buildColumn(
+      quizTable,
+      "average",
+      function(r):
+        average(listOfRow(r))
+      end)
+> addColumn(
+    tableGM,
+    "average-quiz",
+    getColumn(quizAndAverage, "average")
     end)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | average-quiz |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ------------ |
