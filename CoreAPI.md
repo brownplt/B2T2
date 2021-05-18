@@ -736,7 +736,7 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 __Requires:__
 
 * `c` is not in `header(t1)`
-* `length(vs)` is equal to `ncols(t1)`
+* `length(vs)` is equal to `nrows(t1)`
 
 __Ensures:__
 
