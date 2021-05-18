@@ -106,18 +106,18 @@ Jelly bean tables and analysis are produced with
 
 ```R
 library(tibble)
-tableJN = 
+tableJB = 
   as.tibble(
     matrix(
       rbinom(100, 1, 0.3) == 1,
       ncol=10))
-colnames(tableJN) = 
+colnames(tableJB) = 
   c("get-acne",
     "red", "black", "white",
     "green", "yellow", "brown",
     "orange", "pink", "purple")
 
-show(tableJN)
+show(tableJB)
 
 pHacking = function(t) {
   colAcne = factor(t[["get-acne"]], levels = 0:1)

@@ -92,7 +92,7 @@ This example program investigates the association between getting acne and consu
             c ++ " beans and acne (p < 0.05).")
         end
       end
-> pHacking(tableJN)
+> pHacking(tableJB)
 We found a link between orange beans and acne (p < 0.05).
 ```
 

@@ -32,7 +32,7 @@ contains a `"midterm"` column.
 
 ### context
 
-`tableJN`
+`tableJB`
 
 ### task
 
@@ -46,12 +46,12 @@ black jelly beans and white ones.
     function(r):
       r["black and white"] == true
     end
-> buildColumn(tableJN, "eat-black-and-white", eatBlackAndWhite)
+> buildColumn(tableJB, "eat-black-and-white", eatBlackAndWhite)
 ```
 
 ### what's the bug
 
-`"black and white"` is not a valid column name of `r`, which is a row of `tableJN`.
+`"black and white"` is not a valid column name of `r`, which is a row of `tableJB`.
 
 ### corrected program
 
@@ -60,14 +60,14 @@ black jelly beans and white ones.
     function(r):
       r["black"] and r["white"]
     end
-> buildColumn(tableJN, "eat-black-and-white", eatBlackAndWhite)
+> buildColumn(tableJB, "eat-black-and-white", eatBlackAndWhite)
 ```
 
 ## Scope error
 
 ### context
 
-`tableJN`
+`tableJB`
 
 ### task
 
@@ -84,7 +84,7 @@ The programmer was asked to count the number of participants that consumed jelly
     function(r):
       r["color"]
     end
-> countParticipants(tableJN, "brown")
+> countParticipants(tableJB, "brown")
 ```
 
 ### what's the bug
@@ -104,7 +104,7 @@ The programmer was asked to count the number of participants that consumed jelly
         r[color]
       end
     end
-> countParticipants(tableJN, "brown")
+> countParticipants(tableJB, "brown")
 ```
 
 ### corrected program (2/2)
@@ -118,7 +118,7 @@ The programmer was asked to count the number of participants that consumed jelly
         end
       nrows(filter(t, keep))
     end
-> countParticipants(tableJN, "brown")
+> countParticipants(tableJB, "brown")
 ```
 
 ## `count` Table
