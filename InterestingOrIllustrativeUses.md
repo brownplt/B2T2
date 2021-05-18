@@ -41,9 +41,9 @@ This example computes the average quiz score for each student in `tableGF`. This
 ```
 
 
-## Jelly Bean Homologous
+## Jelly Bean Homogeneous
 
-This example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `tableJN`, is homologous because all of its columns contain numbers. It is interesting to compare this program with the next example, Jelly Bean Hetero, which processes `tableJM`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
+This example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `tableJB`, is homogeneous because all of its columns contain Boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `tableJM`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
 
 ```lua
 > pHacking =
@@ -63,9 +63,9 @@ This example program investigates the association between getting acne and consu
 We found a link between orange beans and acne (p < 0.05).
 ```
 
-## Jelly Bean Heterologous
+## Jelly Bean Heterogeneous
 
-This example program is similar to Jelly Bean Homologous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table will be a table of numbers.
+This example program is similar to Jelly Bean Homogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table will be a table of Boolean values.
 
 ```lua
 > pHacking(drop(tableJM, "name"))
