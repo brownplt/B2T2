@@ -4,14 +4,14 @@ The Brown Benchmark for Table Types.
 
 ## What is a Table?
 
-- A table has three parts: a header, a schema, a number of rows (`n`), a number of columns (`m`), and a rectangular (`n*m`) collection of cells
+- A table has two parts: a schema, and a rectangular collection of cells. The rectangle has a fixed shape (`n*m`) and its width must equal to the length of schema.
 - Cells either contain data or are missing data
-- A header is an ordered sequence of column names
+- A schema is an ordered sequence of column names and sorts
+- A header is an ordered sequence of column names. The order is the same as in the schema.
+- Elements of a header must be distinct
 - A column name is a string-like first-class datatype
 - Column names are first-class value.
-- Elements of a header must be distinct
-- A schema is a mapping from elements of the header to sorts
-- A sort is a type-like specification that describe whether a cell contains datum and, if yes, the kinds of data that the cell may contain.
-- A `n*m` table can be viewed as a sequence of `m` columns
-- A `n*m` table can be viewed as a sequence of `n` rows
-- In a table, the i-th column name correspond to the i-th column. The cells of the column are ascribed by the corresponding sort
+- A sort is a type-like specification that describe the kinds of data that the cell may contain.
+- A `n*m` table can be viewed as an ordered sequence of `m` columns
+- A `n*m` table can be viewed as an ordered sequence of `n` rows
+- Each cell of the i-th column is ascribed by the i-th sort.
