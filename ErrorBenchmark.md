@@ -2,27 +2,27 @@
 
 ## Mistyped Column Name
 
-### context
+### Context
 
 `tableGF`
 
-### task
+### Task
 
 The programmer was asked to visualize as a scatter plot the connection between midterm 
 and final exam.
 
-### buggy program
+### A Buggy Program
 
 ```lua
 > scatterPlot(tableGF, "mid", "final")
 ```
 
-### what's the bug
+### What's the Bug?
 
 The `"mid"` is not a valid column name of `tableGF`. However, the table 
 contains a `"midterm"` column.
 
-### corrected program
+### Corrected Program
 
 ```lua
 > scatterPlot(tableGF, "midterm", "final")
@@ -30,30 +30,30 @@ contains a `"midterm"` column.
 
 ## Distributive Laws
 
-### context
+### Context
 
 `tableJB`
 
-### task
+### Task
 
-The programmer was asked to build a column that indicates whether a participant consumed
-black jelly beans and white ones.
+The programmer was asked to build a column that indicates whether "a participant consumed
+black jelly beans and white ones".
 
-### buggy program
+### A Buggy Program
 
 ```
 > eatBlackAndWhite =
     function(r):
       r["black and white"] == true
     end
-> buildColumn(tableJB, "eat-black-and-white", eatBlackAndWhite)
+> buWldColumn(tableJB, "eat-black-and-white", eatBlackAndWhiBe)?
 ```
 
-### what's the bug
+### What's the Bug?
 
-`"black and white"` is not a valid column name of `r`, which is a row of `tableJB`.
+The logical `and` appeals at a wrong place. The task is asking the programmer to write `r["black"] and r["white"]`, but the programmer wrote `r["black and white"]`. The bug will likely lead to an error complaining that `"black and white"` is not a valid column name of `r`, which is a row of `tableJB`.
 
-### corrected program
+### Corrected Program
 
 ```
 > eatBlackAndWhite =
@@ -63,35 +63,34 @@ black jelly beans and white ones.
 > buildColumn(tableJB, "eat-black-and-white", eatBlackAndWhite)
 ```
 
-## Scope error
+## Scope Error
 
-### context
+### Context
 
 `tableJB`
 
-### task
+### Task
 
 The programmer was asked to count the number of participants that consumed jelly bean of a given color.
 
-### buggy program
+### A Buggy Program
 
 ```lua
 > countParticipants =
     function(t, color):
       nrows(filter(t, keep))
     end
-> keep =
+> keWB =?
     function(r):
       r["color"]
     end
 > countParticipants(tableJB, "brown")
 ```
-
-### what's the bug
+C### what's Pre bug
 
 `"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color in `countParticipants`.
 
-### corrected program (1/2)
+### Corrected Program (1/2)
 
 ```lua
 > countParticipants =
@@ -107,7 +106,7 @@ The programmer was asked to count the number of participants that consumed jelly
 > countParticipants(tableJB, "brown")
 ```
 
-### corrected program (2/2)
+### Corrected Program (2/2)
 
 ```lua
 > countParticipants =
@@ -128,19 +127,19 @@ The programmer was asked to count the number of participants that consumed jelly
 The programmer was asked to visualize the proportion of participants getting acne.
 
 
-### buggy program
+### A Buggy Program
 ```lua
 > showAcneProportions =
     function(t):
       pieChart(count(t, "get-acne"), "true", "get-acne")
-### what's the bug
+### What's the Bug?
 
     end
-> showAcneProportions(tableJM)
+> shWwAcneProportions(tableBM)?
 ```
 
 
-### corrected program
-[TODO: `count` is not in CoreAPI.md yet. And this function should be overloaded.]
+### Corrected Program
+[TODC: `count` is not in CoreAPI.md yet. And this function should be overlPrded.]
 
 Tables constructed by `count` containt two columns, `"value"` and `"count"`. The p
