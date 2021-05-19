@@ -23,6 +23,8 @@ R tibbles: https://adv-r.hadley.nz/vectors-chap.html#tibble
 
 R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html
 
+LINQ: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/query-expression-syntax-for-standard-query-operators
+
 ## Terminologies
 
 ### Relation-level Functions
@@ -828,6 +830,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 
 - In CS111 Pyret, `filter-with(t1, f)`
 - In Bootstrap Pyret, `t1.filter(f)`
+- In LINQ, `Where`
 
 ### Notes
 
@@ -896,8 +899,6 @@ __Ensures:__
 - `ncols(t2)` is equal to `ncols(t1)`
 - `header(t2)` is equal to `header(t1)`
 - `schema(t2)` is equal to `schema(t1)`
-
-[TODO: how to specify the order of rows in t2?]
 
 ### Description
 
@@ -1227,7 +1228,7 @@ __Ensures:__
 
 ### Description
 
-Groups the elements of a sequence according to a specified key selector function and creates a result value from each group and its key. The elements of each group are projected by using a specified function. [cite LINQ]
+Groups the rows of a table according to a specified key selector function and creates a result value from each group and its key. The rows of each group are projected by using a specified function. [cite LINQ]
 
 [TODO: this code only makes sense when `Row <: Table`]
 
@@ -1278,9 +1279,266 @@ Groups the elements of a sequence according to a specified key selector function
 
 - In LINQ, `GroupBy`
 
-## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
+## `groupJoin :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:Value) * getKey2:(r2:Row -> k2:Value) * sum:(r3:Row * t3:Table -> r4:Row) -> t4:Table`
 
-Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram. [cite cs111]
+### Constraints
+
+__Requires:__
+
+- `typeof(k1)` == `typeof(k2)`
+
+__Ensures:__
+
+- `schema(r1)` == `schema(t1)`
+- `schema(r2)` == `schema(t2)`
+- `schema(r3)` == `schema(t1)`
+- `schema(t3)` == `schema(t2)`
+- `nrows(t3)` is not greater than `nrows(t2)`
+- `schema(t4)` == `schema(r4)`
+- `nrows(t4)` == `nrows(t1)`
+
+### Description
+
+Correlates the rows of two tables based on equality of keys and groups the results. [cite LINQ]
+
+[TODO: need one more example]
+
+[TODO: this code only makes sense when `Row <: Table` because of `addColumn`]
+
+```lua
+> getName =
+    function(r):
+      getValue(r, "name")
+    end
+> averageFinal =
+    function(r, t):
+      addColumn(r, average(getColumn(t, "final")))
+    end
+> groupJoin(tableSF, tableGF, getName, getName, averageFinal)
+| name    | age | favorite-color | final |
+| ------- | --- | -------------- | ----- |
+| "Bob"   | 12  | "blue"         | 87    |
+| "Alice" | 17  | "green"        | 85    |
+| "Eve"   | 13  | "red"          | 77    |
+```
+
+### Origins
+
+- In LINQ, `GroupJoin`
+
+## `join :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:Value) * getKey2:(r2:Row -> k2:Value) * combine:(r3:Row * r4:Row -> r5:Row) -> t3:Table`
+
+### Constraints
+
+__Requires:__
+
+- `typeof(k1)` == `typeof(k2)`
+
+__Ensures:__
+
+- `schema(r1)` == `schema(t1)`
+- `schema(r2)` == `schema(t2)`
+- `schema(r3)` == `schema(t1)`
+- `schema(r4)` == `schema(t2)`
+- `schema(t3)` == `schema(r5)`
+
+### Description
+
+Correlates the rows of two tables based on matching keys. [cite LINQ]
+
+[TODO: need one more example]
+
+[TODO: this code only makes sense when `Row <: Table` because of `addColumn`]
+
+```lua
+> getName =
+    function(r):
+      getValue(r, "name")
+    end
+> addGradeColumn =
+    function(r1, r2):
+      addColumn(r1, "grade", getValue(r2, "final"))
+    end
+> join(tableSF, tableGF, getName, getName, addGradeColumn)
+| name    | age | favorite-color | final |
+| ------- | --- | -------------- | ----- |
+| "Bob"   | 12  | "blue"         | 87    |
+| "Alice" | 17  | "green"        | 85    |
+| "Eve"   | 13  | "red"          | 77    |
+```
+
+### Origins
+
+- In LINQ, `Join`
+
+## `orderBy :: t1:Table * Seq<getKey:(r:Row -> k:Value) * compare:(k1:Value * k2:Value -> Boolean)> -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+- `schema(r)` is equal to `schema(t1)`
+- `typeof(k1)` is equal to `typeof(k)`
+- `typeof(k2)` is equal to `typeof(k)`
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `nrows(t1)`
+
+### Description
+
+Sorts the rows of a `Table` in ascending order by using a sequence of specified comparers. [cite LINQ]
+
+```lua
+> nameLength =
+    function(r):
+      length(getValue(r, "name"))
+    end
+> le =
+    function(n1, n2):
+      n1 <= n2
+    end
+> orderBy(tableSF, [(nameLength, le)])
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+| "Eve"   | 13  | "red"          |
+| "Alice" | 17  | "green"        |
+> midtermAndFinal =
+    function(r):
+      [getValue(r, "midterm"), getValue(r, "final")]
+    end
+> compareGrade =
+    function(g1, g2):
+      le(average(g1), average(g2))
+    end
+> orderBy(tableGF, [(nameLength, ge), (midtermAndFinal, compareGrade)])
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+```
+
+### Origins
+
+- This funtion is a combination of LINQ's `OrderBy` and `ThenBy`.
+
+## `select :: t1:Table * f:(r1:Row * n:Number -> r2:Row) -> t2:Table``
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+- `schema(r1)` is equal to `schema(t1)`
+- `n` is in `range(nrows(t1))`
+- `schema(t2)` is equal to `schema(r2)`
+- `nrows(t2)` is equal to `nrows(t1)`
+
+### Description
+
+Projects each `Row` of a `Table` into a new `Table`. [cite LINQ]
+
+```lua
+> select(
+    tableSF,
+    function(r, n):
+      [row: 
+        ("id", n),
+        ("COLOR", getValue(r, "favorite-color")),
+        ("AGE", getValue(r, "age"))]
+    end)
+| id | favorite-color | age |
+| -- | -------------- | --- |
+| 0  | "blue"         | 12  |
+| 1  | "green"        | 17  |
+| 2  | "red"          | 13  |
+> select(
+    tableGF,
+    function(r, n):
+      [row: 
+        ("full name", concat(getValue(r, "name"), "Smith")),
+        ("(midterm + final) / 2", (getValue(r, "midterm") + getValue(r, "final")) / 2]
+    end)
+| full name     | (miderm + final) / 2 |
+| ------------- | -------------------- |
+| "Bob Smith"   | 82                   |
+| "Alice Smith" | 86.5                 |
+| "Eve Smith"   | 80.5                 |
+```
+
+### Origins
+
+- In LINQ, `select`
+
+## `selectMany :: t1:Table * project:(r1:Row * n:Number -> t2:Table) * result:(r2:Row * r3:Row -> r4:Row) -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+- `schema(r1)` is equal to `schema(t1)`
+- `n` is in `range(nrows(t1))`
+- `schema(r2)` is equal to `schema(t1)`
+- `schema(r3)` is equal to `schema(t2)`
+- `schema(t2)` is equal to `schema(r4)`
+
+### Description
+
+Projects each row of a table to a new table, flattens the resulting tables into one table, and invokes a result selector function on each row therein. The index of each source row is used in the intermediate projected form of that row. [cite LINQ]
+
+[TODO: this code only makes sense when `Row <: Table` because I used a row as a table and because of selectColumn]
+
+```lua
+> selectMany(
+    tableSF,
+    function(r, n):
+      if even(n):
+        r
+      else:
+        emptyTable
+      end
+    end,
+    function(r1, r2):
+      r2
+    end)
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+| "Eve"   | 13  | "red"          |
+> repeatRow =
+    function(r, n):
+      if n == 0:
+        r
+      else:
+        addRow(repeatRow(r, n - 1), r)
+      end
+    end
+> selectMany(
+    tableGF,
+    repeatRow,
+    function(r1, r2):
+      selectColumns(r2, ["midterm"])
+    end)
+| midterm |
+| ------- |
+| 77      |
+| 88      |
+| 88      |
+| 84      |
+| 84      |
+| 84      |
+```
+
+### Origins
+
+- In LINQ, `selectMany`
+
+## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
 
 ### Constraints
 
@@ -1290,6 +1548,10 @@ __Requires:__
 - `schema(t)[c]` is a subtype of `Number`
 
 __Ensures:__
+
+### Description
+
+Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram. [cite cs111]
 
 ### Origins
 
