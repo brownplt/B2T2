@@ -92,11 +92,6 @@ Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
-### Origins
-
-- In R, `t1[selector,]`
-- In pandas, `t1.iloc[selector]`
-
 ## (overload 2/2) `selectRows :: t1:Table * selector:Seq<Boolean> -> t2:Table`
 
 ### Constraints
@@ -139,11 +134,6 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
-### Origins
-
-- In R, `t1[selector,]`
-- In pandas, `t1.iloc[selector]`
-
 ## (overload 1/3) `selectColumns :: t1:Table * selector:Seq<Boolean> -> t2:Table`
 
 ### Constraints
@@ -176,10 +166,6 @@ Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be k
 | "Alice" | 88      | 85    |
 | "Eve"   | 84      | 77    |
 ```
-
-### Origins
-
-In R, `t1[,selector]`
 
 ## (overload 2/3) `selectColumns :: t1:Table * selector:Seq<Number> -> t2:Table`
   
@@ -216,10 +202,6 @@ Consumes a `Table` and a `Seq<ColName>` containing column indexes, and produces 
 | 77    | "Eve"   | 84      |
 ```
 
-### Origins
-
-In R, `t1[,selector]`
-
 ## (overload 3/3) `selectColumns :: t1:Table * selector:Seq<ColName> -> t2:Table`
 
 ### Constraints
@@ -253,11 +235,6 @@ Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a 
 | 77    | "Eve"   | 84      |
 ```
 
-### Origins
-
-- In R, `t1[,selector]`
-- In CS111 Pyret, `select-columns(t, selector)`.
-
 ### Notes
 
 - This function is similar to `select` in R
@@ -289,10 +266,6 @@ ensures:
 
 This function returns the first `n` rows for the object based on position. It is useful for quickly testing if your object has the right type of data in it. For negative values of `n`, this function returns all rows except the last `n` rows. [cite pandas]
 
-### Origins
-
-- In pandas, `t1.head(n)`
-
 ### Note
 
 - This function is similar to `head(t1, n = n)` in R.
@@ -323,12 +296,6 @@ Extract a row out of a table by a numeric index. E.g.
   ("quiz3", 8), ("quiz4", 7), ("final", 85)]
 ```
 
-### Origins
-
-* In R, `t[n,]`. The output is a data frame.
-* In CS111 Pyret, `get-row(t, n)`
-* In Bootstrap Pyret, `t.row-n(n)`
-
 ## (overloading 1/2) `getColumn :: t:Table * n:Number -> vs:Seq<Value>`
 
 ### Constraints
@@ -352,10 +319,6 @@ Returns a `Seq` of the values in the indexed column in `t`. [cite cs111]
 ["Bob", "Alice", "Eve"]
 ```
 
-### Origins
-
-- In R, `t[[n]]`
-
 ## (overloading 2/2) `getColumn :: t:Table * c:ColName -> vs:Seq<Value>`
 
 ### Constraints
@@ -378,10 +341,6 @@ Returns a `Seq` of the values in the named column in `t`. [cite cs111]
 > getColumn(tableGF, "name")
 ["Bob", "Alice", "Eve"]
 ```
-
-### Origins
-
-In Python pandas, `t[c]`.
 
 In R, `t[[c]]`.
 
@@ -408,11 +367,6 @@ Retrieve the value for the column `c` in the row `r`. [cite cs111]
 12
 ```
 
-### Origins
-
-- In CS111 Pyret, `r[c]`
-- In Bootstrap Pyret, `r[c]`
-
 ## `nrows :: t:Table -> n:Number`
 
 ### Constraints
@@ -434,11 +388,6 @@ Returns a `Number` representing the number of rows in the `Table`. [cite cs111]
 3
 ```
 
-### Origins
-
-- In R, `nrow(t)`
-- In CS111 Pyret, `t.length()`
-
 
 ## `ncols :: t:Table -> n:Number`
 
@@ -459,10 +408,6 @@ Returns a `Number` representing the number of columns in the `Table`. [cite cs11
 > ncols(tableSM)
 8
 ```
-
-### Origins
-
-In R, `ncol(t)`
 
 ## `shape :: t:Table -> (n1:Number * n2:Number)
 
@@ -486,11 +431,6 @@ Return a tuple representing the dimensionality of the `Table`. [cite pandas]
 (3, 8)
 ```
 
-### Origins
-
-- In pandas, `t.shape`
-- In R, `dim(t)`
-
 ## (overload 1/2) `header :: t:Table -> cs:Seq<ColName>`
 
 ### Constraints
@@ -512,10 +452,6 @@ Returns a `Seq` representing the column names in the `Table`.
 ["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
 ```
 
-### Origins
-
-In R, `colnames(t)`
-
 ## (overload 2/2) `header :: r:Row -> cs:Seq<ColName>`
 
 ### Constraints
@@ -536,10 +472,6 @@ Returns a `Seq` representing the column names in the `Row`.
 > header(getRow(tableGF, 0))
 ["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
 ```
-
-### Origins
-
-In R, `colnames(t)`
 
 ## `buildColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table`
 
@@ -583,13 +515,6 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    | true              |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | false             |
 ```
-
-### Origin
-
-- In Python, `t.assign(c=f)`, where `c` must be a literal column name. If `c` is already in `t`, the old column will be updated.
-- In R, `mutate(t, c=f)`, where `c` must be a literal column name. If `c` is already in `t`, the old column will be updated.
-- In CS111 Pyret, `build-column(t, c, f)`.
-- In Bootstrap Pyret, `t.build-column(c, f)`
 
 ## `updateColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table`
 
@@ -640,11 +565,6 @@ Consumes an existing `Table` and produces a new `Table` with the named column up
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | false |
 ```
 
-### Origin
-
-- In Python, `t.assign(c=f)`, where `c` must be a literal column name. If `c` is not in `t`, a new column will be added.
-- In R, `mutate(t, c=f)`, where `c` must be a literal column name. If `c` is not in `t`, a new column will be added.
-
 ## `addRow :: t1:Table * r:Row -> t2:Table`
 
 ### Constraints
@@ -690,10 +610,6 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 | "Colton" | 19  | 8     | 9     | 73      | 7     | 9     | 64    |
 ```
 
-### Origins
-
-* In CS111 Pyret, `add-row(t1,r)`
-
 ## `addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table`
 
 ### Constraints
@@ -730,11 +646,6 @@ Consumes a `ColName` representing a column name and a `Seq` of values and produc
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    | 9            |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 6            |
 ```
-
-### Origins
-
-* In CS111 Pyret, `add-col(t, c, vs)`
-* In Python pandas, `t[c] = vs`. If `c` is already in `t`, the old column is replaced with `vs` and `c` keeps its position in the header. 
 
 ## `transformColumn :: t1:Table * c:ColName * f:(v1:Value -> v2:Value) -> t2:Table`
 
@@ -782,10 +693,6 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
 | "Eve"   | 13  | "fail" | 9     | 84      | 8     | 8     | 77    |
 ```
 
-### Origins
-
-In CS111 Pyret, `transform-column(t, c, f)`
-
 ## `filter :: t1:Table * f:(r:Row -> b:Boolean) -> t2:Table`
 
 ### Constraints
@@ -825,12 +732,6 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
-
-### Origins
-
-- In CS111 Pyret, `filter-with(t1, f)`
-- In Bootstrap Pyret, `t1.filter(f)`
-- In LINQ, `Where`
 
 ### Notes
 
@@ -874,14 +775,6 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
-
-### Origins
-
-- In Python pandas, `t.sort_values(c, ascending=b)`
-- In R, `arrange(t, c)` if `b` is `true`.
-- In R, `arrange(t, desc(c))` if `b` is `false`.
-- In cs111 Pyret, `sort-by(t, c, b)`
-- In Bootstrap Pyret, `t.order-by(c, b)`
 
 ## `sortByColumns :: t1:Table * cs:Seq<ColName> -> t2:Table`
 
@@ -955,11 +848,6 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     |
 ```
 
-### Origins
-
-- In pandas, `del t[c]`
-- In cs111 Pyret, `t.drop(c)`
-
 ## `dropColumns :: t1:Table * cs:Seq<ColName> -> t2:Table`
 
 ### Constraints
@@ -997,11 +885,6 @@ Returns a `Table` that is the same as `t`, except without the columns whose name
 | "Eve"   | 13  | 7     | 9     | 8     | 8     |
 ```
 
-### Origins
-
-- In R, `select(df, -cs)`. The negation symbol makes the selection dropping.
-- In Python pandas, `t1.drop(cs, axis=1)`
-
 ## `distinct :: t1:Table -> t2:Table`
 
 ### Constraints
@@ -1034,11 +917,6 @@ Retain only unique/distinct rows from an input `Table`. [cite R]
 | 7     |
 | 8     |
 ```
-
-### Origins
-
-- In R, `distinct(t1)`
-- In pandas, `t1.drop_duplicates()`
 
 ## `count :: t1:Table * c:ColName -> t2:Table`
 
@@ -1074,11 +952,6 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 | 17    | 1     |
 | 13    | 1     |
 ```
-
-### Origins
-
-- In CS111 Pyret, `count(t, c)`
-- In Bootstrap Pyret, `count(t, c)`
 
 ## `groupByO :: t1:Table * c:ColName -> t2:Table`
 
@@ -1275,10 +1148,6 @@ Groups the rows of a table according to a specified key selector function and cr
 | "teenager" | 81      |
 ```
 
-### Origins
-
-- In LINQ, `GroupBy`
-
 ## `groupJoin :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:Value) * getKey2:(r2:Row -> k2:Value) * sum:(r3:Row * t3:Table -> r4:Row) -> t4:Table`
 
 ### Constraints
@@ -1322,10 +1191,6 @@ Correlates the rows of two tables based on equality of keys and groups the resul
 | "Eve"   | 13  | "red"          | 77    |
 ```
 
-### Origins
-
-- In LINQ, `GroupJoin`
-
 ## `join :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:Value) * getKey2:(r2:Row -> k2:Value) * combine:(r3:Row * r4:Row -> r5:Row) -> t3:Table`
 
 ### Constraints
@@ -1366,10 +1231,6 @@ Correlates the rows of two tables based on matching keys. [cite LINQ]
 | "Alice" | 17  | "green"        | 85    |
 | "Eve"   | 13  | "red"          | 77    |
 ```
-
-### Origins
-
-- In LINQ, `Join`
 
 ## `orderBy :: t1:Table * Seq<getKey:(r:Row -> k:Value) * compare:(k1:Value * k2:Value -> Boolean)> -> t2:Table`
 
@@ -1420,10 +1281,6 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
 ```
 
-### Origins
-
-- This funtion is a combination of LINQ's `OrderBy` and `ThenBy`.
-
 ## `select :: t1:Table * f:(r1:Row * n:Number -> r2:Row) -> t2:Table``
 
 ### Constraints
@@ -1468,10 +1325,6 @@ Projects each `Row` of a `Table` into a new `Table`. [cite LINQ]
 | "Alice Smith" | 86.5                 |
 | "Eve Smith"   | 80.5                 |
 ```
-
-### Origins
-
-- In LINQ, `select`
 
 ## `selectMany :: t1:Table * project:(r1:Row * n:Number -> t2:Table) * result:(r2:Row * r3:Row -> r4:Row) -> t2:Table`
 
@@ -1534,10 +1387,6 @@ Projects each row of a table to a new table, flattens the resulting tables into 
 | 84      |
 ```
 
-### Origins
-
-- In LINQ, `selectMany`
-
 ## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
 
 ### Constraints
@@ -1552,11 +1401,6 @@ __Ensures:__
 ### Description
 
 Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram. [cite cs111]
-
-### Origins
-
-- In CS111 Pyret, `histogram(t, c, n)`
-- In Bootstrap Pyret, `histogram(t, c, n)`
 
 ### Notes
 
@@ -1580,10 +1424,6 @@ __Requires:__
 
 __Ensures:__
 
-### Origins
-
-- In CS111 Pyret, `scatter-plot(t, c1, c2)`
-
 ### Notes
 
 - `lr-plot` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
@@ -1605,10 +1445,6 @@ __Requires:__
 - `getColumn(t, c1)` has no duplicate
 
 __Ensures:__
-
-### Origins
-
-- In CS111 Pyret, `pie-chart(t, c1, c2)`
 
 ### Notes
 
