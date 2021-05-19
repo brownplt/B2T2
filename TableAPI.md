@@ -25,7 +25,7 @@ R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.htm
 
 ## Terminologies
 
-### Functions
+### Relation-level Functions
 
 - length
 - ncols
@@ -36,6 +36,12 @@ R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.htm
 - rows
 - concat
 - insert
+- typeof
+- distinct
+
+### Other assumed functions
+
+- average
 
 ### Relations
 
@@ -1087,7 +1093,7 @@ ensures:
 - `header(t2)` is equal to `["key", "members"]`
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
 - `schema(t2)["members"]` is a subtype of `Table`
-- for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `header(t1)`
+- `getColumn(t2, "key")` has no duplicates
 - for all `t` in `getColumn(t2, "members")`, `schema(t)` is equal to `schema(t1)`
 
 ### Description
@@ -1098,25 +1104,25 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 > groupByO(tableSF, "favorite-color")
 | key     | members  |
 | ------- | -------- |
-| "blue"  | <table1> | 
+| "blue"  | <table1> |
 | "green" | <table2> |
 | "red"   | <table3> |
 <table1> =
-| name    | age | favorite-color |
-| ------- | --- | -------------- |
-| "Bob"   | 12  | "blue"         |
+| name  | age | favorite-color |
+| ----- | --- | -------------- |
+| "Bob" | 12  | "blue"         |
 <table2> =
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
 | "Alice" | 17  | "green"        |
 <table3> =
-| name    | age | favorite-color |
-| ------- | --- | -------------- |
-| "Eve"   | 13  | "red"          |
+| name  | age | favorite-color |
+| ----- | --- | -------------- |
+| "Eve" | 13  | "red"          |
 > groupByO(tableJB, "brown")
 | key   | members  |
 | ----- | -------- |
-| true  | <table1> | 
+| true  | <table1> |
 | false | <table2> |
 <table1> =
 | get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
@@ -1154,6 +1160,7 @@ ensures:
 - `header(t2)` is equal to `["key", "members"]`
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
 - `schema(t2)["members"]` is a subtype of `Table`
+- `getColumn(t2, "key")` has no duplicates
 - for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `remove(header(t1), c)`
 - for all `t` in `getColumn(t2, "members")`, `schema(t)` is included in `schema(t1)`
 
@@ -1165,25 +1172,25 @@ Similar to `groupByO` but the named column is removed in the output.
 > groupByS(tableSF, "favorite-color")
 | key     | members  |
 | ------- | -------- |
-| "blue"  | <table1> | 
+| "blue"  | <table1> |
 | "green" | <table2> |
 | "red"   | <table3> |
 <table1> =
-| name    | age |
-| ------- | --- |
-| "Bob"   | 12  |
+| name  | age |
+| ----- | --- |
+| "Bob" | 12  |
 <table2> =
 | name    | age |
 | ------- | --- |
 | "Alice" | 17  |
 <table3> =
-| name    | age |
-| ------- | --- |
-| "Eve"   | 13  |
+| name  | age |
+| ----- | --- |
+| "Eve" | 13  |
 > groupByS(tableJB, "brown")
 | key   | members  |
 | ----- | -------- |
-| true  | <table1> | 
+| true  | <table1> |
 | false | <table2> |
 <table1> =
 | get-acne | red   | black | white | green | yellow | orange | pink  | purple |
@@ -1202,6 +1209,74 @@ Similar to `groupByO` but the named column is removed in the output.
 | true     | false | false | false | false | false  | true   | false | false  |
 | false    | true  | false | false | false | true   | false  | true  | false  |
 ```
+
+## `groupBy :: t1:Table * key:(r1:Row -> k1:Value) * project:(r2:Row -> v:Value) * sum:(k2:Value * vs:Seq<Value> -> r3:Row) -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+- `schema(r1)` is equal to `schema(t1)`
+- `schema(r2)` is equal to `schema(t1)`
+- for all `v'` in `vs`, `typeof(v')` is equal to `typeof(v)`
+- `schema(t2)` is equal to `schema(r3)`
+- `typeof(k1)` is equal to `typeof(k2)`
+- `nrows(t2)` is equal to `length(distinct(map(key, t1))`
+
+### Description
+
+Groups the elements of a sequence according to a specified key selector function and creates a result value from each group and its key. The elements of each group are projected by using a specified function. [cite LINQ]
+
+[TODO: this code only makes sense when `Row <: Table`]
+
+```lua
+> colorTemp =
+    function(r):
+      if getValue(r, "favorite-color") == "red":
+        "warm"
+      else:
+        "cool"
+      end
+    end
+> nameLength =
+    function(r):
+      length(getValue(r, "name"))
+    end
+> summary =
+    function(k, vs):
+      [row: ("key", k), ("average", average(vs))]
+    end
+> groupBy(tableSF, colorTemp, nameLength, summary)
+| key    | average |
+| ------ | ------- |
+| "warm" | 3       |
+| "cool" | 4       |
+> abstractAge =
+    function(r):
+      if (getValue(r, "age") <= 12):
+        "kid"
+      else if (getValue(r, "age") <= 19):
+        "teenager"
+      else:
+        "adult"
+      end
+    end
+> finalGrade =
+    function(r):
+      getValue(r, "final")
+    end
+> groupBy(tableGF, abstractAge, finalGrade, summary)
+| key        | average |
+| ---------- | ------- |
+| "kid"      | 87      |
+| "teenager" | 81      |
+```
+
+### Origins
+
+- In LINQ, `GroupBy`
 
 ## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
 
