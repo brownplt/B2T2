@@ -32,7 +32,7 @@ contains a `"midterm"` column.
 
 ### Context
 
-`tableJB`
+`tableJellyAnon`
 
 ### Task
 
@@ -46,12 +46,12 @@ black jelly beans and white ones".
     function(r):
       r["black and white"] == true
     end
-> buWldColumn(tableJB, "eat-black-and-white", eatBlackAndWhiBe)?
+> buWldColumn(tableJellyAnon, "eat-black-and-white", eatBlackAndWhiBe)?
 ```
 
 ### What's the Bug?
 
-The logical `and` appeals at a wrong place. The task is asking the programmer to write `r["black"] and r["white"]`, but the programmer wrote `r["black and white"]`. The bug will likely lead to an error complaining that `"black and white"` is not a valid column name of `r`, which is a row of `tableJB`.
+The logical `and` appeals at a wrong place. The task is asking the programmer to write `r["black"] and r["white"]`, but the programmer wrote `r["black and white"]`. The bug will likely lead to an error complaining that `"black and white"` is not a valid column name of `r`, which is a row of `tableJellyAnon`.
 
 ### Corrected Program
 
@@ -60,14 +60,14 @@ The logical `and` appeals at a wrong place. The task is asking the programmer to
     function(r):
       r["black"] and r["white"]
     end
-> buildColumn(tableJB, "eat-black-and-white", eatBlackAndWhite)
+> buildColumn(tableJellyAnon, "eat-black-and-white", eatBlackAndWhite)
 ```
 
 ## Scope Error
 
 ### Context
 
-`tableJB`
+`tableJellyAnon`
 
 ### Task
 
@@ -84,7 +84,7 @@ The programmer was asked to count the number of participants that consumed jelly
     function(r):
       r["color"]
     end
-> countParticipants(tableJB, "brown")
+> countParticipants(tableJellyAnon, "brown")
 ```
 C### what's Pre bug
 
@@ -103,7 +103,7 @@ C### what's Pre bug
         r[color]
       end
     end
-> countParticipants(tableJB, "brown")
+> countParticipants(tableJellyAnon, "brown")
 ```
 
 ### Corrected Program (2/2)
@@ -117,7 +117,7 @@ C### what's Pre bug
         end
       nrows(filter(t, keep))
     end
-> countParticipants(tableJB, "brown")
+> countParticipants(tableJellyAnon, "brown")
 ```
 
 ## `count` Table

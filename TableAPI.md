@@ -1120,7 +1120,7 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 | name  | age | favorite-color |
 | ----- | --- | -------------- |
 | "Eve" | 13  | "red"          |
-> groupByO(tableJB, "brown")
+> groupByO(tableJellyAnon, "brown")
 | key   | members  |
 | ----- | -------- |
 | true  | <table1> |
@@ -1188,7 +1188,7 @@ Similar to `groupByO` but the named column is removed in the output.
 | name  | age |
 | ----- | --- |
 | "Eve" | 13  |
-> groupByS(tableJB, "brown")
+> groupByS(tableJellyAnon, "brown")
 | key   | members  |
 | ----- | -------- |
 | true  | <table1> |
