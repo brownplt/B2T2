@@ -48,7 +48,6 @@ R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.htm
 - `x` is of type `y`
 - `x` is a subtype of `y`
 - `x` is categorical
-- `x` containts distint elements
 - `x` is non-negative
 - `x` is negative
 
@@ -1259,7 +1258,7 @@ __Requires:__
 - `c2` is in `header(t)`
 - `schema(t)[c1]` is a subtype of `String`
 - `schema(t)[c2]` is a subtype of non-negative `Number`
-- `getColumn(t, c1)` containts no duplicate
+- `getColumn(t, c1)` has no duplicate
 
 __Ensures:__
 
