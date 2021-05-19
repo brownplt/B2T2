@@ -294,41 +294,6 @@ This function returns the first `n` rows for the object based on position. It is
 
 - This function is similar to `head(t1, n = n)` in R.
 
-## `sampleRows :: t1:Table * n:Number -> t2:Table`
-
-### Constraints
-
-__Requires:__
-
-- `n` is not greater than `nrows(t1)`
-
-__Ensures:__
-
-- `header(t2)` is equal to `header(t1)`
-- `schema(t2)` is equal to `schema(t1)`
-- `nrows(t2)` is equal to `n`
-- `ncols(t2)` is equal to `ncols(t1)`
-
-### Description
-
-Sample `n` observations (rows) from table `t1` without replacement.
-
-```lua
-> sampleRows(tableSF, 0)
-| name    | age | favorite-color |
-| ------- | --- | -------------- |
-> sampleRows(tableGM, 2)
-| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-| "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
-| "Alice" | 17  | 6     | 8     | 88      |       | 7     | 85    |
-```
-
-### Origins
-
-- In pandas, `t.sample(n=n)`.
-- In Bootstrap Pyret, `random-rows(t, n)`
-
 ## `getRow :: t:Table * n:Number -> r:Row`
 
 ### Constraints
