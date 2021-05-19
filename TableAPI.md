@@ -1221,6 +1221,13 @@ __Ensures:__
 - In CS111 Pyret, `histogram(t, c, n)`
 - In Bootstrap Pyret, `histogram(t, c, n)`
 
+### Notes
+
+- `pie-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `bar-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `freq-bar-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `box-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+
 ## `scatterPlot :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
 Displays an `Image` of a scatter plot from the given table. `c1` names the column in `t` to use for x-values, and `c2` names the column in `t` to use for y-values. Both columns must contain `Number` values. [cite cs111]
@@ -1269,45 +1276,3 @@ __Ensures:__
 ### Notes
 
 - `bar-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
-
-## `freqBarChart :: t:Table * c:ColName -> Image`
-
-### Constraints
-
-__Requires:__
-
-- `c` is in `header(t)`
-- `schema(t)[c]` is categorical
-
-### Description
-
-Display an `Image` of a frequency bar-chart from the given `Table`. There is one bar for each unique value of the column with name `c` (showing the number of occurrences of that value). [cite cs111]
-
-### Origins
-
-- In cs111 Pyret, `freq-bar-chart(t, c)`
-  
-### Notes
-
-- `pie-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
-- `bar-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
-
-## `boxPlot :: t:Table * c:ColName -> Image`
-
-### Constraints
-
-__Requires:__
-
-- `c` is in `header(t)`
-- `schema(t)[c]` is categorical
-
-__Ensures:__
-
-### Description
-
-Produces an `Image` of a box plot of the values in the column named `c` in the `Table`. A box plot shows the minimum, maximum, and median values of a column, as well as the first (lowest) and third quartiles of the dataset; this is helpful for seeing the variation in a dataset. [cite cs111]
-
-### Origins
-
-- In cs111 Pyret, `box-plot(t, c)`
-
