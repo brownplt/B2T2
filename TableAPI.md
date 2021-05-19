@@ -1,19 +1,15 @@
-# Core API
+# Table API
 
 [Note: this section should be considered as an internal note that helps KC decide if an opeartor should be included and, if yes, how.]
 
-This file aims at providing a collection of table-processing operators, such that people can compare programming medias on their
+This file serves for two purposes:
 
-- __expressiveness:__ is an operators provided in one media but not the other?
-- __enforcement of constraints:__ how many of the required constraints are enforced? How many of the ensured constraints are communicated to the type system?
+- Set up a reference for comparing programming medias on their
+  - __expressiveness:__ is an operators provided in one media but not the other?
+  - __enforcement of constraints:__ how many of the required constraints are enforced? How many of the ensured constraints are communicated to the type system? 
+- Challenge type system designers
 
-To make the comparision useful, we set up the following guidelines on collecting operators
-
-- gather operators from real-world programming medias. So far we gather operators from SQL, LINQ, Python pandas, R TidyVerse, and Pyret.
-- must include basic operators (e.g. insertion / deletion of rows / columns). 
-- include operators that impose interesting constraints. Examples of these operators include `pivot_table` in pandas and `pivot_longer` and `pivot_wider` in TidyVerse.
-- ignore operators that can be defined by simple composition of included operators. Otherwise this file can grow too large.
-- if two operators impose similar constraints, we include only one of them and mention in its document the other operator.
+Real-world programming medias contain lots of utility operations. Collecting all of them won't be practical. Instead, we strive to gather at least all operators that are necessary for real-world data analysis. (Please let us know if you think a necessary operator is missing.) Some utilities opoerators impose interesting constraints that might be challenging to type systems. We selectively include some complicated utility operators and hopefully they will illustrate all constraints that a type systems need to handle.
 
 We included operators in __Pyret taught in Brown CS111__. These operators are found by walking through [this document](https://hackmd.io/@cs111/table). All operators described in the linked document are included, except `sum`, `mean`, `median`, `modes`, and `stdev`. These operators are excluded because their constraints on arguments and results are simple and have been illustrated by other operators.
 
