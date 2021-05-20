@@ -25,6 +25,10 @@ R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.htm
 
 LINQ: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/query-expression-syntax-for-standard-query-operators
 
+SQL: https://dev.mysql.com/doc/refman/8.0/en/sql-data-manipulation-statements.html
+
+PostgreSQL: https://www.postgresql.org/docs/current/dml.html
+
 ## Terminologies
 
 ### Relation-level Functions
@@ -515,21 +519,20 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | false             |
 ```
 
-## `updateColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table`
+## `updateColumn :: t1:Table * f:(r1:Row -> r2:Value) -> t2:Table`
 
 ### Constraints
 
 __Requires:__
 
-* `c` is in `header(t1)`
+* for all `c` in `header(r2)`, `c` is in `header(t1)`
+* for all `c` in `header(r2)`, `schema(r2)[c]` is a subtype of `schema(t1)[c]`
 
 __Ensures:__
 
-* `header(r)` is equal to `header(t1)`
-* `schema(r)` is equal to `schema(t1)`
-* `header(t2)` is equal to `header(t1)`
-* `v` is of type `schema(t2)[c]`
-* for all `c` in `header(t1)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+* `schema(r1)` is equal to `schema(t1)`
+* `schema(t2)` is equal to `schema(t1)`
+* `nrows(t2)` is equal to `nrows(t1)`
 
 ### Description
 
@@ -539,14 +542,14 @@ Consumes an existing `Table` and produces a new `Table` with the named column up
 > abstractAge =
     function(r):
       if (getValue(r, "age") <= 12):
-        "kid"
+        [row: ("age", "kid")]
       else if (getValue(r, "age") <= 19):
-        "teenager"
+        [row: ("age", "teenager")]
       else:
-        "adult"
+        [row: ("age", "adult")]
       end
     end
-> updateColumn(tableSF, "age", abstractAge)
+> updateColumn(tableSF, abstractAge)
 | name    | age        | favorite-color | is-teenager |
 | ------- | ---------- | -------------- | ----------- |
 | "Bob"   | "kid"      | "blue"         | false       |
@@ -554,14 +557,16 @@ Consumes an existing `Table` and produces a new `Table` with the named column up
 | "Eve"   | "teenager" | "red"          | true        |
 > abstractFinal =
     function(r):
-      85 <= getValue(r, "final")
+      [row:
+        ("midterm", 85 <= getValue(r, "midterm"))
+        ("final", 85 <= getValue(r, "final"))]
     end
-> updateColumn(tableGF, "did-well-in-final", didWellInFinal)
+> updateColumn(tableGF, didWellInFinal)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | true  |
-| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | true  |
-| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | false |
+| "Bob"   | 12  | 8     | 9     | false   | 7     | 9     | true  |
+| "Alice" | 17  | 6     | 8     | true    | 8     | 7     | true  |
+| "Eve"   | 13  | 7     | 9     | false   | 8     | 8     | false |
 ```
 
 ## `addRow :: t1:Table * r:Row -> t2:Table`
@@ -607,6 +612,47 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 | "Alice"  | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"    | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 | "Colton" | 19  | 8     | 9     | 73      | 7     | 9     | 64    |
+```
+
+## `addRows :: t1:Table * rs:Seq<Row> -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+* for all `r` in `rs`, `header(r)` is equal to `header(t1)`
+* for all `r` in `rs`, `schema(r)` is equal to `schema(t1)`
+
+__Ensures:__
+
+* `header(t2)` is equal to `header(t1)`
+* `schema(t2)` is equal to `schema(t1)`
+* `nrows(t2)` is equal to `nrows(t1) + 1`
+
+### Description
+
+Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` with the rows from the original table followed by the given `Row`s. [cite cs111]
+
+```lua
+> addRows(
+    tableSF,
+    [
+      [row: 
+        ("name", "Colton"), ("age", 19),
+        ("favorite-color", "blue")]
+    ])
+| name     | age | favorite-color |
+| -------- | --- | -------------- |
+| "Bob"    | 12  | "blue"         |
+| "Alice"  | 17  | "green"        |
+| "Eve"    | 13  | "red"          |
+| "Colton" | 19  | "blue"         |
+> addRows(tableGF, [])
+| name     | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| -------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"    | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice"  | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"    | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ## `addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table`
@@ -1223,6 +1269,130 @@ Correlates the rows of two tables based on matching keys. [cite LINQ]
 | "Bob"   | 12  | "blue"         | 87    |
 | "Alice" | 17  | "green"        | 85    |
 | "Eve"   | 13  | "red"          | 77    |
+```
+
+## `crossJoin :: t1:Table * t2:Table -> t3:Table`
+
+### Constraints
+
+__Requires:__
+
+- `concat(header(t1), header(t2))` has no duplicate
+
+__Ensures:__
+
+- `schema(t3)` is equal to `concat(schema(t1), schema(t2))`
+- `nrows(t3)` is equal to `nrows(t1) * nrows(t2)`
+
+### Description
+
+Compute the cartesian product of two tables.
+
+[TODO: need one more example]
+
+```lua
+> petiteJelly = subTable(tableJellyAnon, [0, 1], [0, 1, 2])
+> petiteJelly
+| get-acne | red   | black |
+| -------- | ----- | ----- |
+| true     | false | false |
+| true     | false | true  |
+> crossJoin(tableSF, petiteJelly)
+| name    | age | favorite-color | get-acne | red   | black |
+| ------- | --- | -------------- | -------- | ----- | ----- |
+| "Bob"   | 12  | "blue"         | true     | false | false |
+| "Bob"   | 12  | "blue"         | true     | false | true  |
+| "Alice" | 17  | "green"        | true     | false | false |
+| "Alice" | 17  | "green"        | true     | false | true  |
+| "Eve"   | 13  | "red"          | true     | false | false |
+| "Eve"   | 13  | "red"          | true     | false | true  |
+```
+
+## `union :: t1:Table * t2:Table -> t3:Table`
+
+### Constraints
+
+__Requires:__
+
+- `schema(t1)` is equal to `schema(t2)`
+
+__Ensures:__
+
+- `schema(t3)` is equal to `schema(t1)`
+- `nrows(t3)` is equal to `nrows(t1) + nrows(t2)`
+
+### Description
+
+Combining two tables vertically. The output table starts with rows from the first input table, followed by the rows from the second input table.
+
+```lua
+> increaseAge =
+    function(r):
+      [row: ("name", 1 + getValue(r, "age"))]
+    end
+> union(tableSF, updateColumn(tableSF, increaseAge))
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+| "Alice" | 17  | "green"        |
+| "Eve"   | 13  | "red"          |
+| "Bob"   | 13  | "blue"         |
+| "Alice" | 18  | "green"        |
+| "Eve"   | 14  | "red"          |
+> curveMidtermAndFinal =
+    function(r):
+      curve =
+        function(n):
+          n + 5
+        end
+      [row:
+        ("midterm", curve(getValue("midterm"))),
+        ("final", curve(getValue("final")))]
+    end
+> union(tableGF, updateColumn(tableGF, curveFinal))
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
+| "Bob"   | 12  | 8     | 9     | 82      | 7     | 9     | 92    |
+| "Alice" | 17  | 6     | 8     | 93      | 8     | 7     | 90    |
+| "Eve"   | 13  | 7     | 9     | 89      | 8     | 8     | 82    |
+```
+
+## `values :: rs:Seq<Row> -> t:Table`
+
+### Constraints
+
+__Requires:__
+
+- for all `r1` and `r2` in `rs`, `schema(r1)` is equal to `schema(r2)`
+- `length(rs)` is positive
+
+__Ensures:__
+
+- for some `r` in `rs`, `schema(t)` is equal to `schema(r)`
+- `nrows(t)` is equal to `length(rs)`
+
+### Description
+
+Returns a set of one or more rows as a table. [cite MySQL]
+
+```lua
+> values([
+    [row: ("name", "Alice")],
+    [row: ("name", "Bob")]])
+| name    |
+| ------- |
+| "Alice" |
+| "Bob"   |
+> values([
+    [row: ("name", "Alice"), ("age", 12)],
+    [row: ("name", "Bob"), ("age", 13)]])
+| name    | age |
+| ------- | --- |
+| "Alice" | 12  |
+| "Bob"   | 13  |
 ```
 
 ## `orderBy<K> :: t1:Table * Seq<getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`

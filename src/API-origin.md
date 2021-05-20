@@ -114,18 +114,25 @@ In R, `colnames(t)`
 - In CS111 Pyret, `build-column(t, c, f)`.
 - In Bootstrap Pyret, `t.build-column(c, f)`
 
-## `updateColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table`
+## `updateColumn :: t1:Table * c:ColName * f:(r1:Row -> r2:Row) -> t2:Table`
 
 ### Origin
 
-- In Python, `t.assign(c=f)`, where `c` must be a literal column name. If `c` is not in `t`, a new column will be added.
-- In R, `mutate(t, c=f)`, where `c` must be a literal column name. If `c` is not in `t`, a new column will be added.
+- In Python, `DataFrame.assign`. The updated column names are given as argument names so they are taken literally. If a column name is not in `t1`, a new column will be added.
+- In R, `mutate`. The updated column names are given as argument names so they are taken literally. If a column name is not in `t1`, a new column will be added.
+- In SQL, `UPDATE`
 
 ## `addRow :: t1:Table * r:Row -> t2:Table`
 
 ### Origins
 
 * In CS111 Pyret, `add-row(t1,r)`
+
+## `addRows :: t1:Table * r:Row -> t2:Table`
+
+### Origins
+
+* In MySQL, `INSERT`
 
 ## `addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table`
 
@@ -147,7 +154,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 - In CS111 Pyret, `filter-with(t1, f)`
 - In Bootstrap Pyret, `t1.filter(f)`
 - In LINQ, `Where`
-
+- Similar to MySQL `DELETE`, which drops rows satisfying the criteria and can take a number limit.
 
 ## `sort :: t1:Table * c:ColName * b:Boolean -> t2:Table`
 
@@ -204,6 +211,19 @@ In CS111 Pyret, `transform-column(t, c, f)`
 ### Origins
 
 - In LINQ, `Join`
+- This operator seems to be more general than any variant of SQL `JOIN`
+
+## `crossJoin :: t1:Table * t2:Table -> t3:Table`
+
+- SQL `CROSS JOIN`
+
+## `union :: t1:Table * t2:Table -> t3:Table`
+
+- SQL `UNION`
+
+## `values :: rs:Seq<Row> -> t:Table`
+
+- SQL `VALUES`
 
 ## `orderBy :: t1:Table * Seq<getKey:(r:Row -> k:Value) * compare:(k1:Value * k2:Value -> Boolean)> -> t2:Table`
 
@@ -216,6 +236,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 ### Origins
 
 - In LINQ, `select`
+- In MySQL, `SELECT ... AS ...`
 
 ## `selectMany :: t1:Table * project:(r1:Row * n:Number -> t2:Table) * result:(r2:Row * r3:Row -> r4:Row) -> t2:Table`
 
