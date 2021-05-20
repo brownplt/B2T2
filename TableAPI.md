@@ -953,7 +953,7 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 | 13    | 1     |
 ```
 
-## `groupByO :: t1:Table * c:ColName -> t2:Table`
+## `groupByOriginal :: t1:Table * c:ColName -> t2:Table`
 
 ### Constraints
 
@@ -975,7 +975,7 @@ ensures:
 Catagorize rows of the input table into groups by the key of each row. The key is computed by accessing the named column. 
 
 ```lua
-> groupByO(tableSF, "favorite-color")
+> groupByOriginal(tableSF, "favorite-color")
 | key     | members  |
 | ------- | -------- |
 | "blue"  | <table1> |
@@ -993,7 +993,7 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 | name  | age | favorite-color |
 | ----- | --- | -------------- |
 | "Eve" | 13  | "red"          |
-> groupByO(tableJellyAnon, "brown")
+> groupByOriginal(tableJellyAnon, "brown")
 | key   | members  |
 | ----- | -------- |
 | true  | <table1> |
@@ -1020,7 +1020,7 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 
 - In LINQ, `GroupBy`
   
-## `groupByS :: t1:Table * c:ColName -> t2:Table`
+## `groupBySubtracted :: t1:Table * c:ColName -> t2:Table`
 
 ### Constraints
 
@@ -1040,10 +1040,10 @@ ensures:
 
 ### Description
 
-Similar to `groupByO` but the named column is removed in the output.
+Similar to `groupByOriginal` but the named column is removed in the output.
 
 ```lua
-> groupByS(tableSF, "favorite-color")
+> groupBySubtracted(tableSF, "favorite-color")
 | key     | members  |
 | ------- | -------- |
 | "blue"  | <table1> |
@@ -1061,7 +1061,7 @@ Similar to `groupByO` but the named column is removed in the output.
 | name  | age |
 | ----- | --- |
 | "Eve" | 13  |
-> groupByS(tableJellyAnon, "brown")
+> groupBySubtracted(tableJellyAnon, "brown")
 | key   | members  |
 | ----- | -------- |
 | true  | <table1> |
