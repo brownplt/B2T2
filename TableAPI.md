@@ -38,7 +38,6 @@ LINQ: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/
 - rows
 - concat
 - insert
-- typeof
 - distinct
 
 ### Other assumed functions
@@ -1084,7 +1083,7 @@ Similar to `groupByOriginal` but the named column is removed in the output.
 | false    | true  | false | false | false | true   | false  | true  | false  |
 ```
 
-## `groupBy :: t1:Table * key:(r1:Row -> k1:Value) * project:(r2:Row -> v:Value) * aggregate:(k2:Value * vs:Seq<Value> -> r3:Row) -> t2:Table`
+## `groupBy<K,V> :: t1:Table * key:(r1:Row -> k1:K) * project:(r2:Row -> v:V) * aggregate:(k2:K * vs:Seq<V> -> r3:Row) -> t2:Table`
 
 ### Constraints
 
@@ -1094,9 +1093,7 @@ __Ensures:__
 
 - `schema(r1)` is equal to `schema(t1)`
 - `schema(r2)` is equal to `schema(t1)`
-- for all `v'` in `vs`, `typeof(v')` is equal to `typeof(v)`
 - `schema(t2)` is equal to `schema(r3)`
-- `typeof(k1)` is equal to `typeof(k2)`
 - `nrows(t2)` is equal to `length(distinct(map(key, t1))`
 
 ### Description
@@ -1148,13 +1145,11 @@ Groups the rows of a table according to a specified key selector function and cr
 | "teenager" | 81      |
 ```
 
-## `groupJoin :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:Value) * getKey2:(r2:Row -> k2:Value) * aggregate:(r3:Row * t3:Table -> r4:Row) -> t4:Table`
+## `groupJoin<K> :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:K) * getKey2:(r2:Row -> k2:K) * aggregate:(r3:Row * t3:Table -> r4:Row) -> t4:Table`
 
 ### Constraints
 
 __Requires:__
-
-- `typeof(k1)` == `typeof(k2)`
 
 __Ensures:__
 
@@ -1191,13 +1186,11 @@ Correlates the rows of two tables based on equality of keys and groups the resul
 | "Eve"   | 13  | "red"          | 77    |
 ```
 
-## `join :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:Value) * getKey2:(r2:Row -> k2:Value) * combine:(r3:Row * r4:Row -> r5:Row) -> t3:Table`
+## `join<K> :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:K) * getKey2:(r2:Row -> k2:K) * combine:(r3:Row * r4:Row -> r5:Row) -> t3:Table`
 
 ### Constraints
 
 __Requires:__
-
-- `typeof(k1)` == `typeof(k2)`
 
 __Ensures:__
 
@@ -1232,7 +1225,7 @@ Correlates the rows of two tables based on matching keys. [cite LINQ]
 | "Eve"   | 13  | "red"          | 77    |
 ```
 
-## `orderBy :: t1:Table * Seq<getKey:(r:Row -> k:Value) * compare:(k1:Value * k2:Value -> Boolean)> -> t2:Table`
+## `orderBy<K> :: t1:Table * Seq<getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`
 
 ### Constraints
 
@@ -1241,8 +1234,6 @@ __Requires:__
 __Ensures:__
 
 - `schema(r)` is equal to `schema(t1)`
-- `typeof(k1)` is equal to `typeof(k)`
-- `typeof(k2)` is equal to `typeof(k)`
 - `schema(t2)` is equal to `schema(t1)`
 - `nrows(t2)` is equal to `nrows(t1)`
 
