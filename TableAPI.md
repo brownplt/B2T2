@@ -1084,7 +1084,7 @@ Similar to `groupByO` but the named column is removed in the output.
 | false    | true  | false | false | false | true   | false  | true  | false  |
 ```
 
-## `groupBy :: t1:Table * key:(r1:Row -> k1:Value) * project:(r2:Row -> v:Value) * sum:(k2:Value * vs:Seq<Value> -> r3:Row) -> t2:Table`
+## `groupBy :: t1:Table * key:(r1:Row -> k1:Value) * project:(r2:Row -> v:Value) * aggregate:(k2:Value * vs:Seq<Value> -> r3:Row) -> t2:Table`
 
 ### Constraints
 
@@ -1118,11 +1118,11 @@ Groups the rows of a table according to a specified key selector function and cr
     function(r):
       length(getValue(r, "name"))
     end
-> summary =
+> aggregate =
     function(k, vs):
       [row: ("key", k), ("average", average(vs))]
     end
-> groupBy(tableSF, colorTemp, nameLength, summary)
+> groupBy(tableSF, colorTemp, nameLength, aggregate)
 | key    | average |
 | ------ | ------- |
 | "warm" | 3       |
@@ -1141,14 +1141,14 @@ Groups the rows of a table according to a specified key selector function and cr
     function(r):
       getValue(r, "final")
     end
-> groupBy(tableGF, abstractAge, finalGrade, summary)
+> groupBy(tableGF, abstractAge, finalGrade, aggregate)
 | key        | average |
 | ---------- | ------- |
 | "kid"      | 87      |
 | "teenager" | 81      |
 ```
 
-## `groupJoin :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:Value) * getKey2:(r2:Row -> k2:Value) * sum:(r3:Row * t3:Table -> r4:Row) -> t4:Table`
+## `groupJoin :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:Value) * getKey2:(r2:Row -> k2:Value) * aggregate:(r3:Row * t3:Table -> r4:Row) -> t4:Table`
 
 ### Constraints
 
