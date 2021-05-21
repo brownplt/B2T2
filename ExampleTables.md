@@ -57,6 +57,15 @@
 | 35            | "Marketing"     |
 ```
 
+## `tableSeq`: a table of sequences
+
+```lua
+| a   | b      | c      |
+| --- | ------ | ------ |
+| 1   | [1, 2] | [5, 6] |
+| 2   | [3, 4] | [7, 8] |
+```
+
 ## `tableJellyAnon`: a jelly bean table that contains only boolean data
 
 ```lua

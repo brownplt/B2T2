@@ -231,6 +231,10 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 - This funtion is a combination of LINQ's `OrderBy` and `ThenBy`.
 
+## `flatten :: t1:Table * cs:Seq<ColName> -> t2:Table`
+
+- Julia, `flatten`
+
 ## `select :: t1:Table * f:(r1:Row * n:Number -> r2:Row) -> t2:Table``
 
 ### Origins

@@ -695,6 +695,71 @@ Consumes a `ColName` representing a column name and a `Seq` of values and produc
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 6            |
 ```
 
+## `completeCases :: t:Table * c:ColName -> bs:Seq<Boolean>`
+
+### Constraints
+
+__Requires:__
+
+- `c` is in `header(t)`
+
+__Ensures:__
+
+- `length(bs)` is equal to `nrows(t)`
+
+### Description
+
+Return a `Seq<Boolean>` with `true` entries indicating rows without missing values (complete cases) in table `t`. [cite Julia]
+
+```lua
+> completeCases(tableSF, "age")
+[true, true, true]
+> completeCases(tableSM, "age")
+[false, true, true]
+```
+
+## `flatten :: t1:Table * cs:Seq<ColName> -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+[TODO: non-structural desc]
+
+- `cs` has no duplicates
+- for all `c` in `cs`, `c` is in `header(t1)`
+- for all `c` in `cs`, for some type `T`, `schema(t1)[c]` is equal to `Seq<T>`
+- for all `i` in `range(nrows(t1))`, for all `c1` and `c2` in `cs`, `length(getValue(getRow(t1, i), c1))` is equal to `length(getValue(getRow(t1, i), c1))`
+
+__Ensures:__
+
+[TODO: elementTypeOf]
+
+- `header(t2)` is equal to `header(t1)`
+- for all `c` in `header(t2)`, if `c` is in `cs` then `schema(t2)[c]` is equal to `elementTypeOf(schema(t1)[c])`
+- for all `c` in `header(t2)`, if `c` is not in `cs` then `schema(t2)[c]` is equal to `schema(t1)[c]`
+
+### Description
+
+When columns `cs` of table `t` have sequences, return a `Table` where each element of each `c` in `cs` is flattened, meaning the column corresponding to `c` becomes a longer column where the original entries are concatenated. Elements of row `i` of `t` in columns other than `cs` will be repeated according to the length of `getValue(getRow(t1, i), c1)`. These lengths must therefore be the same for each `c` in `cs`, or else an error is raised. [cite Julia]
+
+```lua
+> flatten(tableSeq, ["b"])
+| a   | b      | c      |
+| --- | ------ | ------ |
+| 1   | 1      | [5, 6] |
+| 1   | 2      | [5, 6] |
+| 2   | 3      | [7, 8] |
+| 2   | 4      | [7, 8] |
+> flatten(tableSeq, ["c", "b"])
+| a   | b      | c      |
+| --- | ------ | ------ |
+| 1   | 1      | 5      |
+| 1   | 2      | 6      |
+| 2   | 3      | 7      |
+| 2   | 4      | 8      |
+```
+
 ## `transformColumn :: t1:Table * c:ColName * f:(v1:Value -> v2:Value) -> t2:Table`
 
 ### Constraints
