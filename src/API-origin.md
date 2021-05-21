@@ -114,7 +114,7 @@ In R, `colnames(t)`
 - In CS111 Pyret, `build-column(t, c, f)`.
 - In Bootstrap Pyret, `t.build-column(c, f)`
 
-## `updateColumn :: t1:Table * c:ColName * f:(r1:Row -> r2:Row) -> t2:Table`
+## `update :: t1:Table * c:ColName * f:(r1:Row -> r2:Row) -> t2:Table`
 
 ### Origin
 
@@ -243,6 +243,22 @@ In CS111 Pyret, `transform-column(t, c, f)`
 ### Origins
 
 - In LINQ, `selectMany`
+
+## `pivotLonger : t1:Table * cs:Seq<ColName> * c1:ColName * c2:ColName -> t2:Table`
+
+- R TidyVerse, `pivot_longer`
+- Julia DataFrame, `stack`
+
+## `pivotWider :: t1:Table * c1:ColName * c2:ColName -> t2:Table`
+
+- R TidyVerse, `pivot_wider`
+- Julia, `unstack`
+
+## `leftJoin :: t1:Table * t2:Table * cs:Table -> t3:Table`
+
+- Julia, `leftjoin`
+- SQL, `LEFT JOIN`. But our `leftJoin` does not prefix column names and does not delete shared columns.
+- `leftJoin` is chosen as a representative of various other join operators (e.g. right join, inner join, and outer join)
 
 ## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
 

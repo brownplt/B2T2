@@ -4,12 +4,15 @@
 
 This file serves for two purposes:
 
+- Challenge type system designers
 - Set up a reference for comparing programming medias on their
   - __expressiveness:__ is an operators provided in one media but not the other?
   - __enforcement of constraints:__ how many of the required constraints are enforced? How many of the ensured constraints are communicated to the type system? 
-- Challenge type system designers
 
-Real-world programming medias contain lots of utility operations. Collecting all of them won't be practical. Instead, we strive to gather at least all operators that are necessary for real-world data analysis. (Please let us know if you think a necessary operator is missing.) Some utilities opoerators impose interesting constraints that might be challenging to type systems. We selectively include some complicated utility operators and hopefully they will illustrate all constraints that a type systems need to handle.
+Real-world programming medias contain lots of utility operations. Collecting all of them won't be practical. Instead, we strive to gather at least all operators that are necessary for real-world data analysis. (Please let us know if you think a necessary operator is missing.) Some utilities opoerators impose interesting constraints that might be challenging to type systems. We selectively include some complicated utility operators and hopefully they will illustrate all constraints that a type systems need to handle. In short, an operator is included if it meets one of the following criteria:
+
+- necessary for realistic table programming
+- illustrating interesting constraints
 
 We included operators in __Pyret taught in Brown CS111__. These operators are found by walking through [this document](https://hackmd.io/@cs111/table). All operators described in the linked document are included, except `sum`, `mean`, `median`, `modes`, and `stdev`. These operators are excluded because their constraints on arguments and results are simple and have been illustrated by other operators.
 
@@ -519,7 +522,7 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | false             |
 ```
 
-## `updateColumn :: t1:Table * f:(r1:Row -> r2:Value) -> t2:Table`
+## `update :: t1:Table * f:(r1:Row -> r2:Value) -> t2:Table`
 
 ### Constraints
 
@@ -549,7 +552,7 @@ Consumes an existing `Table` and produces a new `Table` with the named column up
         [row: ("age", "adult")]
       end
     end
-> updateColumn(tableSF, abstractAge)
+> update(tableSF, abstractAge)
 | name    | age        | favorite-color | is-teenager |
 | ------- | ---------- | -------------- | ----------- |
 | "Bob"   | "kid"      | "blue"         | false       |
@@ -561,7 +564,7 @@ Consumes an existing `Table` and produces a new `Table` with the named column up
         ("midterm", 85 <= getValue(r, "midterm"))
         ("final", 85 <= getValue(r, "final"))]
     end
-> updateColumn(tableGF, didWellInFinal)
+> update(tableGF, didWellInFinal)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | false   | 7     | 9     | true  |
@@ -648,11 +651,11 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
 | "Eve"    | 13  | "red"          |
 | "Colton" | 19  | "blue"         |
 > addRows(tableGF, [])
-| name     | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-| -------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-| "Bob"    | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
-| "Alice"  | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
-| "Eve"    | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ## `addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table`
@@ -1308,6 +1311,43 @@ Compute the cartesian product of two tables.
 | "Eve"   | 13  | "red"          | true     | false | true  |
 ```
 
+## `leftJoin :: t1:Table * t2:Table * cs:Table -> t3:Table`
+
+### Constraints
+
+__Requires:__
+
+- `cs` has no duplicates
+- for all `c` in `cs`, `c` is in `header(t1)`
+- for all `c` in `cs`, `c` is in `header(t2)`
+- for all `c` in `cs`, `schema(t1)[c]` is equal to `schema(t2)[c]`
+
+__Ensures:__
+
+- `header(t3)` is equal to `concat(removeAll(header(t1), cs), removeAll(header(t2), cs))`
+
+### Description
+
+Look up more information on rows of the first table and add those information to create a new table. The named columns define the keys for looking up. If there is no corresponding row in `t2`, the extra column will be filled with empty cells.
+
+```lua
+> leftJoin(tableSF, tableGF, ["name", "age"])
+| name    | age | favorite-color | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | -------------- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | "blue"         | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | "green"        | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | "red"          | 7     | 9     | 84      | 8     | 8     | 77    |
+> leftJoin(tableEmployee, tableDepartment, ["Department ID"])
+| Last Name    | Department ID | Department Name |
+| ------------ | ------------- | --------------- |
+| "Rafferty"   | 31            | "Sales"         |
+| "Jones"      | 32            |                 |
+| "Heisenberg" | 33            | "Engineering"   |
+| "Robinson"   | 34            | "Clerical"      |
+| "Smith"      | 34            | "Clerical"      |
+| "Williams"   |               |                 |
+```
+
 ## `union :: t1:Table * t2:Table -> t3:Table`
 
 ### Constraints
@@ -1330,7 +1370,7 @@ Combining two tables vertically. The output table starts with rows from the firs
     function(r):
       [row: ("name", 1 + getValue(r, "age"))]
     end
-> union(tableSF, updateColumn(tableSF, increaseAge))
+> union(tableSF, update(tableSF, increaseAge))
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
@@ -1349,7 +1389,7 @@ Combining two tables vertically. The output table starts with rows from the firs
         ("midterm", curve(getValue("midterm"))),
         ("final", curve(getValue("final")))]
     end
-> union(tableGF, updateColumn(tableGF, curveFinal))
+> union(tableGF, update(tableGF, curveFinal))
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
@@ -1468,11 +1508,11 @@ Projects each `Row` of a `Table` into a new `Table`. [cite LINQ]
         ("COLOR", getValue(r, "favorite-color")),
         ("AGE", getValue(r, "age"))]
     end)
-| id | favorite-color | age |
-| -- | -------------- | --- |
-| 0  | "blue"         | 12  |
-| 1  | "green"        | 17  |
-| 2  | "red"          | 13  |
+| id  | favorite-color | age |
+| --- | -------------- | --- |
+| 0   | "blue"         | 12  |
+| 1   | "green"        | 17  |
+| 2   | "red"          | 13  |
 > select(
     tableGF,
     function(r, n):
@@ -1520,10 +1560,10 @@ Projects each row of a table to a new table, flattens the resulting tables into 
     function(r1, r2):
       r2
     end)
-| name    | age | favorite-color |
-| ------- | --- | -------------- |
-| "Bob"   | 12  | "blue"         |
-| "Eve"   | 13  | "red"          |
+| name  | age | favorite-color |
+| ----- | --- | -------------- |
+| "Bob" | 12  | "blue"         |
+| "Eve" | 13  | "red"          |
 > repeatRow =
     function(r, n):
       if n == 0:
@@ -1546,6 +1586,132 @@ Projects each row of a table to a new table, flattens the resulting tables into 
 | 84      |
 | 84      |
 | 84      |
+```
+
+## `pivotLonger : t1:Table * cs:Seq<ColName> * c1:ColName * c2:ColName -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- `length(cs)` is positive
+- `cs` has no duplicates
+- for all `c` in `cs`, `c` is in `header(t1)`
+- `c1` is not in `header(t1)`
+- `c2` is not in `header(t1)`
+- for all `c`, `schema(t1)[c]` is equal to `schema(t1)[cs[0]]`
+
+__Ensures:__
+
+[TODO: the description is non-structural]
+
+- `schema(t2)[c1]` is equal to `ColName`
+- `schema(t2)[c2]` is equal to `schema(t1)[cs[0]]`
+- `header(t2)` is equal to `header(t1)` with the column names in `cs` removed then concatenated with `[c1, c2]`
+- for all `c` in `header(t2)`, if `c` is in `header(t1)` then `schema(t2)[c]` is equal to `schema(t1)[c]`
+
+### Description
+
+Reshape the input table and make it longer. The data kept in the named columns are moved to two new columns, one for the column names and the other for the cell values. 
+
+[TODO: one more example]
+
+```lua
+> pivotLonger(tableGF, ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"], "test", "score")
+| name    | age | test    | score |
+| ------- | --- | ------- | ----- |
+| "Bob"   | 12  | quiz1   | 8     |
+| "Bob"   | 12  | quiz2   | 9     |
+| "Bob"   | 12  | quiz3   | 7     |
+| "Bob"   | 12  | quiz4   | 9     |
+| "Bob"   | 12  | midterm | 77    |
+| "Bob"   | 12  | final   | 87    |
+| "Alice" | 17  | quiz1   | 6     |
+| "Alice" | 17  | quiz2   | 8     |
+| "Alice" | 17  | quiz3   | 8     |
+| "Alice" | 17  | quiz4   | 7     |
+| "Alice" | 17  | midterm | 88    |
+| "Alice" | 17  | final   | 85    |
+| "Eve"   | 13  | quiz1   | 7     |
+| "Eve"   | 13  | quiz2   | 9     |
+| "Eve"   | 13  | quiz3   | 8     |
+| "Eve"   | 13  | quiz4   | 8     |
+| "Eve"   | 13  | midterm | 84    |
+| "Eve"   | 13  | final   | 77    |
+```
+
+## `pivotWider :: t1:Table * c1:ColName * c2:ColName -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- `c1` is in `header(t1)`
+- `c2` is in `header(t1)`
+- `schema(t1)[c1]` is a subtype of `ColName`
+- for all `c` in `distinct(getColumn(t1, c1))`, `c` is not in `header(t1)`
+
+__Ensures:__
+
+[TODO: non-structural constraints]
+
+- `header(t2)` is equal to `header(t1)` with `c1` and `c2` removed then concatenated with `distinct(getColumn(t1, c1))`
+- for all `c` in `header(t2)`, if `c` in `header(t1)` then `schema(t2)[c]` is equal to `schema(t1)[c]`
+- for all `c` in `distinct(getColumn(t1, c1))`, `schema(t2)[c]` is equal to `schema(t1)[c2]`
+
+### Description
+
+The inverse of `pivotLonger`.
+
+[TODO: one more example]
+
+```lua
+> longerTable = 
+    pivotLonger(
+      tableGF,
+      ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"],
+      "test",
+      "score")
+> longerTable
+| name    | age | test    | score |
+| ------- | --- | ------- | ----- |
+| "Bob"   | 12  | quiz1   | 8     |
+| "Bob"   | 12  | quiz2   | 9     |
+| "Bob"   | 12  | quiz3   | 7     |
+| "Bob"   | 12  | quiz4   | 9     |
+| "Bob"   | 12  | midterm | 77    |
+| "Bob"   | 12  | final   | 87    |
+| "Alice" | 17  | quiz1   | 6     |
+| "Alice" | 17  | quiz2   | 8     |
+| "Alice" | 17  | quiz3   | 8     |
+| "Alice" | 17  | quiz4   | 7     |
+| "Alice" | 17  | midterm | 88    |
+| "Alice" | 17  | final   | 85    |
+| "Eve"   | 13  | quiz1   | 7     |
+| "Eve"   | 13  | quiz2   | 9     |
+| "Eve"   | 13  | quiz3   | 8     |
+| "Eve"   | 13  | quiz4   | 8     |
+| "Eve"   | 13  | midterm | 84    |
+| "Eve"   | 13  | final   | 77    |
+> pivotWider(longerTable, "test", "score")
+| name    | age | quiz1 | quiz2 | quiz3 | quiz4 | midterm | final |
+| ------- | --- | ----- | ----- | ----- | ----- | ------- | ----- |
+| "Bob"   | 12  | 8     | 9     | 7     | 9     | 77      | 87    |
+| "Alice" | 17  | 6     | 8     | 8     | 7     | 88      | 85    |
+| "Eve"   | 13  | 7     | 9     | 8     | 8     | 84      | 77    |
+```
+
+## ``
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+### Description
+
+```lua
 ```
 
 ## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
