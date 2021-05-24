@@ -745,19 +745,19 @@ When columns `cs` of table `t` have sequences, return a `Table` where each eleme
 
 ```lua
 > flatten(tableSeq, ["b"])
-| a   | b      | c      |
-| --- | ------ | ------ |
-| 1   | 1      | [5, 6] |
-| 1   | 2      | [5, 6] |
-| 2   | 3      | [7, 8] |
-| 2   | 4      | [7, 8] |
+| a   | b   | c      |
+| --- | --- | ------ |
+| 1   | 1   | [5, 6] |
+| 1   | 2   | [5, 6] |
+| 2   | 3   | [7, 8] |
+| 2   | 4   | [7, 8] |
 > flatten(tableSeq, ["c", "b"])
-| a   | b      | c      |
-| --- | ------ | ------ |
-| 1   | 1      | 5      |
-| 1   | 2      | 6      |
-| 2   | 3      | 7      |
-| 2   | 4      | 8      |
+| a   | b   | c   |
+| --- | --- | --- |
+| 1   | 1   | 5   |
+| 1   | 2   | 6   |
+| 2   | 3   | 7   |
+| 2   | 4   | 8   |
 ```
 
 ## `transformColumn :: t1:Table * c:ColName * f:(v1:Value -> v2:Value) -> t2:Table`
@@ -1766,17 +1766,62 @@ The inverse of `pivotLonger`.
 | "Eve"   | 13  | 7     | 9     | 8     | 8     | 84      | 77    |
 ```
 
-## ``
+## `pivotTable :: t1:Table * cs:Seq<ColName> * agg:Seq<ColName * ColName * Function> -> t2:Table`
 
 ### Constraints
 
+Let's name each component of each element of `aggs` as `c_i1` and `c_i2` and `f_i` respectively. Let `n` be `length(agg)`
+
 __Requires:__
+
+- for all `c` in `cs`, `c` is in `header(t1)`
+- for all `c` in `cs`, `schema(t1)[c]` is categorical
+- `c_i2` is in `header(t1)`
+- `concat(cs, [c_11, ... , c_n1])` has no duplicates
 
 __Ensures:__
 
+- `f_i` will receive a `Seq<T_i>`, where `T_i` is equal to `schema(t1)[c_i2]`
+- `header(t2)` is equal to `concat(cs, [c_11, ... , c_n1])`
+- for all `c` in `cs`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `schema(t2)[c_i]` is equal to the output type of `f_i`
+
 ### Description
 
+Partition rows into groups and summarize each group with the functions in `agg`. Each element of `agg` specifies the output column, the input column, and the function that compute the summarizing value (e.g. average, sum, and count).
+
 ```lua
+> pivotTable(tableSF, ["favorite-color"], [("age", "age-average", average)])
+| favorite-color | age-average |
+| -------------- | ----------- |
+| "blue"         | 12          |
+| "green"        | 17          |
+| "red"          | 13          |
+> proportion =
+    function(bs):
+      n1 = length(filter(bs, function(b): b end))
+      n2 = length(filter(bs, function(b): b end))
+      n1 / n2
+    end
+> pivotTable(
+    tableJellyNamed,
+    ["brown", "get-acne"],
+    [
+      ("red", "red proportion", proportion),
+      ("red", "red proportion", proportion)
+    ])
+| name       | get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
+| ---------- | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
+| "Emily"    | true     | false | false | false | true  | false  | false | true   | false | false  |
+| "Jacob"    | true     | false | true  | false | true  | true   | false | false  | false | false  |
+| "Emma"     | false    | false | false | false | true  | false  | false | false  | true  | false  |
+| "Aidan"    | false    | false | false | false | false | true   | false | false  | false | false  |
+| "Madison"  | false    | false | false | false | false | true   | false | false  | true  | false  |
+| "Ethan"    | true     | false | true  | false | false | false  | false | true   | true  | false  |
+| "Hannah"   | false    | false | true  | false | false | false  | false | false  | true  | false  |
+| "Matthew"  | true     | false | false | false | false | false  | true  | true   | false | false  |
+| "Hailey"   | true     | false | false | false | false | false  | false | true   | false | false  |
+| "Nicholas" | false    | true  | false | false | false | true   | true  | false  | true  | false  |
 ```
 
 ## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
