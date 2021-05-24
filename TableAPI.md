@@ -1832,8 +1832,8 @@ __Requires:__
 
 - `c1` is in `header(t)`
 - `c2` is in `header(t)`
-- `schema(t)[c1]` is a subtype of `String`
-- `schema(t)[c2]` is a subtype of non-negative `Number`
+- `schema(t)[c1]` can be used as `String`
+- `schema(t)[c2]` can be used as non-negative `Number`
 - `getColumn(t, c1)` has no duplicate
 
 __Ensures:__
