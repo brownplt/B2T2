@@ -1,6 +1,4 @@
-# Error Benchmark
-
-[TODO: use consistent titles]
+# Error Illustrations
 
 ## Mistyped Column Name
 
@@ -19,12 +17,12 @@ and final exam.
 > scatterPlot(tableGF, "mid", "final")
 ```
 
-### What's the Bug?
+### What is the Bug?
 
 The `"mid"` is not a valid column name of `tableGF`. However, the table 
 contains a `"midterm"` column.
 
-### Corrected Program
+### A Corrected Program
 
 ```lua
 > scatterPlot(tableGF, "midterm", "final")
@@ -51,11 +49,11 @@ black jelly beans and white ones".
 > buWldColumn(tableJellyAnon, "eat-black-and-white", eatBlackAndWhiBe)?
 ```
 
-### What's the Bug?
+### What is the Bug?
 
 The logical `and` appeals at a wrong place. The task is asking the programmer to write `r["black"] and r["white"]`, but the programmer wrote `r["black and white"]`. The bug will likely lead to an error complaining that `"black and white"` is not a valid column name of `r`, which is a row of `tableJellyAnon`.
 
-### Corrected Program
+### A Corrected Program
 
 ```
 > eatBlackAndWhite =
@@ -89,11 +87,11 @@ The programmer was asked to count the number of participants that consumed jelly
 > countParticipants(tableJellyAnon, "brown")
 ```
 
-### What's the bug
+### What is the Bug?
 
 `"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color in `countParticipants`.
 
-### Corrected Program (1/2)
+### A Corrected Program (1/2)
 
 ```lua
 > countParticipants =
@@ -109,7 +107,7 @@ The programmer was asked to count the number of participants that consumed jelly
 > countParticipants(tableJellyAnon, "brown")
 ```
 
-### Corrected Program (2/2)
+### A Corrected Program (2/2)
 
 ```lua
 > countParticipants =
@@ -143,11 +141,11 @@ The programmer was asked to visualize the proportion of participants getting acn
 > showAcneProportions(tableBM)?
 ```
 
-### What's the Bug?
+### What is the Bug?
 
 The program supplies a `count` table to `pieChart`, which also consumes two column names of its input table. The `count` table contains two column names, `"value"` and `"count"`. None of the given colum names, `"true"` and `"get-acen"`, are valid column names of the `count` table.
 
-### Corrected Program
+### A Corrected Program
 
 ```lua
 > showAcneProportions =
@@ -230,7 +228,7 @@ There are several problems in this program. First, in the body of `employeeToDep
 
 As the part 2 of all tasks, the programmer was asked to compute the proportion of participants that consumed brown jelly beans and got acne.
 
-### The Buggy Program
+### A Buggy Program
 
 ```lua
 > brownAndGetAcne =
@@ -268,7 +266,7 @@ The built column was named inconsistently. In `buildColumn(...)`, the column was
 
 The programmer was asked to find Alice's favorite color.
 
-### The Buggy Program
+### A Buggy Program
 
 ```lua
 > getValue(
@@ -306,7 +304,7 @@ There is only one row that matches the filtering criteria. So there is only one 
 
 The programmer was asked to define a function that finds all participants who like `"green"`.
 
-### The Buggy Program
+### A Buggy Program
 
 ```lua
 > participantsLikeGreen =
