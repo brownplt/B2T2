@@ -28,7 +28,7 @@ contains a `"midterm"` column.
 > scatterPlot(tableGF, "midterm", "final")
 ```
 
-## Distributive Laws
+## Nonexisting Distributive Laws
 
 ### Context
 
@@ -121,7 +121,7 @@ The programmer was asked to count the number of participants that consumed jelly
 > countParticipants(tableJellyAnon, "brown")
 ```
 
-## `count` Table
+## Misuse Computed Tables
 
 ### Context
 
@@ -143,7 +143,7 @@ The programmer was asked to visualize the proportion of participants getting acn
 
 ### What is the Bug?
 
-The program supplies a `count` table to `pieChart`, which also consumes two column names of its input table. The `count` table contains two column names, `"value"` and `"count"`. None of the given colum names, `"true"` and `"get-acen"`, are valid column names of the `count` table.
+The program supplies a table produced by `count` to `pieChart`, which also consumes two column names of its input table. The table produced by `count` contains two column names, `"value"` and `"count"`. None of the given colum names, `"true"` and `"get-acen"`, is valid.
 
 ### A Corrected Program
 
@@ -155,7 +155,7 @@ The program supplies a `count` table to `pieChart`, which also consumes two colu
 > showAcneProportions(tableBM)?
 ```
 
-## Use column names in an other table
+## Use Column Names of One Table with Another Table
 
 ### Context
 
@@ -242,7 +242,7 @@ As the part 2 of all tasks, the programmer was asked to compute the proportion o
 
 ### What is the Bug?
 
-The built column was named inconsistently. In `buildColumn(...)`, the column was named `"part2"` but when computing the `count` table, the column was accessed with `"brown-and-get-acne"`.
+The built column was named inconsistently. In `buildColumn(...)`, the column was named `"part2"` but when `count`ed, the column was accessed with `"brown-and-get-acne"`.
 
 ### A Corrected Program
 
@@ -318,7 +318,7 @@ The programmer was asked to define a function that finds all participants who li
 
 ### What is the Bug?
 
-The programmer returns `getValue(r, "favrite-color")` directly in the predicate but should return a `Boolean`.
+The programmer returns `getValue(r, "favorite-color")` directly in the predicate but should return a `Boolean`.
 
 ### A Corrected Program
 
@@ -327,7 +327,7 @@ The programmer returns `getValue(r, "favrite-color")` directly in the predicate 
     function(t):
       filter(t,
         function(r):
-          getValue(r, "favorite-color") == "red"
+          getValue(r, "favorite-color") == "green"
         end)
     end
 ```
