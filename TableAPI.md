@@ -1799,9 +1799,8 @@ Partition rows into groups and summarize each group with the functions in `agg`.
 | "red"          | 13          |
 > proportion =
     function(bs):
-      n1 = length(filter(bs, function(b): b end))
-      n2 = length(filter(bs, function(b): b end))
-      n1 / n2
+      n = length(filter(bs, function(b): b end))
+      n / length(bs)
     end
 > pivotTable(
     tableJellyNamed,
@@ -1810,18 +1809,12 @@ Partition rows into groups and summarize each group with the functions in `agg`.
       ("red", "red proportion", proportion),
       ("red", "red proportion", proportion)
     ])
-| name       | get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
-| ---------- | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
-| "Emily"    | true     | false | false | false | true  | false  | false | true   | false | false  |
-| "Jacob"    | true     | false | true  | false | true  | true   | false | false  | false | false  |
-| "Emma"     | false    | false | false | false | true  | false  | false | false  | true  | false  |
-| "Aidan"    | false    | false | false | false | false | true   | false | false  | false | false  |
-| "Madison"  | false    | false | false | false | false | true   | false | false  | true  | false  |
-| "Ethan"    | true     | false | true  | false | false | false  | false | true   | true  | false  |
-| "Hannah"   | false    | false | true  | false | false | false  | false | false  | true  | false  |
-| "Matthew"  | true     | false | false | false | false | false  | true  | true   | false | false  |
-| "Hailey"   | true     | false | false | false | false | false  | false | true   | false | false  |
-| "Nicholas" | false    | true  | false | false | false | true   | true  | false  | true  | false  |
+| get-acne | brown | red | pink |
+| -------- | ----- | --- | ---- |
+| false    | false | 0   | 3/4  |
+| false    | true  | 1   | 1    |
+| true     | false | 0   | 1/4  |
+| true     | true  | 0   | 0    |
 ```
 
 ## `histogram :: t:Table * c:ColName * n:Number -> i:Image`
