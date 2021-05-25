@@ -4,7 +4,7 @@
 
 ### Context
 
-`tableGF`
+`gradebook`
 
 ### Task
 
@@ -14,25 +14,25 @@ midterm and final exam grades.
 ### A Buggy Program
 
 ```lua
-> scatterPlot(tableGF, "mid", "final")
+> scatterPlot(gradebook, "mid", "final")
 ```
 
 ### What is the Bug?
 
-The `"mid"` is not a valid column name of `tableGF`. However, the table
+The `"mid"` is not a valid column name of `gradebook`. However, the table
 contains a `"midterm"` column.
 
 ### A Corrected Program
 
 ```lua
-> scatterPlot(tableGF, "midterm", "final")
+> scatterPlot(gradebook, "midterm", "final")
 ```
 
 ## Nonexisting Distributive Laws
 
 ### Context
 
-`tableJellyAnon`
+`jellyAnon`
 
 ### Task
 
@@ -46,7 +46,7 @@ participant consumed black jelly beans and white ones".
     function(r):
       r["black and white"] == true
     end
-> buildColumn(tableJellyAnon, "eat-black-and-white", eatBlackAndWhite)?
+> buildColumn(jellyAnon, "eat-black-and-white", eatBlackAndWhite)?
 ```
 
 ### What is the Bug?
@@ -62,14 +62,14 @@ invalid column `"black and white"` instead.
     function(r):
       r["black"] and r["white"]
     end
-> buildColumn(tableJellyAnon, "eat-black-and-white", eatBlackAndWhite)
+> buildColumn(jellyAnon, "eat-black-and-white", eatBlackAndWhite)
 ```
 
 ## Scope Error
 
 ### Context
 
-`tableJellyAnon`
+`jellyAnon`
 
 ### Task
 
@@ -87,7 +87,7 @@ jelly bean of a given color.
     function(r):
       r["color"]
     end
-> countParticipants(tableJellyAnon, "brown")
+> countParticipants(jellyAnon, "brown")
 ```
 
 ### What is the Bug?
@@ -107,7 +107,7 @@ jelly bean of a given color.
         r[color]
       end
     end
-> countParticipants(tableJellyAnon, "brown")
+> countParticipants(jellyAnon, "brown")
 ```
 
 ### A Corrected Program (2/2)
@@ -121,14 +121,14 @@ jelly bean of a given color.
         end
       nrows(filter(t, keep))
     end
-> countParticipants(tableJellyAnon, "brown")
+> countParticipants(jellyAnon, "brown")
 ```
 
 ## Misuse Computed Tables
 
 ### Context
 
-`tableJellyAnon`
+`jellyAnon`
 
 ### Task
 
@@ -141,7 +141,7 @@ The programmer was asked to visualize the proportion of participants getting acn
     function(t):
       pieChart(count(t, "get-acne"), "true", "get-acne")
     end
-> showAcneProportions(tableJellyAnon)
+> showAcneProportions(jellyAnon)
 ```
 
 ### What is the Bug?
@@ -155,15 +155,15 @@ The program supplies a table produced by `count` to `pieChart`, which also expec
     function(t):
       pieChart(count(t, "get-acne"), "value", "count")
     end
-> showAcneProportions(tableJellyAnon)
+> showAcneProportions(jellyAnon)
 ```
 
 ## Use Column Names of One Table with Another Table
 
 ### Context
 
-- `tableEmployee`
-- `tableDepartment`
+- `employee`
+- `department`
 
 ### Task
 
@@ -225,7 +225,7 @@ There are several problems in this program. First, in the body of `employeeToDep
 
 ### Context
 
-`tableJellyNamed`
+`jellyNamed`
 
 ### Task
 
@@ -239,7 +239,7 @@ The programmer was asked to compute how many participants consumed brown jelly b
       getValue(r, "brown") and getValue(r, "get-acne")
     end
 > brownAndGetAcneTable =
-    buildColumn(tableJellyNamed, "part2", brownAndGetAcne)
+    buildColumn(jellyNamed, "part2", brownAndGetAcne)
 > count(brownAndGetAcneTable, "brown-and-get-acne")
 ```
 
@@ -255,7 +255,7 @@ The built column was named inconsistently. In `buildColumn(...)`, the column was
       getValue(r, "brown") and getValue(r, "get-acne")
     end
 > brownAndGetAcneTable =
-    buildColumn(tableJellyNamed, "brown-and-get-acne", brownAndGetAcne)
+    buildColumn(jellyNamed, "brown-and-get-acne", brownAndGetAcne)
 > count(brownAndGetAcneTable, "brown-and-get-acne")
 ```
 
@@ -263,7 +263,7 @@ The built column was named inconsistently. In `buildColumn(...)`, the column was
 
 ### Context
 
-`tableSF`
+`students`
 
 ### Task
 
@@ -274,7 +274,7 @@ The programmer was asked to find Alice's favorite color.
 ```lua
 > getValue(
     getRow(
-      filter(tableSF,
+      filter(students,
         function(r):
           getValue(r, "name") == "Alice"
         end),
@@ -291,7 +291,7 @@ There is only one row that matches the filtering criteria. So the only valid ind
 ```lua
 > getValue(
     getRow(
-      filter(tableSF,
+      filter(students,
         function(r):
           getValue(r, "name") == "Alice"
         end),
@@ -303,7 +303,7 @@ There is only one row that matches the filtering criteria. So the only valid ind
 
 ### Context
 
-`tableSF`
+`students`
 
 ### Task
 

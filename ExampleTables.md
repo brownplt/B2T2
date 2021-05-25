@@ -1,4 +1,4 @@
-## `tableSF`: a simple table with no values missing.
+## `students`: a simple table with no values missing.
 
 ```lua
 | name    | age | favorite-color |
@@ -8,7 +8,7 @@
 | "Eve"   | 13  | "red"          |
 ```
 
-## `tableSM`: a simple table with some values missing.
+## `studentsMissing`: a simple table with some values missing.
 
 ```lua
 | name    | age | favorite-color |
@@ -18,7 +18,7 @@
 | "Eve"   | 13  |                |
 ```
 
-## `tableGF`: a gradebook table with no missing values.
+## `gradebook`: a gradebook table with no missing values.
 
 ```lua
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
@@ -28,7 +28,7 @@
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
-## `tableGM`: a gradebook table with some missing values.
+## `gradebookMissing`: a gradebook table with some missing values.
 
 ```lua
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
@@ -38,7 +38,7 @@
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
 ```
 
-## `tableEmployee`: a table that contains employees and their department IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
+## `employee`: a table that contains employees and their department IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
 
 ```lua
 | Last Name    | Department ID |
@@ -51,7 +51,7 @@
 | "Williams"   |               |
 ```
 
-## `tableDepartment`: a table that contains departments and their IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
+## `department`: a table that contains departments and their IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
 
 ```lua
 | Department ID | Department Name |
@@ -71,7 +71,7 @@
 | 2   | [3, 4] | [7, 8] |
 ```
 
-## `tableJellyAnon`: a jelly bean table that contains only boolean data
+## `jellyAnon`: a jelly bean table that contains only boolean data
 
 ```lua
 | get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
@@ -88,7 +88,7 @@
 | false    | true  | false | false | false | true   | true  | false  | true  | false  |
 ```
 
-## `tableJellyNamed`: a jelly bean table that contains booleans and strings
+## `jellyNamed`: a jelly bean table that contains booleans and strings
 
 ```lua
 | name       | get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |

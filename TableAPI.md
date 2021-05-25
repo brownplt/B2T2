@@ -79,14 +79,14 @@ __Ensures:__
 Given a `Table` and a `Seq<Number>` containing row indices, and produces a new `Table` containing only those rows.
 
 ```lua
-> selectRows(tableSF, [2, 0, 2, 1])
+> selectRows(students, [2, 0, 2, 1])
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
 | "Eve"   | 13  | "red"          |
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
 | "Alice" | 17  | "green"        |
-> selectRows(tableGM, [2, 1])
+> selectRows(gradebooks, [2, 1])
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
@@ -112,12 +112,12 @@ __Ensures:__
 Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, returns a `Table` with only the rows for which the predicate returns true.
 
 ```lua
-> selectRows(tableSF, [true, false, true])
+> selectRows(students, [true, false, true])
 | name  | age | favorite-color |
 | ----- | --- | -------------- |
 | "Bob" | 12  | "blue"         |
 | "Eve" | 13  | "red"          |
-> selectRows(tableGM, [false, false, true])
+> selectRows(gradebook, [false, false, true])
 | name  | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ----- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Eve" | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
@@ -142,13 +142,13 @@ __Ensures:__
 Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be kept, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
 
 ```lua
-> selectColumns(tableSF, [true, true, false])
+> selectColumns(students, [true, true, false])
 | name    | age |
 | ------- | --- |
 | "Bob"   | 12  |
 | "Alice" | 17  |
 | "Eve"   | 13  |
-> selectColumns(tableGF, [true, false, false, false, true, false, false, true])
+> selectColumns(gradebook, [true, false, false, false, true, false, false, true])
 | name    | midterm | final |
 | ------- | ------- | ----- |
 | "Bob"   | 77      | 87    |
@@ -177,13 +177,13 @@ Consumes a `Table` and a `Seq<ColName>` containing column indices, and produces 
 
 
 ```lua
-> selectColumns(tableSF, [2, 1])
+> selectColumns(students, [2, 1])
 | favorite-color | age |
 | -------------- | --- |
 | "blue"         | 12  |
 | "green"        | 17  |
 | "red"          | 13  |
-> selectColumns(tableGF, [7, 0, 4])
+> selectColumns(gradebook, [7, 0, 4])
 | final | name    | midterm |
 | ----- | ------- | ------- |
 | 87    | "Bob"   | 77      |
@@ -210,13 +210,13 @@ __Ensures:__
 Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
 
 ```lua
-> selectColumns(tableSF, ["favorite-color", "age"])
+> selectColumns(students, ["favorite-color", "age"])
 | favorite-color | age |
 | -------------- | --- |
 | "blue"         | 12  |
 | "green"        | 17  |
 | "red"          | 13  |
-> selectColumns(tableGF, ["final", "name", "midterm"])
+> selectColumns(gradebook, ["final", "name", "midterm"])
 | final | name    | midterm |
 | ----- | ------- | ------- |
 | 87    | "Bob"   | 77      |
@@ -276,9 +276,9 @@ __Ensures:__
 Extract a row out of a table by a numeric index. 
 
 ```lua
-> getRow(tableSF, 0)
+> getRow(students, 0)
 [row: ("name", "Bob"), ("age", 12), ("favorite-color", "blue")]
-> getRow(tableGF, 1)
+> getRow(gradebook, 1)
 [row:
   ("name", "Alice"), ("age", 17),
   ("quiz1", 6), ("quiz2", 8), ("midterm", 88),
@@ -302,9 +302,9 @@ __Ensures:__
 Returns a `Seq` of the values in the indexed column in `t`.
 
 ```lua
-> getColumn(tableSF, 1)
+> getColumn(students, 1)
 [12, 17, 13]
-> getColumn(tableGF, 0)
+> getColumn(gradebook, 0)
 ["Bob", "Alice", "Eve"]
 ```
 
@@ -325,9 +325,9 @@ __Ensures:__
 Returns a `Seq` of the values in the named column in `t`.
 
 ```lua
-> getColumn(tableSF, "age")
+> getColumn(students, "age")
 [12, 17, 13]
-> getColumn(tableGF, "name")
+> getColumn(gradebook, "name")
 ["Bob", "Alice", "Eve"]
 ```
 
@@ -373,9 +373,9 @@ __Ensures:__
 Returns a `Number` representing the number of rows in the `Table`.
 
 ```lua
-> nrows(tableSF)
+> nrows(students)
 3
-> nrows(tableSM)
+> nrows(studentsMissing)
 3
 ```
 
@@ -395,9 +395,9 @@ __Ensures:__
 Returns a `Number` representing the number of columns in the `Table`.
 
 ```lua
-> ncols(tableSF)
+> ncols(students)
 3
-> ncols(tableSM)
+> ncols(studentsMissing)
 8
 ```
 
@@ -417,9 +417,9 @@ __Ensures:__
 Return a tuple representing the dimensionality of the `Table`. [cite pandas]
 
 ```lua
-> shape(tableSF)
+> shape(students)
 (3, 3)
-> shape(tableGF)
+> shape(gradebook)
 (3, 8)
 ```
 
@@ -438,9 +438,9 @@ __Ensures:__
 Returns a `Seq` representing the column names in the `Table`.
 
 ```lua
-> header(tableSF)
+> header(students)
 ["name", "age", "favorite-color"]
-> header(tableGF)
+> header(gradebook)
 ["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
 ```
 
@@ -459,9 +459,9 @@ __Ensures:__
 Returns a `Seq` representing the column names in the `Row`.
 
 ```lua
-> header(getRow(tableSF, 0))
+> header(getRow(students, 0))
 ["name", "age", "favorite-color"]
-> header(getRow(tableGF, 0))
+> header(getRow(gradebook, 0))
 ["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
 ```
 
@@ -490,7 +490,7 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
     function(r):
       12 < getValue(r, "age") and getValue(r, "age") < 20
     end
-> buildColumn(tableSF, "is-teenager", isTeenagerBuilder)
+> buildColumn(students, "is-teenager", isTeenagerBuilder)
 | name    | age | favorite-color | is-teenager |
 | ------- | --- | -------------- | ----------- |
 | "Bob"   | 12  | "blue"         | false       |
@@ -500,7 +500,7 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
     function(r):
       85 <= getValue(r, "final")
     end
-> buildColumn(tableGF, "did-well-in-final", didWellInFinal)
+> buildColumn(gradebook, "did-well-in-final", didWellInFinal)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | did-well-in-final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ----------------- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | true              |
@@ -538,7 +538,7 @@ Consumes an existing `Table` and produces a new `Table` with the named columns u
         [row: ("age", "adult")]
       end
     end
-> update(tableSF, abstractAge)
+> update(students, abstractAge)
 | name    | age        | favorite-color |
 | ------- | ---------- | -------------- |
 | "Bob"   | "kid"      | "blue"         |
@@ -550,7 +550,7 @@ Consumes an existing `Table` and produces a new `Table` with the named columns u
         ("midterm", 85 <= getValue(r, "midterm"))
         ("final", 85 <= getValue(r, "final"))]
     end
-> update(tableGF, didWellInFinal)
+> update(gradebook, didWellInFinal)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | false   | 7     | 9     | true  |
@@ -579,7 +579,7 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 
 ```lua
 > addRow(
-    tableSF,
+    students,
     [row: 
       ("name", "Colton"), ("age", 19),
       ("favorite-color", "blue")])
@@ -590,7 +590,7 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 | "Eve"    | 13  | "red"          |
 | "Colton" | 19  | "blue"         |
 > addRow(
-    tableGF,
+    gradebook,
     [row:
       ("name", "Colton"), ("age", 19),
       ("quiz1", 8), ("quiz2", 9), ("midterm", 73),
@@ -624,7 +624,7 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
 
 ```lua
 > addRows(
-    tableSF,
+    students,
     [
       [row: 
         ("name", "Colton"), ("age", 19),
@@ -636,7 +636,7 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
 | "Alice"  | 17  | "green"        |
 | "Eve"    | 13  | "red"          |
 | "Colton" | 19  | "blue"         |
-> addRows(tableGF, [])
+> addRows(gradebook, [])
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
@@ -698,14 +698,14 @@ Consumes a column name and a `Seq` of values and produces a new `Table` with the
 
 ```lua
 > hairColor = ["brown", "red", "blonde"]
-> addColumn(tableSF, "hair-color", hairColor)
+> addColumn(students, "hair-color", hairColor)
 | name    | age | favorite-color | hair-color |
 | ------- | --- | -------------- | ---------- |
 | "Bob"   | 12  | "blue"         | "brown"    |
 | "Alice" | 17  | "green"        | "red"      |
 | "Eve"   | 13  | "red"          | "blonde"   |
 > presentation = [9, 9, 6]
-> addColumn(tableGF, "presentation", presentation)
+> addColumn(gradebook, "presentation", presentation)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | presentation |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ------------ |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | 9            |
@@ -730,9 +730,9 @@ __Ensures:__
 Return a `Seq<Boolean>` with `true` entries indicating rows without missing values (complete cases) in table `t`. [cite Julia]
 
 ```lua
-> completeCases(tableSF, "age")
+> completeCases(students, "age")
 [true, true, true]
-> completeCases(tableSM, "age")
+> completeCases(studentsMissing, "age")
 [false, true, true]
 ```
 
@@ -802,7 +802,7 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
     lam(name):
       Strings.concat(name, “ Smith”)
     end
-> transformColumn(tableSF, “name”, addLastName)
+> transformColumn(students, “name”, addLastName)
 | name          | age | favorite-color |
 | ------------- | --- | -------------- |
 | "Bob Smith"   | 12  | "blue"         |
@@ -816,7 +816,7 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
         "pass"
       end
     end
-> transformColumn(tableGF, "quiz1", quizScoreToPassFail)
+> transformColumn(gradebook, "quiz1", quizScoreToPassFail)
 | name    | age | quiz1  | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ------ | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | "pass" | 9     | 77      | 7     | 9     | 87    |
@@ -847,7 +847,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
     lam(r):
       getValue(r, “age”) < 15
     end
-> filter(tableSF, ageUnderFifteen)
+> filter(students, ageUnderFifteen)
 | name  | age | favorite-color |
 | ----- | --- | -------------- |
 | "Bob" | 12  | "blue"         |
@@ -856,7 +856,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
     lam(r):
       length(getValue(r, “name)) > 3
     end
-> filter(tableGF, nameLongerThan3Letters)
+> filter(gradebook, nameLongerThan3Letters)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
@@ -893,13 +893,13 @@ __Ensures:__
 Given a `Table` and the name of a column in that `Table`, return a `Table` with the same rows ordered based on the named column. If `b` is `true`, the `Table` will be sorted in ascending order, otherwise it will be in descending order.
 
 ```lua
-> sort(tableSF, "age", true)
+> sort(students, "age", true)
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
 | "Alice" | 17  | "green"        |
-> sort(tableGF)
+> sort(gradebook)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
@@ -929,13 +929,13 @@ __Ensures:__
 Given a `Table` and a sequence of column names in that `Table`, return a `Table` with the same rows ordered based on the named columns.
 
 ```lua
-> sort(tableSF, ["age"])
+> sort(students, ["age"])
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
 | "Alice" | 17  | "green"        |
-> sort(tableGF, ["quiz2", "quiz1",])
+> sort(gradebook, ["quiz2", "quiz1",])
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
@@ -965,13 +965,13 @@ __Ensures:__
 Returns a `Table` that is the same as `t`, except without the column whose name is `c`.
 
 ```lua
-> dropColumn(tableSF, "age")
+> dropColumn(students, "age")
 | name    | favorite-color |
 | ------- | -------------- |
 | "Bob"   | "blue"         |
 | "Alice" | "green"        |
 | "Eve"   | "red"          |
-> dropColumn(tableGF, "final")
+> dropColumn(gradebook, "final")
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     |
@@ -1002,13 +1002,13 @@ __Ensures:__
 Returns a `Table` that is the same as `t`, except without the columns whose name is in `cs`.
 
 ```lua
-> dropColumns(tableSF, ["age"])
+> dropColumns(students, ["age"])
 | name    | favorite-color |
 | ------- | -------------- |
 | "Bob"   | "blue"         |
 | "Alice" | "green"        |
 | "Eve"   | "red"          |
-> dropColumns(tableGF, ["final", "midterm"])
+> dropColumns(gradebook, ["final", "midterm"])
 | name    | age | quiz1 | quiz2 | quiz3 | quiz4 |
 | ------- | --- | ----- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 7     | 9     |
@@ -1032,10 +1032,10 @@ __Ensures:__
 Remove all rows but keep the schema.
 
 ```lua
-> empty(tableSF)
+> empty(students)
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
-> empty(tableGF)
+> empty(gradebook)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 ```
@@ -1060,13 +1060,13 @@ __Ensures:__
 Retain only unique/distinct rows from an input `Table`. [cite R]
 
 ```lua
-> distinct(tableSF)
+> distinct(students)
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Alice" | 17  | "green"        |
 | "Eve"   | 13  | "red"          |
-> distinct(selectColumns(tableGF, ["quiz3"]))
+> distinct(selectColumns(gradebook, ["quiz3"]))
 | quiz3 |
 | ----- |
 | 7     |
@@ -1094,13 +1094,13 @@ __Ensures:__
 Takes a `Table` and a `ColName` representing the name of a column in that `Table`. Produces a `Table` that summarizes how many rows have each value in the given column.
 
 ```lua
-> count(tableSF, "favorite-color")
+> count(students, "favorite-color")
 | value   | count |
 | ------- | ----- |
 | "blue"  | 1     |
 | "green" | 1     |
 | "red"   | 1     |
-> count(tableGF, "age")
+> count(gradebook, "age")
 | value | count |
 | ----- | ----- |
 | 12    | 1     |
@@ -1130,7 +1130,7 @@ ensures:
 Catagorize rows of the input table into groups by the key of each row. The key is computed by accessing the named column. 
 
 ```lua
-> groupByOriginal(tableSF, "favorite-color")
+> groupByOriginal(students, "favorite-color")
 | key     | members  |
 | ------- | -------- |
 | "blue"  | <table1> |
@@ -1148,7 +1148,7 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 | name  | age | favorite-color |
 | ----- | --- | -------------- |
 | "Eve" | 13  | "red"          |
-> groupByOriginal(tableJellyAnon, "brown")
+> groupByOriginal(jellyAnon, "brown")
 | key   | members  |
 | ----- | -------- |
 | true  | <table1> |
@@ -1198,7 +1198,7 @@ ensures:
 Similar to `groupByOriginal` but the named column is removed in the output.
 
 ```lua
-> groupBySubtracted(tableSF, "favorite-color")
+> groupBySubtracted(students, "favorite-color")
 | key     | members  |
 | ------- | -------- |
 | "blue"  | <table1> |
@@ -1216,7 +1216,7 @@ Similar to `groupByOriginal` but the named column is removed in the output.
 | name  | age |
 | ----- | --- |
 | "Eve" | 13  |
-> groupBySubtracted(tableJellyAnon, "brown")
+> groupBySubtracted(jellyAnon, "brown")
 | key   | members  |
 | ----- | -------- |
 | true  | <table1> |
@@ -1275,7 +1275,7 @@ Groups the rows of a table according to a specified key selector function and cr
     function(k, vs):
       [row: ("key", k), ("average", average(vs))]
     end
-> groupBy(tableSF, colorTemp, nameLength, aggregate)
+> groupBy(students, colorTemp, nameLength, aggregate)
 | key    | average |
 | ------ | ------- |
 | "warm" | 3       |
@@ -1294,7 +1294,7 @@ Groups the rows of a table according to a specified key selector function and cr
     function(r):
       getValue(r, "final")
     end
-> groupBy(tableGF, abstractAge, finalGrade, aggregate)
+> groupBy(gradebook, abstractAge, finalGrade, aggregate)
 | key        | average |
 | ---------- | ------- |
 | "kid"      | 87      |
@@ -1334,7 +1334,7 @@ Correlates the rows of two tables based on equality of keys and groups the resul
     function(r, t):
       addColumn(r, average(getColumn(t, "final")))
     end
-> groupJoin(tableSF, tableGF, getName, getName, averageFinal)
+> groupJoin(students, gradebook, getName, getName, averageFinal)
 | name    | age | favorite-color | final |
 | ------- | --- | -------------- | ----- |
 | "Bob"   | 12  | "blue"         | 87    |
@@ -1373,7 +1373,7 @@ Correlates the rows of two tables based on matching keys. [cite LINQ]
     function(r1, r2):
       addColumn(r1, "grade", getValue(r2, "final"))
     end
-> join(tableSF, tableGF, getName, getName, addGradeColumn)
+> join(students, gradebook, getName, getName, addGradeColumn)
 | name    | age | favorite-color | final |
 | ------- | --- | -------------- | ----- |
 | "Bob"   | 12  | "blue"         | 87    |
@@ -1401,13 +1401,13 @@ Compute the cartesian product of two tables.
 [TODO: need one more example]
 
 ```lua
-> petiteJelly = subTable(tableJellyAnon, [0, 1], [0, 1, 2])
+> petiteJelly = subTable(jellyAnon, [0, 1], [0, 1, 2])
 > petiteJelly
 | get-acne | red   | black |
 | -------- | ----- | ----- |
 | true     | false | false |
 | true     | false | true  |
-> crossJoin(tableSF, petiteJelly)
+> crossJoin(students, petiteJelly)
 | name    | age | favorite-color | get-acne | red   | black |
 | ------- | --- | -------------- | -------- | ----- | ----- |
 | "Bob"   | 12  | "blue"         | true     | false | false |
@@ -1438,13 +1438,13 @@ __Ensures:__
 Look up more information on rows of the first table and add those information to create a new table. The named columns define the keys for looking up. If there is no corresponding row in `t2`, the extra column will be filled with empty cells.
 
 ```lua
-> leftJoin(tableSF, tableGF, ["name", "age"])
+> leftJoin(students, gradebook, ["name", "age"])
 | name    | age | favorite-color | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | -------------- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | "blue"         | 8     | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | "green"        | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"   | 13  | "red"          | 7     | 9     | 84      | 8     | 8     | 77    |
-> leftJoin(tableEmployee, tableDepartment, ["Department ID"])
+> leftJoin(employee, department, ["Department ID"])
 | Last Name    | Department ID | Department Name |
 | ------------ | ------------- | --------------- |
 | "Rafferty"   | 31            | "Sales"         |
@@ -1477,7 +1477,7 @@ Combining two tables vertically. The output table starts with rows from the firs
     function(r):
       [row: ("name", 1 + getValue(r, "age"))]
     end
-> union(tableSF, update(tableSF, increaseAge))
+> union(students, update(students, increaseAge))
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
@@ -1496,7 +1496,7 @@ Combining two tables vertically. The output table starts with rows from the firs
         ("midterm", curve(getValue("midterm"))),
         ("final", curve(getValue("final")))]
     end
-> union(tableGF, update(tableGF, curveFinal))
+> union(gradebook, update(gradebook, curveFinal))
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
@@ -1567,7 +1567,7 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
     function(n1, n2):
       n1 <= n2
     end
-> orderBy(tableSF, [(nameLength, le)])
+> orderBy(students, [(nameLength, le)])
 | name    | age | favorite-color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
@@ -1581,7 +1581,7 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
     function(g1, g2):
       le(average(g1), average(g2))
     end
-> orderBy(tableGF, [(nameLength, ge), (midtermAndFinal, compareGrade)])
+> orderBy(gradebook, [(nameLength, ge), (midtermAndFinal, compareGrade)])
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
@@ -1608,7 +1608,7 @@ Projects each `Row` of a `Table` into a new `Table`. [cite LINQ]
 
 ```lua
 > select(
-    tableSF,
+    students,
     function(r, n):
       [row: 
         ("id", n),
@@ -1621,7 +1621,7 @@ Projects each `Row` of a `Table` into a new `Table`. [cite LINQ]
 | 1   | "green"        | 17  |
 | 2   | "red"          | 13  |
 > select(
-    tableGF,
+    gradebook,
     function(r, n):
       [row: 
         ("full name", concat(getValue(r, "name"), "Smith")),
@@ -1656,7 +1656,7 @@ Projects each row of a table to a new table, flattens the resulting tables into 
 
 ```lua
 > selectMany(
-    tableSF,
+    students,
     function(r, n):
       if even(n):
         r
@@ -1680,7 +1680,7 @@ Projects each row of a table to a new table, flattens the resulting tables into 
       end
     end
 > selectMany(
-    tableGF,
+    gradebook,
     repeatRow,
     function(r1, r2):
       selectColumns(r2, ["midterm"])
@@ -1724,7 +1724,7 @@ Reshape the input table and make it longer. The data kept in the named columns a
 [TODO: one more example]
 
 ```lua
-> pivotLonger(tableGF, ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"], "test", "score")
+> pivotLonger(gradebook, ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"], "test", "score")
 | name    | age | test    | score |
 | ------- | --- | ------- | ----- |
 | "Bob"   | 12  | quiz1   | 8     |
@@ -1775,7 +1775,7 @@ The inverse of `pivotLonger`.
 ```lua
 > longerTable = 
     pivotLonger(
-      tableGF,
+      gradebook,
       ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"],
       "test",
       "score")
@@ -1833,7 +1833,7 @@ __Ensures:__
 Partition rows into groups and summarize each group with the functions in `agg`. Each element of `agg` specifies the output column, the input column, and the function that compute the summarizing value (e.g. average, sum, and count).
 
 ```lua
-> pivotTable(tableSF, ["favorite-color"], [("age", "age-average", average)])
+> pivotTable(students, ["favorite-color"], [("age", "age-average", average)])
 | favorite-color | age-average |
 | -------------- | ----------- |
 | "blue"         | 12          |
@@ -1845,7 +1845,7 @@ Partition rows into groups and summarize each group with the functions in `agg`.
       n / length(bs)
     end
 > pivotTable(
-    tableJellyNamed,
+    jellyNamed,
     ["brown", "get-acne"],
     [
       ("red", "red proportion", proportion),

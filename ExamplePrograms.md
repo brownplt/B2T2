@@ -10,7 +10,7 @@ A type system should try to realize that `sampleRows` requires `n` is in `range(
       indexes = sample(range(nrows(t)), n)
       selectRowsByNumbers(t, indexes)
     end
-> sampleRows(tableGM, 2)
+> sampleRows(gradebook, 2)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
@@ -54,11 +54,11 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
 
 ## Gradebook 1
 
-This example computes the average quiz score for each student in `tableGF`. This example is interesting because the type system needs to understand the connection between the pattern of quiz column names (i.e. `startsWith(..., "quiz")`) and the type of those columns (i.e. numeric).
+This example computes the average quiz score for each student in `gradebook`. This example is interesting because the type system needs to understand the connection between the pattern of quiz column names (i.e. `startsWith(..., "quiz")`) and the type of those columns (i.e. numeric).
 
 ```lua
 > buildColumn(
-    tableGM,
+    gradebook,
     "average-quiz",
     function(row):
       quizColnames = 
@@ -83,7 +83,7 @@ This example computes the average quiz score for each student in `tableGF`. This
 
 ## Gradebook 2
 
-This example also computes the average quiz score for each student in `tableGF`. It computes quiz column names by concatenating `"quiz"` with numbers. This example is interesting because the type system needs to understand the connection between the computed column names and the type of those columns (i.e. numeric).
+This example also computes the average quiz score for each student in `gradebook`. It computes quiz column names by concatenating `"quiz"` with numbers. This example is interesting because the type system needs to understand the connection between the computed column names and the type of those columns (i.e. numeric).
 
 ```lua
 > quizColNames = 
@@ -92,7 +92,7 @@ This example also computes the average quiz score for each student in `tableGF`.
       function(i):
         concat("quiz", colNameOfNumber(i))
       end)
-> quizTable = selectColumns(tableGF, quizColNames)
+> quizTable = selectColumns(gradebook, quizColNames)
 > quizAndAverage =
     buildColumn(
       quizTable,
@@ -101,7 +101,7 @@ This example also computes the average quiz score for each student in `tableGF`.
         average(listOfRow(r))
       end)
 > addColumn(
-    tableGM,
+    gradebook,
     "average-quiz",
     getColumn(quizAndAverage, "average")
     end)
@@ -115,14 +115,14 @@ This example also computes the average quiz score for each student in `tableGF`.
 
 ## Jelly Bean Homogeneous
 
-Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `tableJellyAnon`, is homogeneous because all of its columns contain boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `tableJellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
+Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `jellyAnon`, is homogeneous because all of its columns contain boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `jellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
 
 ```lua
 > pHacking =
     function(t):
       colAcne = getColumn(t, "get-acne")
-      tableJellyAnon = drop(t, "get-acne")
-      for c in header(tableJellyAnon):
+      jellyAnon = drop(t, "get-acne")
+      for c in header(jellyAnon):
         colJB = getColumn(t, c)
         p = fisherTest(colAcne, colJB)
         if p < 0.05:
@@ -131,7 +131,7 @@ Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the
             c ++ " jelly beans and acne (p < 0.05).")
         end
       end
-> pHacking(tableJellyAnon)
+> pHacking(jellyAnon)
 We found a link between orange jelly beans and acne (p < 0.05).
 ```
 
@@ -140,6 +140,6 @@ We found a link between orange jelly beans and acne (p < 0.05).
 This example program is similar to Jelly Bean Homogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table contains only boolean values.
 
 ```lua
-> pHacking(drop(tableJellyNamed, "name"))
+> pHacking(drop(jellyNamed, "name"))
 We found a link between orange jelly beans and acne (p < 0.05).
 ```
