@@ -1,15 +1,15 @@
 # Table API
 
-[Note: this section should be considered as an internal note that helps KC decide if an opeartor should be included and, if yes, how.]
+[Note: this section should be considered as an internal note that helps KC decide if an operator should be included and, if yes, how.]
 
 This file serves for two purposes:
 
 - Challenge type system designers
 - Set up a reference for comparing programming medias on their
   - __expressiveness:__ is an operators provided in one media but not the other?
-  - __enforcement of constraints:__ how many of the required constraints are enforced? How many of the ensured constraints are communicated to the type system? 
+  - __enforcement of constraints:__ how many of the required constraints are enforced? How many of the ensured constraints are communicated to the type system?
 
-Real-world programming medias contain lots of utility operations. Collecting all of them won't be practical. Instead, we strive to gather at least all operators that are necessary for real-world data analysis. (Please let us know if you think a necessary operator is missing.) Some utilities opoerators impose interesting constraints that might be challenging to type systems. We selectively include some complicated utility operators and hopefully they will illustrate all constraints that a type systems need to handle. In short, an operator is included if it meets one of the following criteria:
+Real-world programming medias contain lots of utility operations. Collecting all of them won't be practical. Instead, we strive to gather at least all operators that are necessary for real-world data analysis. (Please let us know if you think a necessary operator is missing.) Some operators impose interesting constraints that might be challenging to type systems. We selectively include some complicated operators and hopefully they will illustrate all constraints that a type systems need to handle. In short, an operator is included if it meets one of the following criteria:
 
 - necessary for realistic table programming
 - illustrating interesting constraints
@@ -32,7 +32,7 @@ SQL: https://dev.mysql.com/doc/refman/8.0/en/sql-data-manipulation-statements.ht
 
 PostgreSQL: https://www.postgresql.org/docs/current/dml.html
 
-## Terminologies
+## Assumptions
 
 ### Relation-level Functions
 
@@ -81,7 +81,7 @@ __Ensures:__
 
 ### Description
 
-Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `Table` containing only those rows. [cite cs111]
+Given a `Table` and a `Seq<Number>` containing row indices, and produces a new `Table` containing only those rows.
 
 ```lua
 > selectRows(tableSF, [2, 0, 2, 1])
@@ -94,8 +94,8 @@ Given a `Table` and a `Seq<Number>` containing row indexes, and produces a new `
 > selectRows(tableGM, [2, 1])
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
 ```
 
 ## (overload 2/2) `selectRows :: t1:Table * selector:Seq<Boolean> -> t2:Table`
@@ -114,7 +114,7 @@ __Ensures:__
 
 ### Description
 
-Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, returns a `Table` with only the rows for which the predicate returns true. [cite cs111]
+Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, returns a `Table` with only the rows for which the predicate returns true.
 
 ```lua
 > selectRows(tableSF, [true, false, true])
@@ -126,18 +126,6 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 | name  | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ----- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Eve" | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
-> selectRows(tableSF, [2, 0, 2, 1])
-| name    | age | favorite-color |
-| ------- | --- | -------------- |
-| "Eve"   | 13  | "red"          |
-| "Bob"   | 12  | "blue"         |
-| "Eve"   | 13  | "red"          |
-| "Alice" | 17  | "green"        |
-> selectRows(tableGM, [2, 1])
-| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
-| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ## (overload 1/3) `selectColumns :: t1:Table * selector:Seq<Boolean> -> t2:Table`
@@ -156,7 +144,7 @@ __Ensures:__
 
 ### Description
 
-Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be kept, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`. [cite cs111]
+Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be kept, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
 
 ```lua
 > selectColumns(tableSF, [true, true, false])
@@ -190,7 +178,7 @@ __Ensures:__
 
 ### Description
 
-Consumes a `Table` and a `Seq<ColName>` containing column indexes, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
+Consumes a `Table` and a `Seq<ColName>` containing column indices, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
 
 
 ```lua
@@ -224,7 +212,7 @@ __Ensures:__
 
 ### Description
 
-Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`. [cite cs111]
+Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
 
 ```lua
 > selectColumns(tableSF, ["favorite-color", "age"])
@@ -254,12 +242,12 @@ Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a 
 
 ### Constraints
 
-requires:
+__Requires:__
 
 - if `n` is non-negative then `n` is not greater than `nrows(t1)`
 - if `n` is negative then `- n` is not greater than `nrows(t1)`
 
-ensures:
+__Ensures:__
 
 - `header(t2)` is equal to `header(t1)`
 - `schema(t2)` is equal to `schema(t1)`
@@ -270,7 +258,7 @@ ensures:
 
 ### Description
 
-This function returns the first `n` rows for the object based on position. It is useful for quickly testing if your object has the right type of data in it. For negative values of `n`, this function returns all rows except the last `n` rows. [cite pandas]
+This function returns the first `n` rows of the table based on position. It is useful for quickly testing if your table has the right type of data in it. For negative values of `n`, this function returns all rows except the last `n` rows. [cite pandas]
 
 ### Note
 
@@ -283,14 +271,14 @@ This function returns the first `n` rows for the object based on position. It is
 __Requires:__
 
 * `n` is in `range(nrows(t))`
-  
+
 __Ensures:__
 
 * `r` is equal to `getRow(t, n)`
 
 ### Description
 
-Extract a row out of a table by a numeric index. E.g.
+Extract a row out of a table by a numeric index. 
 
 ```lua
 > getRow(tableSF, 0)
@@ -316,7 +304,7 @@ __Ensures:__
 
 ### Description
 
-Returns a `Seq` of the values in the indexed column in `t`. [cite cs111]
+Returns a `Seq` of the values in the indexed column in `t`.
 
 ```lua
 > getColumn(tableSF, 1)
@@ -339,7 +327,7 @@ __Ensures:__
 
 ### Description
 
-Returns a `Seq` of the values in the named column in `t`. [cite cs111]
+Returns a `Seq` of the values in the named column in `t`.
 
 ```lua
 > getColumn(tableSF, "age")
@@ -347,6 +335,8 @@ Returns a `Seq` of the values in the named column in `t`. [cite cs111]
 > getColumn(tableGF, "name")
 ["Bob", "Alice", "Eve"]
 ```
+
+### Notes
 
 In R, `t[[c]]`.
 
@@ -408,6 +398,7 @@ __Ensures:__
 ### Description
 
 Returns a `Number` representing the number of columns in the `Table`. [cite cs111]
+
 ```lua
 > ncols(tableSF)
 3
@@ -415,7 +406,7 @@ Returns a `Number` representing the number of columns in the `Table`. [cite cs11
 8
 ```
 
-## `shape :: t:Table -> (n1:Number * n2:Number)
+## `shape :: t:Table -> (n1:Number * n2:Number)`
 
 ### Constraints
 
@@ -539,7 +530,7 @@ __Ensures:__
 
 ### Description
 
-Consumes an existing `Table` and produces a new `Table` with the named column updated, using `f` to produce the values for that column, once for each row. [cite cs111]
+Consumes an existing `Table` and produces a new `Table` with the named columns updated, using `f` to produce the values for those columns, once for each row. [cite cs111]
 
 ```lua
 > abstractAge =
@@ -553,11 +544,11 @@ Consumes an existing `Table` and produces a new `Table` with the named column up
       end
     end
 > update(tableSF, abstractAge)
-| name    | age        | favorite-color | is-teenager |
-| ------- | ---------- | -------------- | ----------- |
-| "Bob"   | "kid"      | "blue"         | false       |
-| "Alice" | "teenager" | "green"        | true        |
-| "Eve"   | "teenager" | "red"          | true        |
+| name    | age        | favorite-color |
+| ------- | ---------- | -------------- |
+| "Bob"   | "kid"      | "blue"         |
+| "Alice" | "teenager" | "green"        |
+| "Eve"   | "teenager" | "red"          |
 > abstractFinal =
     function(r):
       [row:
@@ -630,7 +621,7 @@ __Ensures:__
 
 * `header(t2)` is equal to `header(t1)`
 * `schema(t2)` is equal to `schema(t1)`
-* `nrows(t2)` is equal to `nrows(t1) + 1`
+* `nrows(t2)` is equal to `nrows(t1) + length(rs)`
 
 ### Description
 
@@ -676,7 +667,7 @@ __Ensures:__
 
 ### Description
 
-Consumes a `ColName` representing a column name and a `Seq` of values and produces a new `Table` with the columns of the input `Table` followed by a column with the given name and values. Note that the length of `vs` must equal the length of the `Table`. [cs111]
+Consumes a column name and a `Seq` of values and produces a new `Table` with the columns of the input `Table` followed by a column with the given name and values. Note that the length of `vs` must equal the length of the `Table`. [cs111]
 
 ```lua
 > hairColor = ["brown", "red", "blonde"]

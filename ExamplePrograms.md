@@ -1,6 +1,6 @@
 ## sampleRows
 
-This example defines a function that randomly sample rows of a table. This function might be interesting when working with tidy tables, where each row is one observation. "Pure" languages (e.g. Haskell) might find typing this example challenging because generating random number is stateful. Ideally, the `sampleRows` function should have the same constraints as in Table API.
+This example defines a function that randomly samples rows of a table. This function might be interesting when working with tidy tables, where each row is one observation. "Pure" languages (e.g. Haskell) might find typing this example challenging because generating random number is stateful. Ideally, the `sampleRows` function should have the same constraints as in Table API.
 
 ```lua
 > sampleRows =
@@ -15,18 +15,18 @@ This example defines a function that randomly sample rows of a table. This funct
 | "Alice" | 17  | 6     | 8     | 88      |       | 7     | 85    |
 ```
 
-## GroupBy
+## groupBy
 
-This example defines two group-by functions. `groupByOriginal` catagorizes rows of the input table into groups by the key of each row. The key is computed by accessing the named column. `groupBySubtracted` is similar to `groupByOriginal` but the named column is removed in the output. Ideally, the two user-defined functions should have the same constraints as in Table API.
+This example defines two groupBy functions. `groupByOriginal` catagorizes rows of the input table into groups by the key of each row. The key is computed by accessing the named column. `groupBySubtracted` is similar to `groupByOriginal` but the named column is removed in the output. Ideally, the two user-defined functions should have the same constraints as in Table API.
 
 ```lua
 > groupByOriginal =
     function(t, c):
       keys = addColumn(emptyTable, "key", distinct(getColumn(t, c)))
       makeGroup =
-        function(r):
-          filter(t, 
-            function(r): 
+        function(k):
+          filter(t,
+            function(r):
               getValue(r, c) == k
             end)
         end
@@ -36,10 +36,10 @@ This example defines two group-by functions. `groupByOriginal` catagorizes rows 
     function(t, c):
       keys = addColumn(emptyTable, "key", distinct(getColumn(t, c)))
       makeGroup =
-        function(r):
+        function(k):
           g =
-            filter(t, 
-              function(r): 
+            filter(t,
+              function(r):
                 getValue(r, c) == k
               end)
           dropColumn(g, c)
@@ -75,7 +75,7 @@ This example computes the average quiz score for each student in `tableGF`. This
 
 ## Gradebook 2
 
-This example also computes the average quiz score for each student in `tableGF`. It computes quiz column names by concatenating `"quiz"` with numbers. This example is interesting because the type system needs to understand the connection between the compute column names and the type of those columns (i.e. numeric).
+This example also computes the average quiz score for each student in `tableGF`. It computes quiz column names by concatenating `"quiz"` with numbers. This example is interesting because the type system needs to understand the connection between the computed column names and the type of those columns (i.e. numeric).
 
 ```lua
 > quizColNames = 
@@ -107,7 +107,7 @@ This example also computes the average quiz score for each student in `tableGF`.
 
 ## Jelly Bean Homogeneous
 
-Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `tableJellyAnon`, is homogeneous because all of its columns contain Boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `tableJellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
+Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `tableJellyAnon`, is homogeneous because all of its columns contain boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `tableJellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
 
 ```lua
 > pHacking =
@@ -120,18 +120,18 @@ Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the
         if p < 0.05:
           println(
             "We found a link between " ++ 
-            c ++ " beans and acne (p < 0.05).")
+            c ++ " jelly beans and acne (p < 0.05).")
         end
       end
 > pHacking(tableJellyAnon)
-We found a link between orange beans and acne (p < 0.05).
+We found a link between orange jelly beans and acne (p < 0.05).
 ```
 
 ## Jelly Bean Heterogeneous
 
-This example program is similar to Jelly Bean Homogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table will be a table of Boolean values.
+This example program is similar to Jelly Bean Homogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table contains only boolean values.
 
 ```lua
 > pHacking(drop(tableJellyNamed, "name"))
-We found a link between orange beans and acne (p < 0.05).
+We found a link between orange jelly beans and acne (p < 0.05).
 ```

@@ -1,4 +1,4 @@
-# Error Illustrations
+# Errors
 
 ## Mistyped Column Name
 
@@ -8,8 +8,8 @@
 
 ### Task
 
-The programmer was asked to visualize as a scatter plot the connection between midterm 
-and final exam.
+The programmer was asked to visualize as a scatter plot the connection between
+midterm and final exam grades.
 
 ### A Buggy Program
 
@@ -19,7 +19,7 @@ and final exam.
 
 ### What is the Bug?
 
-The `"mid"` is not a valid column name of `tableGF`. However, the table 
+The `"mid"` is not a valid column name of `tableGF`. However, the table
 contains a `"midterm"` column.
 
 ### A Corrected Program
@@ -36,8 +36,8 @@ contains a `"midterm"` column.
 
 ### Task
 
-The programmer was asked to build a column that indicates whether "a participant consumed
-black jelly beans and white ones".
+The programmer was asked to build a column that indicates whether "a
+participant consumed black jelly beans and white ones".
 
 ### A Buggy Program
 
@@ -46,12 +46,14 @@ black jelly beans and white ones".
     function(r):
       r["black and white"] == true
     end
-> buWldColumn(tableJellyAnon, "eat-black-and-white", eatBlackAndWhiBe)?
+> buildColumn(tableJellyAnon, "eat-black-and-white", eatBlackAndWhite)?
 ```
 
 ### What is the Bug?
 
-The logical `and` appeals at a wrong place. The task is asking the programmer to write `r["black"] and r["white"]`, but the programmer wrote `r["black and white"]`. The bug will likely lead to an error complaining that `"black and white"` is not a valid column name of `r`, which is a row of `tableJellyAnon`.
+The logical `and` appears at a wrong place. The task is asking the programmer
+to write `r["black"] and r["white"]`, but the buggy program accesses the
+invalid column `"black and white"` instead.
 
 ### A Corrected Program
 
@@ -71,7 +73,8 @@ The logical `and` appeals at a wrong place. The task is asking the programmer to
 
 ### Task
 
-The programmer was asked to count the number of participants that consumed jelly bean of a given color.
+The programmer was asked to count the number of participants that consumed
+jelly bean of a given color.
 
 ### A Buggy Program
 
@@ -80,7 +83,7 @@ The programmer was asked to count the number of participants that consumed jelly
     function(t, color):
       nrows(filter(t, keep))
     end
-> keWB =?
+> keep =
     function(r):
       r["color"]
     end
@@ -125,7 +128,7 @@ The programmer was asked to count the number of participants that consumed jelly
 
 ### Context
 
-`tableBM`
+`tableJellyAnon`
 
 ### Task
 
@@ -138,12 +141,12 @@ The programmer was asked to visualize the proportion of participants getting acn
     function(t):
       pieChart(count(t, "get-acne"), "true", "get-acne")
     end
-> showAcneProportions(tableBM)?
+> showAcneProportions(tableJellyAnon)
 ```
 
 ### What is the Bug?
 
-The program supplies a table produced by `count` to `pieChart`, which also consumes two column names of its input table. The table produced by `count` contains two column names, `"value"` and `"count"`. None of the given colum names, `"true"` and `"get-acen"`, is valid.
+The program supplies a table produced by `count` to `pieChart`, which also expects two column names of its input table. The table produced by `count` contains two column names, `"value"` and `"count"`. Neither of the supplied colum names, `"true"` and `"get-acne"`, are valid.
 
 ### A Corrected Program
 
@@ -152,7 +155,7 @@ The program supplies a table produced by `count` to `pieChart`, which also consu
     function(t):
       pieChart(count(t, "get-acne"), "value", "count")
     end
-> showAcneProportions(tableBM)?
+> showAcneProportions(tableJellyAnon)
 ```
 
 ## Use Column Names of One Table with Another Table
@@ -164,7 +167,7 @@ The program supplies a table produced by `count` to `pieChart`, which also consu
 
 ### Task
 
-The programmer was given two tables, one maps employee names to department IDs, the other maps department IDs to names. The programmer was asked to define a function, `employeeToDepartment` that consumes the two tables and looks up the a department name that an employee belongs to. 
+The programmer was given two tables, one maps employee names to department IDs, the other maps department names to department IDs. The programmer was asked to define a function, `employeeToDepartment` that consumes the two tables and looks up the a department name that an employee belongs to.
 
 ### A Buggy Program
 
@@ -190,7 +193,7 @@ The programmer was given two tables, one maps employee names to department IDs, 
 
 ### What is the Bug?
 
-There are several problems in this program. First, in the body of `employeeToDepartment`, the programmer returned the extended table, but they should return a cost. Another problem is in the name of the helper function, `lastNameToDeptId`. The name suggests that this function maps the last names of employees to drink bases. However, this suggestion is inconsistent with the application of this function in `employeeToDepartment`, which is expecting a cost. Finally, the first parameter of `lastNameToDeptId`, `deptTab`, has a name that is inconsistent with its use. The name suggests a department table. However, the identifier is used as an employee table.
+There are several problems in this program. First, in the body of `employeeToDepartment`, the programmer returned the extended table, but they should return a cost. Another problem is in the name of the helper function, `lastNameToDeptId`. The name suggests that this function maps the last names of employees to department IDs. However, this suggestion is inconsistent with the application of this function in `employeeToDepartment`, which is expecting a cost. Finally, the first parameter of `lastNameToDeptId`, `deptTab`, has a name that is inconsistent with its use. The name suggests a department table. However, the identifier is used as an employee table.
 
 ### A Corrected Prgram
 
@@ -211,7 +214,7 @@ There are several problems in this program. First, in the body of `employeeToDep
         function(r):
           getValue(r, "Last Name") == name
         end
-      matchedTab = filter(deptTab, matchName)
+      matchedTab = filter(emplTab, matchName)
       matchedRow = getRow(matchedTab, 0)
       deptId = getValue(matchedRow, "Department ID")
       deptIdToDeptName(deptTab, deptId)
@@ -226,14 +229,14 @@ There are several problems in this program. First, in the body of `employeeToDep
 
 ### Task
 
-As the part 2 of all tasks, the programmer was asked to compute the proportion of participants that consumed brown jelly beans and got acne.
+The programmer was asked to compute the proportion of participants that consumed brown jelly beans and got acne.
 
 ### A Buggy Program
 
 ```lua
 > brownAndGetAcne =
     function(r):
-      getValue(r, "Brown") and getValue(r, "get-acne")
+      getValue(r, "brown") and getValue(r, "get-acne")
     end
 > brownAndGetAcneTable =
     buildColumn(tableJellyNamed, "part2", brownAndGetAcne)
@@ -249,7 +252,7 @@ The built column was named inconsistently. In `buildColumn(...)`, the column was
 ```lua
 > brownAndGetAcne =
     function(r):
-      getValue(r, "Brown") and getValue(r, "get-acne")
+      getValue(r, "brown") and getValue(r, "get-acne")
     end
 > brownAndGetAcneTable =
     buildColumn(tableJellyNamed, "brown-and-get-acne", brownAndGetAcne)
@@ -280,7 +283,7 @@ The programmer was asked to find Alice's favorite color.
 
 ### What is the Bug?
 
-There is only one row that matches the filtering criteria. So there is only one valid index. In this example we assume the valid index is `0`. One can imagine a similar error example in a language that thinks `1` is the valid index.
+There is only one row that matches the filtering criteria. So the only valid index is `0`, not `1`.
 
 ### A Corrected Program
 
@@ -318,7 +321,7 @@ The programmer was asked to define a function that finds all participants who li
 
 ### What is the Bug?
 
-The programmer returns `getValue(r, "favorite-color")` directly in the predicate but should return a `Boolean`.
+The programmer returns `getValue(r, "favorite-color")` directly in the predicate but should return a boolean.
 
 ### A Corrected Program
 

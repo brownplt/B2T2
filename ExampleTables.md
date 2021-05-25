@@ -8,7 +8,7 @@
 | "Eve"   | 13  | "red"          |
 ```
 
-## `tableSM`: a simple table missing some values.
+## `tableSM`: a simple table with some values missing.
 
 ```lua
 | name    | age | favorite-color |
@@ -28,7 +28,7 @@
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
-## `tableGM`: a gradebook table missing some values.
+## `tableGM`: a gradebook table with some missing values.
 
 ```lua
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
@@ -38,7 +38,7 @@
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
 ```
 
-## `tableEmployee`: a table that contains employees and their departments (Adapted from [this table](https://en.wikipedia.org/wiki/Join_(SQL)))
+## `tableEmployee`: a table that contains employees and their department IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
 
 ```lua
 | Last Name    | Department ID |
