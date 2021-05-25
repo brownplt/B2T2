@@ -1,6 +1,8 @@
 ## sampleRows
 
-This example defines a function that randomly samples rows of a table. This function might be interesting when working with tidy tables, where each row is one observation. "Pure" languages (e.g. Haskell) might find typing this example challenging because generating random number is stateful. Ideally, the `sampleRows` function should have the same constraints as in Table API.
+This example defines a function that randomly samples rows of a table. This function might be interesting when working with tidy tables, where each row is one observation. "Pure" languages (e.g. Haskell) might find typing this example challenging because generating random number is stateful.
+
+A type system should try to realize that `sampleRows` requires `n` is in `range(nrows(t))` and ensures that the output table has as many rows as `n`.
 
 ```lua
 > sampleRows =
