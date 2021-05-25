@@ -229,7 +229,7 @@ There are several problems in this program. First, in the body of `employeeToDep
 
 ### Task
 
-The programmer was asked to compute the proportion of participants that consumed brown jelly beans and got acne.
+The programmer was asked to compute how many participants consumed brown jelly beans and got acne, and how many did not.
 
 ### A Buggy Program
 
