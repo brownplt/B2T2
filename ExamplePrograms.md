@@ -59,13 +59,17 @@ This example computes the average quiz score for each student in `tableGF`. This
     tableGM,
     "average-quiz",
     function(row):
-      fields =
+      quizColnames = 
         filter(
-          listOfRow(row),
-          function(fld):
-            startsWith(first(fld), "quiz")
+          header(),
+          function(c):
+            startsWith(c, "quiz")
           end)
-      scores = map(fields, second)
+      scores = map(
+        quizColnames,
+        function(c):
+          getValue(row, c)
+        end)
       sum(scores) / length(scores)
     end)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | average-quiz |
