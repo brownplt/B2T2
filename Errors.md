@@ -278,7 +278,8 @@ The programmer was asked to find Alice's favorite color.
         function(r):
           getValue(r, "name") == "Alice"
         end),
-      1))
+      1),
+    "color")
 ```
 
 ### What is the Bug?
@@ -294,7 +295,8 @@ There is only one row that matches the filtering criteria. So the only valid ind
         function(r):
           getValue(r, "name") == "Alice"
         end),
-      0))
+      0),
+    "color")
 ```
 
 ## Infer the Types of Accessed Columns
