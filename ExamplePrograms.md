@@ -56,7 +56,7 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
     end
 ```
 
-## Gradebook 1
+## quizScoreFilter
 
 This example computes the average quiz score for each student in `gradebook`. This example is interesting because the type system needs to understand the connection between the pattern of quiz column names (i.e. `startsWith(..., "quiz")`) and the type of those columns (i.e. numeric).
 
@@ -85,7 +85,7 @@ This example computes the average quiz score for each student in `gradebook`. Th
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 8            |
 ```
 
-## Gradebook 2
+## quizScoreSelect
 
 This example also computes the average quiz score for each student in `gradebook`. It computes quiz column names by concatenating `"quiz"` with numbers. This example is interesting because the type system needs to understand the connection between the computed column names and the type of those columns (i.e. numeric).
 
@@ -117,7 +117,7 @@ This example also computes the average quiz score for each student in `gradebook
 ```
 
 
-## Jelly Bean Homogeneous
+## pHackingHomogeneous
 
 Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `jellyAnon`, is homogeneous because all of its columns contain boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `jellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
 
@@ -139,9 +139,9 @@ Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the
 We found a link between orange jelly beans and acne (p < 0.05).
 ```
 
-## Jelly Bean Heterogeneous
+## pHackingHeterogeneous
 
-This example program is similar to Jelly Bean Homogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table contains only boolean values.
+This example program is similar to pHackingHomogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table contains only boolean values.
 
 ```lua
 > pHacking(drop(jellyNamed, "name"))
