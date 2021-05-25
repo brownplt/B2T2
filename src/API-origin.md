@@ -156,6 +156,11 @@ In CS111 Pyret, `transform-column(t, c, f)`
 - In LINQ, `Where`
 - Similar to MySQL `DELETE`, which drops rows satisfying the criteria and can take a number limit.
 
+### Notes
+
+- This function is similar to `DataFrame.query` in pandas.
+- This function is similar to `filter` in R.
+
 ## `sort :: t1:Table * c:ColName * b:Boolean -> t2:Table`
 
 ### Origins
@@ -271,11 +276,24 @@ In CS111 Pyret, `transform-column(t, c, f)`
 - In CS111 Pyret, `histogram(t, c, n)`
 - In Bootstrap Pyret, `histogram(t, c, n)`
 
+### Notes
+
+- `pie-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `bar-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `freq-bar-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `box-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+
 ## `scatterPlot :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
 ### Origins
 
 - In CS111 Pyret, `scatter-plot(t, c1, c2)`
+
+### Notes
+
+- `lr-plot` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `scatter-plot` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
+- `lr-plot` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
 
 ## `pieChart :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
@@ -283,3 +301,6 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 - In CS111 Pyret, `pie-chart(t, c1, c2)`
 
+### Notes
+
+- `bar-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.

@@ -253,7 +253,7 @@ __Ensures:__
 
 ### Description
 
-This function returns the first `n` rows of the table based on position. It is useful for quickly testing if your table has the right type of data in it. For negative values of `n`, this function returns all rows except the last `n` rows. [cite pandas]
+This function returns the first `n` rows of the table based on position. It is useful for quickly testing if your table has the right type of data in it. For negative values of `n`, this function returns all rows except the last `n` rows.
 
 ### Note
 
@@ -414,7 +414,7 @@ __Ensures:__
 
 ### Description
 
-Return a tuple representing the dimensionality of the `Table`. [cite pandas]
+Return a tuple representing the dimensionality of the `Table`.
 
 ```lua
 > shape(students)
@@ -727,7 +727,7 @@ __Ensures:__
 
 ### Description
 
-Return a `Seq<Boolean>` with `true` entries indicating rows without missing values (complete cases) in table `t`. [cite Julia]
+Return a `Seq<Boolean>` with `true` entries indicating rows without missing values (complete cases) in table `t`.
 
 ```lua
 > completeCases(students, "age")
@@ -759,7 +759,7 @@ __Ensures:__
 
 ### Description
 
-When columns `cs` of table `t` have sequences, return a `Table` where each element of each `c` in `cs` is flattened, meaning the column corresponding to `c` becomes a longer column where the original entries are concatenated. Elements of row `i` of `t` in columns other than `cs` will be repeated according to the length of `getValue(getRow(t1, i), c1)`. These lengths must therefore be the same for each `c` in `cs`, or else an error is raised. [cite Julia]
+When columns `cs` of table `t` have sequences, return a `Table` where each element of each `c` in `cs` is flattened, meaning the column corresponding to `c` becomes a longer column where the original entries are concatenated. Elements of row `i` of `t` in columns other than `cs` will be repeated according to the length of `getValue(getRow(t1, i), c1)`. These lengths must therefore be the same for each `c` in `cs`, or else an error is raised.
 
 ```lua
 > flatten(tableSeq, ["b"])
@@ -863,12 +863,6 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
-
-### Notes
-
-- This function is similar to `DataFrame.query` in pandas.
-- This function is similar to `filter` in R.
-
 
 ## `sort :: t1:Table * c:ColName * b:Boolean -> t2:Table`
 
@@ -1057,7 +1051,7 @@ __Ensures:__
 
 ### Description
 
-Retain only unique/distinct rows from an input `Table`. [cite R]
+Retain only unique/distinct rows from an input `Table`.
 
 ```lua
 > distinct(students)
@@ -1170,10 +1164,6 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 | true     | false | false | false | false | false  | true  | true   | false | false  |
 | false    | true  | false | false | false | true   | true  | false  | true  | false  |
 ```
-
-### Notes
-
-- In LINQ, `GroupBy`
   
 ## `groupBySubtracted :: t1:Table * c:ColName -> t2:Table`
 
@@ -1254,7 +1244,7 @@ __Ensures:__
 
 ### Description
 
-Groups the rows of a table according to a specified key selector function and creates a result value from each group and its key. The rows of each group are projected by using a specified function. [cite LINQ]
+Groups the rows of a table according to a specified key selector function and creates a result value from each group and its key. The rows of each group are projected by using a specified function.
 
 [TODO: this code only makes sense when `Row <: Table`]
 
@@ -1319,7 +1309,7 @@ __Ensures:__
 
 ### Description
 
-Correlates the rows of two tables based on equality of keys and groups the results. [cite LINQ]
+Correlates the rows of two tables based on equality of keys and groups the results.
 
 [TODO: need one more example]
 
@@ -1358,7 +1348,7 @@ __Ensures:__
 
 ### Description
 
-Correlates the rows of two tables based on matching keys. [cite LINQ]
+Correlates the rows of two tables based on matching keys.
 
 [TODO: need one more example]
 
@@ -1523,7 +1513,7 @@ __Ensures:__
 
 ### Description
 
-Returns a set of one or more rows as a table. [cite MySQL]
+Returns a sequence of one or more rows as a table.
 
 ```lua
 > values([
@@ -1556,7 +1546,7 @@ __Ensures:__
 
 ### Description
 
-Sorts the rows of a `Table` in ascending order by using a sequence of specified comparers. [cite LINQ]
+Sorts the rows of a `Table` in ascending order by using a sequence of specified comparers.
 
 ```lua
 > nameLength =
@@ -1604,7 +1594,7 @@ __Ensures:__
 
 ### Description
 
-Projects each `Row` of a `Table` into a new `Table`. [cite LINQ]
+Projects each `Row` of a `Table` into a new `Table`.
 
 ```lua
 > select(
@@ -1650,7 +1640,7 @@ __Ensures:__
 
 ### Description
 
-Projects each row of a table to a new table, flattens the resulting tables into one table, and invokes a result selector function on each row therein. The index of each source row is used in the intermediate projected form of that row. [cite LINQ]
+Projects each row of a table to a new table, flattens the resulting tables into one table, and invokes a result selector function on each row therein. The index of each source row is used in the intermediate projected form of that row.
 
 [TODO: this code only makes sense when `Row <: Table` because I used a row as a table and because of selectColumn]
 
@@ -1874,13 +1864,6 @@ __Ensures:__
 
 Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram.
 
-### Notes
-
-- `pie-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
-- `bar-chart` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
-- `freq-bar-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
-- `box-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
-
 ## `scatterPlot :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
 Displays an `Image` of a scatter plot from the given table. `c1` names the column in `t` to use for x-values, and `c2` names the column in `t` to use for y-values. Both columns must contain `Number` values.
@@ -1895,12 +1878,6 @@ __Requires:__
 - `schema(t)[c2]` is a subtype of `Number`
 
 __Ensures:__
-
-### Notes
-
-- `lr-plot` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
-- `scatter-plot` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
-- `lr-plot` in Bootstrap Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
 
 ## `pieChart :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
@@ -1917,7 +1894,3 @@ __Requires:__
 - `getColumn(t, c1)` has no duplicate
 
 __Ensures:__
-
-### Notes
-
-- `bar-chart` in CS111 Pyret has similar constraints on its inputs and outputs, so that function is not presented here.
