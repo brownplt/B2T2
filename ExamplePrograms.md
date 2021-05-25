@@ -63,7 +63,7 @@ This example computes the average quiz score for each student in `gradebook`. Th
     function(row):
       quizColnames = 
         filter(
-          header(),
+          header(row),
           function(c):
             startsWith(c, "quiz")
           end)
