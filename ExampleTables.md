@@ -1,3 +1,7 @@
+# Example Tables
+
+This file lists some tables that are either used in other files (e.g. TableAPI and ExampleProgram), or illustrating interesting structural properties (e.g. having some values missing, having lists in cells, and having tables in cells).
+
 ## `students`: a simple table with no values missing.
 
 ```lua

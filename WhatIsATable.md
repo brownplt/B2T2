@@ -1,3 +1,5 @@
+# What is a Table?
+
 ## Fundamentals
 
 - A _table_ has two parts: a schema, and a rectangular collection of cells.

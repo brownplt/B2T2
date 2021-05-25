@@ -1,3 +1,7 @@
+# Example Programs
+
+This file challenges type systems with some programs that might be difficult to typecheck.
+
 ## sampleRows
 
 This example defines a function that randomly samples rows of a table. This function might be interesting when working with tidy tables, where each row is one observation. "Pure" languages (e.g. Haskell) might find typing this example challenging because generating random number is stateful.
