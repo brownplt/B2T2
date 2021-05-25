@@ -279,7 +279,7 @@ The programmer was asked to find Alice's favorite color.
           getValue(r, "name") == "Alice"
         end),
       1),
-    "color")
+    "favorite-color")
 ```
 
 ### What is the Bug?
@@ -296,7 +296,7 @@ There is only one row that matches the filtering criteria. So the only valid ind
           getValue(r, "name") == "Alice"
         end),
       0),
-    "color")
+    "favorite-color")
 ```
 
 ## Infer the Types of Accessed Columns
