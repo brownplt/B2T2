@@ -20,7 +20,7 @@
 
 ## `tableGF`: a gradebook table with no missing values.
 
-```luaues.
+```lua
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |

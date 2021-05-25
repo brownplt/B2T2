@@ -650,6 +650,38 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
+## `tableOfColumn :: c:ColName * vs:Seq<Value> -> t:Table`
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+- `header(t)` is equal to `[c]`
+- `schema(t)[c]` is equal to the element sort of `vs`
+- `nrows(t)` is equal to `length(vs)`
+
+### Description
+
+Construct a single-column table. The only column is equal to the input sequence of values.
+
+```lua
+> tableOfColumn("colors", ["red", "green", "blue"])
+| colors  |
+| ------- |
+| "red"   |
+| "green" |
+| "blue"  |
+> tableOfColumn("PLs", ["C", "Java", "Agda", "Scheme"])
+| PLs      |
+| -------- |
+| "C"      |
+| "Java"   |
+| "Agda"   |
+| "Scheme" |
+```
+
 ## `addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table`
 
 ### Constraints
@@ -988,6 +1020,30 @@ Returns a `Table` that is the same as `t`, except without the columns whose name
 | "Bob"   | 12  | 8     | 9     | 7     | 9     |
 | "Alice" | 17  | 6     | 8     | 8     | 7     |
 | "Eve"   | 13  | 7     | 9     | 8     | 8     |
+```
+
+## `empty :: t1:Table -> t2:Table`
+
+### Constraints:
+
+__Requires:__
+
+__Ensures:__
+
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `0`
+
+### Description
+
+Remove all rows but keep the schema.
+
+```lua
+> empty(tableSF)
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+> empty(tableGF)
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 ```
 
 ## `distinct :: t1:Table -> t2:Table`
@@ -1611,7 +1667,7 @@ Projects each row of a table to a new table, flattens the resulting tables into 
       if even(n):
         r
       else:
-        emptyTable
+        empty(r)
       end
     end,
     function(r1, r2):
