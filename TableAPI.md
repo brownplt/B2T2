@@ -49,7 +49,8 @@ PostgreSQL: https://www.postgresql.org/docs/current/dml.html
 
 ### Other assumed functions
 
-- average
+- `startsWith`: check if a string starts with another string
+- `average`: compute the average of a sequence of numbers
 
 ### Relations
 
