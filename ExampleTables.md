@@ -42,7 +42,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
 ```
 
-## `tableSeq` -> `gradebookNestedList`: a gradebook table with list cells
+## `gradebookList`: a gradebook table with list cells
 
 ```lua
 | name    | age | quizes       | midterm | final |
@@ -52,7 +52,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 | "Eve"   | 13  | [7, 9, 8, 8] | 84      | 77    |
 ```
 
-## `tableTable` -> `gradebookNestedTable`: a gradebook table with table cells
+## `gradebookTable`: a gradebook table with table cells
 
 ```lua
 | name    | age | quizes   | midterm | final |
