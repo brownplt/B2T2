@@ -356,7 +356,7 @@ __Ensures:__
 
 ### Description
 
-Retrieve the value for the column `c` in the row `r`. [cite cs111]
+Retrieve the value for the column `c` in the row `r`.
 
 ```lua
 > getValue([row: ("name", "Bob"),  ("age", 12)], "age")
@@ -375,7 +375,7 @@ __Ensures:__
 
 ### Description
 
-Returns a `Number` representing the number of rows in the `Table`. [cite cs111]
+Returns a `Number` representing the number of rows in the `Table`.
 
 ```lua
 > nrows(tableSF)
@@ -397,7 +397,7 @@ __Ensures:__
 
 ### Description
 
-Returns a `Number` representing the number of columns in the `Table`. [cite cs111]
+Returns a `Number` representing the number of columns in the `Table`.
 
 ```lua
 > ncols(tableSF)
@@ -488,7 +488,7 @@ __Ensures:__
 
 ### Description
 
-Consumes an existing `Table` and produces a new `Table` containing an additional column with the given `ColName`, using `f` to produce the values for that column, once for each row. [cite cs111]
+Consumes an existing `Table` and produces a new `Table` containing an additional column with the given `ColName`, using `f` to produce the values for that column, once for each row.
 
 ```lua
 > isTeenagerBuilder =
@@ -530,7 +530,7 @@ __Ensures:__
 
 ### Description
 
-Consumes an existing `Table` and produces a new `Table` with the named columns updated, using `f` to produce the values for those columns, once for each row. [cite cs111]
+Consumes an existing `Table` and produces a new `Table` with the named columns updated, using `f` to produce the values for those columns, once for each row.
 
 ```lua
 > abstractAge =
@@ -580,7 +580,7 @@ __Ensures:__
 
 ### Description
 
-Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows from the original table followed by the given `Row`. [cite cs111]
+Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows from the original table followed by the given `Row`.
 
 ```lua
 > addRow(
@@ -625,7 +625,7 @@ __Ensures:__
 
 ### Description
 
-Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` with the rows from the original table followed by the given `Row`s. [cite cs111]
+Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` with the rows from the original table followed by the given `Row`s.
 
 ```lua
 > addRows(
@@ -768,7 +768,7 @@ __Ensures:__
 
 ### Description
 
-Consumes a `Table`, a `ColName` representing a column name, and a transformation function and produces a new `Table` where the transformation function has been applied to all values in the named column. [cite cs111]
+Consumes a `Table`, a `ColName` representing a column name, and a transformation function and produces a new `Table` where the transformation function has been applied to all values in the named column.
 
 ```lua
 > addLastName =
@@ -813,7 +813,7 @@ __Ensures:__
 
 ### Description
 
-Given a `Table` and a predicate on rows, returns a `Table` with only the rows for which the predicate returns `true`. [cite cs111]
+Given a `Table` and a predicate on rows, returns a `Table` with only the rows for which the predicate returns `true`.
 
 ```lua
 > ageUnderFifteen =
@@ -863,7 +863,7 @@ __Ensures:__
 
 ### Description
 
-Given a `Table` and the name of a column in that `Table`, return a `Table` with the same rows ordered based on the named column. If `b` is `true`, the `Table` will be sorted in ascending order, otherwise it will be in descending order. [cite cs111]
+Given a `Table` and the name of a column in that `Table`, return a `Table` with the same rows ordered based on the named column. If `b` is `true`, the `Table` will be sorted in ascending order, otherwise it will be in descending order.
 
 ```lua
 > sort(tableSF, "age", true)
@@ -899,7 +899,7 @@ __Ensures:__
 
 ### Description
 
-Given a `Table` and a sequence of column names in that `Table`, return a `Table` with the same rows ordered based on the named columns. [cite cs111]
+Given a `Table` and a sequence of column names in that `Table`, return a `Table` with the same rows ordered based on the named columns.
 
 ```lua
 > sort(tableSF, ["age"])
@@ -935,7 +935,7 @@ __Ensures:__
 
 ### Description
 
-Returns a `Table` that is the same as `t`, except without the column whose name is `c`. [cite cs111]
+Returns a `Table` that is the same as `t`, except without the column whose name is `c`.
 
 ```lua
 > dropColumn(tableSF, "age")
@@ -972,7 +972,7 @@ __Ensures:__
 
 ### Description
 
-Returns a `Table` that is the same as `t`, except without the columns whose name is in `cs`. [cite cs111]
+Returns a `Table` that is the same as `t`, except without the columns whose name is in `cs`.
 
 ```lua
 > dropColumns(tableSF, ["age"])
@@ -1040,7 +1040,7 @@ __Ensures:__
 
 ### Description
 
-Takes a `Table` and a `ColName` representing the name of a column in that `Table`. Produces a `Table` that summarizes how many rows have each value in the given column. [cite cs111]
+Takes a `Table` and a `ColName` representing the name of a column in that `Table`. Produces a `Table` that summarizes how many rows have each value in the given column.
 
 ```lua
 > count(tableSF, "favorite-color")
@@ -1821,7 +1821,7 @@ __Ensures:__
 
 ### Description
 
-Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram. [cite cs111]
+Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram.
 
 ### Notes
 
@@ -1832,7 +1832,7 @@ Displays an `Image` of a histogram of values in the named column, which must con
 
 ## `scatterPlot :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
-Displays an `Image` of a scatter plot from the given table. `c1` names the column in `t` to use for x-values, and `c2` names the column in `t` to use for y-values. Both columns must contain `Number` values. [cite cs111]
+Displays an `Image` of a scatter plot from the given table. `c1` names the column in `t` to use for x-values, and `c2` names the column in `t` to use for y-values. Both columns must contain `Number` values.
 
 ### Constraints
 
@@ -1853,7 +1853,7 @@ __Ensures:__
 
 ## `pieChart :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
-Display an `Image` of a pie-chart from the given `Table` (one slice per row). `c1` is the label to use for the chart, and `c2` names the column of the `Table` to use for values in the pie chart. [cite cs111]
+Display an `Image` of a pie-chart from the given `Table` (one slice per row). `c1` is the label to use for the chart, and `c2` names the column of the `Table` to use for values in the pie chart.
 
 ### Constraints
 
