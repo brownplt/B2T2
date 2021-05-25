@@ -38,6 +38,47 @@
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
 ```
 
+## `tableSeq` -> `gradebookNestedList`: a gradebook table with list cells
+
+```lua
+| name    | age | quizes       | midterm | final |
+| ------- | --- | ------------ | ------- | ----- |
+| "Bob"   | 12  | [8, 9, 7, 9] | 77      | 87    |
+| "Alice" | 17  | [6, 8, 8, 7] | 88      | 85    |
+| "Eve"   | 13  | [7, 9, 8, 8] | 84      | 77    |
+```
+
+## `tableTable` -> `gradebookNestedTable`: a gradebook table with table cells
+
+```lua
+| name    | age | quizes   | midterm | final |
+| ------- | --- | -------- | ------- | ----- |
+| "Bob"   | 12  | <table1> | 77      | 87    |
+| "Alice" | 17  | <table2> | 88      | 85    |
+| "Eve"   | 13  | <table3> | 84      | 77    |
+<table1> =
+| quiz# | grade |
+| ----- | ----- |
+| 1     | 8     |
+| 2     | 9     |
+| 3     | 7     |
+| 4     | 9     |
+<table2> =
+| quiz# | grade |
+| ----- | ----- |
+| 1     | 6     |
+| 2     | 8     |
+| 3     | 8     |
+| 4     | 7     |
+<table3> =
+| quiz# | grade |
+| ----- | ----- |
+| 1     | 7     |
+| 2     | 9     |
+| 3     | 8     |
+| 4     | 8     |
+```
+
 ## `employee`: a table that contains employees and their department IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
 
 ```lua
@@ -60,15 +101,6 @@
 | 33            | "Engineering"   |
 | 34            | "Clerical"      |
 | 35            | "Marketing"     |
-```
-
-## `tableSeq`: a table of sequences
-
-```lua
-| a   | b      | c      |
-| --- | ------ | ------ |
-| 1   | [1, 2] | [5, 6] |
-| 2   | [3, 4] | [7, 8] |
 ```
 
 ## `jellyAnon`: a jelly bean table that contains only boolean data
