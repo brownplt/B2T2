@@ -1,6 +1,6 @@
 # Errors
 
-This file serves for the diagnostic challenge. Each example includes a buggy program and one or more corrected program. A good programming media should help programmers to avoid writing these buggy programs or to recover from the bug and finally reach one of the corrected program.
+This file presents a diagnostic challenge. Each example includes a buggy program and one or more corrected programs. A good programming media should help programmers to avoid writing these buggy programs or to recover from the bug and finally reach a corrected program.
 
 These examples are adapted from student code collected in CS111 at Brown University.
 
