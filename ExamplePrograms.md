@@ -24,7 +24,8 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
     function(t, c):
       keys = addColumn(emptyTable, "key", distinct(getColumn(t, c)))
       makeGroup =
-        function(k):
+        function(kr):
+          k = getValue(kr, "key")
           filter(t,
             function(r):
               getValue(r, c) == k
@@ -36,7 +37,8 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
     function(t, c):
       keys = addColumn(emptyTable, "key", distinct(getColumn(t, c)))
       makeGroup =
-        function(k):
+        function(kr):
+          k = getValue(kr, "key")
           g =
             filter(t,
               function(r):
