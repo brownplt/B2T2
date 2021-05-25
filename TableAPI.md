@@ -1,7 +1,5 @@
 # Table API
 
-[Note: this section should be considered as an internal note that helps KC decide if an operator should be included and, if yes, how.]
-
 This file serves for two purposes:
 
 - Challenge type system designers
@@ -9,28 +7,24 @@ This file serves for two purposes:
   - __expressiveness:__ is an operators provided in one media but not the other?
   - __enforcement of constraints:__ how many of the required constraints are enforced? How many of the ensured constraints are communicated to the type system?
 
-Real-world programming medias contain lots of utility operations. Collecting all of them won't be practical. Instead, we strive to gather at least all operators that are necessary for real-world data analysis. (Please let us know if you think a necessary operator is missing.) Some operators impose interesting constraints that might be challenging to type systems. We selectively include some complicated operators and hopefully they will illustrate all constraints that a type systems need to handle. In short, an operator is included if it meets one of the following criteria:
+Real-world programming medias contain lots of operations. Collecting all of them won't be practical or necessary for the purposes of this file. Instead, we strive to gather at least all operators that are necessary for real-world data analysis. (Please let us know if you think a necessary operator is missing.) Furthermore, some operators impose interesting constraints that might be challenging to type systems. We selectively include some of these operators and hopefully they will illustrate all constraints that a type systems need to handle. In short, an operator is included if it meets one of the following criteria:
 
 - necessary for realistic table programming
-- illustrating interesting constraints
+- illustrating interesting constraints not illustrated by other operators in this file
 
-We included operators in __Pyret taught in Brown CS111__. These operators are found by walking through [this document](https://hackmd.io/@cs111/table). All operators described in the linked document are included, except `sum`, `mean`, `median`, `modes`, and `stdev`. These operators are excluded because their constraints on arguments and results are simple and have been illustrated by other operators.
+Operators are collected from the following resources:
 
-We included operators in __Pyret taught in the Data Science curriculumn of the Bootstrap project__. These operator are found by walking through the "Language Table"s in [this document](https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml). We only include functions and methods that look table-related. Methods are described in [Pyret's official document](https://www.pyret.org/docs/latest/tables.html). Functions are defined in [a Bootstrap Pyret module](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB).
-
-Pandas cheatsheet: https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
-
-Python pandas and R: https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html
-
-R tibbles: https://adv-r.hadley.nz/vectors-chap.html#tibble
-
-R tidying: https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html
-
-LINQ: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/query-expression-syntax-for-standard-query-operators
-
-SQL: https://dev.mysql.com/doc/refman/8.0/en/sql-data-manipulation-statements.html
-
-PostgreSQL: https://www.postgresql.org/docs/current/dml.html
+- [Pyret taught in Brown CS111](https://hackmd.io/@cs111/table)
+- [Pyret taught in the Data Science curriculumn of the Bootstrap project](https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml)
+  - [the definition of methods and some functions](https://www.pyret.org/docs/latest/tables.html)
+  - [the definition of other functions](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB)
+- [Python pandas cheatsheet](https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf)
+- [Compare Python pandas with R](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html)
+- [R tibbles](https://adv-r.hadley.nz/vectors-chap.html#tibble)
+- [R TidyVerse](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
+- [LINQ](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/query-expression-syntax-for-standard-query-operators)
+- [MySQL](https://dev.mysql.com/doc/refman/8.0/en/sql-data-manipulation-statements.html)
+- [PostgreSQL](https://www.postgresql.org/docs/current/dml.html)
 
 ## Assumptions
 
