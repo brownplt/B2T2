@@ -45,7 +45,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 ## `gradebookList`: a gradebook table with list cells
 
 ```lua
-| name    | age | quizes       | midterm | final |
+| name    | age | quizzes      | midterm | final |
 | ------- | --- | ------------ | ------- | ----- |
 | "Bob"   | 12  | [8, 9, 7, 9] | 77      | 87    |
 | "Alice" | 17  | [6, 8, 8, 7] | 88      | 85    |
@@ -55,7 +55,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 ## `gradebookTable`: a gradebook table with table cells
 
 ```lua
-| name    | age | quizes            | midterm | final |
+| name    | age | quizzes           | midterm | final |
 | ------- | --- | ----------------- | ------- | ----- |
 | "Bob"   | 12  | | quiz# | grade | | 77      | 87    |
 |         |     | | ----- | ----- | |         |       |

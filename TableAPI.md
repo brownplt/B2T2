@@ -817,50 +817,50 @@ __Ensures:__
 When columns `cs` of table `t` have sequences, return a `Table` where each element of each `c` in `cs` is flattened, meaning the column corresponding to `c` becomes a longer column where the original entries are concatenated. Elements of row `i` of `t` in columns other than `cs` will be repeated according to the length of `getValue(getRow(t1, i), c1)`. These lengths must therefore be the same for each `c` in `cs`.
 
 ```lua
-> flatten(gradebookList, ["quizes"])
-| name    | age | quizes | midterm | final |
-| ------- | --- | ------ | ------- | ----- |
-| "Bob"   | 12  | 8      | 77      | 87    |
-| "Bob"   | 12  | 9      | 77      | 87    |
-| "Bob"   | 12  | 7      | 77      | 87    |
-| "Bob"   | 12  | 9      | 77      | 87    |
-| "Alice" | 17  | 6      | 88      | 85    |
-| "Alice" | 17  | 8      | 88      | 85    |
-| "Alice" | 17  | 8      | 88      | 85    |
-| "Alice" | 17  | 7      | 88      | 85    |
-| "Eve"   | 13  | 7      | 84      | 77    |
-| "Eve"   | 13  | 9      | 84      | 77    |
-| "Eve"   | 13  | 8      | 84      | 77    |
-| "Eve"   | 13  | 8      | 84      | 77    |
+> flatten(gradebookList, ["quizzes"])
+| name    | age | quizzes | midterm | final |
+| ------- | --- | ------- | ------- | ----- |
+| "Bob"   | 12  | 8       | 77      | 87    |
+| "Bob"   | 12  | 9       | 77      | 87    |
+| "Bob"   | 12  | 7       | 77      | 87    |
+| "Bob"   | 12  | 9       | 77      | 87    |
+| "Alice" | 17  | 6       | 88      | 85    |
+| "Alice" | 17  | 8       | 88      | 85    |
+| "Alice" | 17  | 8       | 88      | 85    |
+| "Alice" | 17  | 7       | 88      | 85    |
+| "Eve"   | 13  | 7       | 84      | 77    |
+| "Eve"   | 13  | 9       | 84      | 77    |
+| "Eve"   | 13  | 8       | 84      | 77    |
+| "Eve"   | 13  | 8       | 84      | 77    |
 > t = buildColumn(gradebookList, "quiz-pass?"
     function(r):
       isPass =
         function(n):
           n >= 8
         end
-      map(getValue(r, "quizes"), isPass)
+      map(getValue(r, "quizzes"), isPass)
     end)
 > t
-| name    | age | quizes       | midterm | final | quiz-pass?                 |
+| name    | age | quizzes      | midterm | final | quiz-pass?                 |
 | ------- | --- | ------------ | ------- | ----- | -------------------------- |
 | "Bob"   | 12  | [8, 9, 7, 9] | 77      | 87    | [true, true, false, true]  |
 | "Alice" | 17  | [6, 8, 8, 7] | 88      | 85    | [false, true, true, false] |
 | "Eve"   | 13  | [7, 9, 8, 8] | 84      | 77    | [false, true, true, true]  |
-> flatten(gradebookList, ["quiz-pass?", "quizes"])
-| name    | age | quizes | midterm | final | quiz-pass? |
-| ------- | --- | ------ | ------- | ----- | ---------- |
-| "Bob"   | 12  | 8      | 77      | 87    | true       |
-| "Bob"   | 12  | 9      | 77      | 87    | true       |
-| "Bob"   | 12  | 7      | 77      | 87    | false      |
-| "Bob"   | 12  | 9      | 77      | 87    | true       |
-| "Alice" | 17  | 6      | 88      | 85    | false      |
-| "Alice" | 17  | 8      | 88      | 85    | true       |
-| "Alice" | 17  | 8      | 88      | 85    | true       |
-| "Alice" | 17  | 7      | 88      | 85    | false      |
-| "Eve"   | 13  | 7      | 84      | 77    | false      |
-| "Eve"   | 13  | 9      | 84      | 77    | true       |
-| "Eve"   | 13  | 8      | 84      | 77    | true       |
-| "Eve"   | 13  | 8      | 84      | 77    | true       |
+> flatten(gradebookList, ["quiz-pass?", "quizzes"])
+| name    | age | quizzes | midterm | final | quiz-pass? |
+| ------- | --- | ------- | ------- | ----- | ---------- |
+| "Bob"   | 12  | 8       | 77      | 87    | true       |
+| "Bob"   | 12  | 9       | 77      | 87    | true       |
+| "Bob"   | 12  | 7       | 77      | 87    | false      |
+| "Bob"   | 12  | 9       | 77      | 87    | true       |
+| "Alice" | 17  | 6       | 88      | 85    | false      |
+| "Alice" | 17  | 8       | 88      | 85    | true       |
+| "Alice" | 17  | 8       | 88      | 85    | true       |
+| "Alice" | 17  | 7       | 88      | 85    | false      |
+| "Eve"   | 13  | 7       | 84      | 77    | false      |
+| "Eve"   | 13  | 9       | 84      | 77    | true       |
+| "Eve"   | 13  | 8       | 84      | 77    | true       |
+| "Eve"   | 13  | 8       | 84      | 77    | true       |
 ```
 
 ## `transformColumn :: t1:Table * c:ColName * f:(v1:Value -> v2:Value) -> t2:Table`
