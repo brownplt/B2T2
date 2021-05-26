@@ -18,7 +18,9 @@ Operators are collected from the following resources:
 - [Pyret taught in the Data Science curriculumn of the Bootstrap project](https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml)
   - [the definition of methods and some functions](https://www.pyret.org/docs/latest/tables.html)
   - [the definition of other functions](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB)
-- [Python pandas cheatsheet](https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf)
+- Python pandas
+  - [cheatsheet](https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf)
+  - [DataFrame attributes and methods](https://pandas.pydata.org/pandas-docs/stable/reference/frame.html)
 - [Compare Python pandas with R](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html)
 - [R tibbles](https://adv-r.hadley.nz/vectors-chap.html#tibble)
 - [R TidyVerse](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
@@ -1394,6 +1396,33 @@ Correlates the rows of two tables based on matching keys.
 | "Bob"   | 12  | "blue"         | 87    |
 | "Alice" | 17  | "green"        | 85    |
 | "Eve"   | 13  | "red"          | 77    |
+```
+
+## `hconcat :: t1:Table * t2:Table -> t3:Table`
+
+### Constraints
+
+__Requires:__
+
+- `concat(header(t1), header(t2))` has no duplicates
+- `nrows(t1)` is equal to `nrows(t2)`
+
+__Ensures:__
+
+- `header(t3)` is equal to `concat(header(t1), header(t2))`
+- `nrows(t3)` is equal to `nrows(t1)`
+
+### Description
+
+[TODO: one more example]
+
+```lua
+> hconcat(students, dropColumns(gradebook, ["name", "age"]))
+| name    | age | favorite-color | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | -------------- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | "blue"         | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | "green"        | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | "red"          | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ## `crossJoin :: t1:Table * t2:Table -> t3:Table`
