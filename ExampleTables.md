@@ -55,32 +55,26 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 ## `gradebookTable`: a gradebook table with table cells
 
 ```lua
-| name    | age | quizes   | midterm | final |
-| ------- | --- | -------- | ------- | ----- |
-| "Bob"   | 12  | <table1> | 77      | 87    |
-| "Alice" | 17  | <table2> | 88      | 85    |
-| "Eve"   | 13  | <table3> | 84      | 77    |
-<table1> =
-| quiz# | grade |
-| ----- | ----- |
-| 1     | 8     |
-| 2     | 9     |
-| 3     | 7     |
-| 4     | 9     |
-<table2> =
-| quiz# | grade |
-| ----- | ----- |
-| 1     | 6     |
-| 2     | 8     |
-| 3     | 8     |
-| 4     | 7     |
-<table3> =
-| quiz# | grade |
-| ----- | ----- |
-| 1     | 7     |
-| 2     | 9     |
-| 3     | 8     |
-| 4     | 8     |
+| name    | age | quizes            | midterm | final |
+| ------- | --- | ----------------- | ------- | ----- |
+| "Bob"   | 12  | | quiz# | grade | | 77      | 87    |
+|         |     | | ----- | ----- | |         |       |
+|         |     | | 1     | 8     | |         |       |
+|         |     | | 2     | 9     | |         |       |
+|         |     | | 3     | 7     | |         |       |
+|         |     | | 4     | 9     | |         |       |
+| "Alice" | 17  | | quiz# | grade | | 88      | 85    |
+|         |     | | ----- | ----- | |         |       |
+|         |     | | 1     | 6     | |         |       |
+|         |     | | 2     | 8     | |         |       |
+|         |     | | 3     | 8     | |         |       |
+|         |     | | 4     | 7     | |         |       |
+| "Eve"   | 13  | | quiz# | grade | | 84      | 77    |
+|         |     | | ----- | ----- | |         |       |
+|         |     | | 1     | 7     | |         |       |
+|         |     | | 2     | 9     | |         |       |
+|         |     | | 3     | 8     | |         |       |
+|         |     | | 4     | 8     | |         |       |
 ```
 
 ## `employee`: a table that contains employees and their department IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
