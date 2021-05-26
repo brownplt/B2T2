@@ -7,16 +7,16 @@ Given a table `t`, every single-column selector (`CS`) means an integer `i` in `
 Every single column selectors is constructed by one of the following operators.
 
 ```haskell
-begin :: Seq<ColName> -> ColumnSelector
+begin :: Seq<ColName> -> CS
 begin hd = 0
 
-end :: Seq<ColName> -> ColumnSelector
+end :: Seq<ColName> -> CS
 end hd = length hd - 1
 
-byName :: ColName -> Seq<ColName> -> ColumnSelector
+byName :: ColName -> Seq<ColName> -> CS
 (byName c) hd = indexOf c hd
 
-byIndex :: Int -> Seq<ColName> -> ColumnSelector
+byIndex :: Int -> Seq<ColName> -> CS
 (byIndex i) hd = if i < 0 then (length hd - i) else i
 ```
 
