@@ -28,7 +28,7 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
 ```lua
 > groupByOriginal =
     function(t, c):
-      keys = tableOfColumn("key", distinct(getColumn(t, c)))
+      keys = tableOfColumn("key", removeDuplicates(getColumn(t, c)))
       makeGroup =
         function(kr):
           k = getValue(kr, "key")
@@ -41,7 +41,7 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
     end
 > groupBySubtracted =
     function(t, c):
-      keys = tableOfColumn("key", distinct(getColumn(t, c)))
+      keys = tableOfColumn("key", removeDuplicates(getColumn(t, c)))
       makeGroup =
         function(kr):
           k = getValue(kr, "key")

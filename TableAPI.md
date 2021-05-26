@@ -28,24 +28,16 @@ Operators are collected from the following resources:
 
 ## Assumptions
 
-### Relation-level Functions
+### Functions
 
-- length
-- ncols
-- nrows
-- header
-- schema
-- range
-- rows
-- concat
-- insert
-- distinct
-
-### Other assumed functions
-
-- `startsWith`: check if a string starts with another string
-- `average`: compute the average of a sequence of numbers
+- `length`: consumes a sequence and measures its length
+- `schema`: extracts the schema of a table
+- `range`: consumes a number and produces a sequence of valid indices
+- `concat`: concatenates two sequences
+- `startsWith`: checks whether a string starts with another string
+- `average`: computes the average of a sequence of numbers
 - `filter`: the conventional sequence (e.g. lists) filter
+- `removeDuplicates`: consumes a sequence and produces a subsequence with all duplicated elements removed
 
 ### Relations
 
@@ -785,7 +777,7 @@ When columns `cs` of table `t` have sequences, return a `Table` where each eleme
         function(n):
           n >= 8
         end
-      map(isPass, getValue(r, "quizes"))
+      map(getValue(r, "quizes"), isPass)
     end)
 > t
 | name    | age | quizes       | midterm | final | quiz-pass?                 |
@@ -940,7 +932,7 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 __Requires:__
 
 - for all `c` in `cs`, `c` is in `header(t1)`
-- `cs` contains no duplicates
+- `cs` has no duplicates
 - `schema(t1)[c]` is a subtype of `Number`
 
 __Ensures:__
@@ -1012,7 +1004,7 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 __Requires:__
 
 - for all `c` in `cs`, `c` is in `header(t1)`
-- `cs` contains distinct elements
+- `cs` has no duplicates
 
 __Ensures:__
 
@@ -1272,7 +1264,7 @@ __Ensures:__
 - `schema(r1)` is equal to `schema(t1)`
 - `schema(r2)` is equal to `schema(t1)`
 - `schema(t2)` is equal to `schema(r3)`
-- `nrows(t2)` is equal to `length(distinct(map(key, t1))`
+- `nrows(t2)` is equal to `length(removeDuplicates(ks)`, where `ks` is the results of applying `key` to each row of `t1`.
 
 ### Description
 
@@ -1778,15 +1770,13 @@ __Requires:__
 - `c1` is in `header(t1)`
 - `c2` is in `header(t1)`
 - `schema(t1)[c1]` is a subtype of `ColName`
-- for all `c` in `distinct(getColumn(t1, c1))`, `c` is not in `header(t1)`
+- for all `c` in `removeDuplicates(getColumn(t1, c1))`, `c` is not in `header(t1)`
 
 __Ensures:__
 
-[TODO: non-structural constraints]
-
-- `header(t2)` is equal to `header(t1)` with `c1` and `c2` removed then concatenated with `distinct(getColumn(t1, c1))`
+- `header(t2)` is equal to `header(t1)` with `c1` and `c2` removed then concatenated with `removeDuplicates(getColumn(t1, c1))`
 - for all `c` in `header(t2)`, if `c` in `header(t1)` then `schema(t2)[c]` is equal to `schema(t1)[c]`
-- for all `c` in `distinct(getColumn(t1, c1))`, `schema(t2)[c]` is equal to `schema(t1)[c2]`
+- for all `c` in `removeDuplicates(getColumn(t1, c1))`, `schema(t2)[c]` is equal to `schema(t1)[c2]`
 
 ### Description
 
