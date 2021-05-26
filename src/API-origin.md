@@ -86,7 +86,7 @@ In CS111 Pyret, `t.get-column(c)`.
 
 In R, `ncol(t)`
 
-## `shape :: t:Table -> (n1:Number * n2:Number)
+## `shape :: t:Table -> ns:Seq<Number>
 
 ### Origins
 

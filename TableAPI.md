@@ -401,7 +401,7 @@ Returns a `Number` representing the number of columns in the `Table`.
 8
 ```
 
-## `shape :: t:Table -> (n1:Number * n2:Number)`
+## `shape :: t:Table -> ns:Seq<Number>`
 
 ### Constraints
 
@@ -409,8 +409,9 @@ __Requires:__
 
 __Ensures:__
 
-- `n1` is equal to `nrows(t)`
-- `n2` is equal to `ncols(t)`
+- `length(ns)` is equal to `2`
+- `ns[0]` is equal to `nrows(t)`
+- `ns[1]` is equal to `ncols(t)`
 
 ### Description
 
@@ -418,9 +419,9 @@ Return a tuple representing the dimensionality of the `Table`.
 
 ```lua
 > shape(students)
-(3, 3)
+[3, 3]
 > shape(gradebook)
-(3, 8)
+[3, 8]
 ```
 
 ## (overload 1/2) `header :: t:Table -> cs:Seq<ColName>`
