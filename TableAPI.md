@@ -45,6 +45,7 @@ Operators are collected from the following resources:
 
 - `startsWith`: check if a string starts with another string
 - `average`: compute the average of a sequence of numbers
+- `filter`: the conventional sequence (e.g. lists) filter
 
 ### Relations
 
@@ -855,7 +856,7 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
 | "Eve"   | 13  | "fail" | 9     | 84      | 8     | 8     | 77    |
 ```
 
-## `filter :: t1:Table * f:(r:Row -> b:Boolean) -> t2:Table`
+## `tfilter :: t1:Table * f:(r:Row -> b:Boolean) -> t2:Table`
 
 ### Constraints
 
@@ -878,7 +879,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
     lam(r):
       getValue(r, “age”) < 15
     end
-> filter(students, ageUnderFifteen)
+> tfilter(students, ageUnderFifteen)
 | name  | age | favorite-color |
 | ----- | --- | -------------- |
 | "Bob" | 12  | "blue"         |
@@ -887,7 +888,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
     lam(r):
       length(getValue(r, “name)) > 3
     end
-> filter(gradebook, nameLongerThan3Letters)
+> tfilter(gradebook, nameLongerThan3Letters)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |

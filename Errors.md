@@ -85,7 +85,7 @@ jelly bean of a given color.
 ```lua
 > countParticipants =
     function(t, color):
-      nrows(filter(t, keep))
+      nrows(tfilter(t, keep))
     end
 > keep =
     function(r):
@@ -103,7 +103,7 @@ jelly bean of a given color.
 ```lua
 > countParticipants =
     function(t, color):
-      nrows(filter(t, keep(color)))
+      nrows(tfilter(t, keep(color)))
     end
 > keep =
     function(color):
@@ -123,7 +123,7 @@ jelly bean of a given color.
         function(r):
           r["color"]
         end
-      nrows(filter(t, keep))
+      nrows(tfilter(t, keep))
     end
 > countParticipants(jellyAnon, "brown")
 ```
@@ -182,7 +182,7 @@ The programmer was given two tables, one maps employee names to department IDs, 
         function(r):
           getValue(r, "Last Name") == name
         end
-      matchedTab = filter(deptTab, matchName)
+      matchedTab = tfilter(deptTab, matchName)
       matchedRow = getRow(matchedTab, 0)
       getValue(matchedRow, "Department ID")
     end
@@ -208,7 +208,7 @@ There are several problems in this program. First, in the body of `employeeToDep
         function(r):
           getValue(r, "Department ID") == name
         end
-      matchedTab = filter(deptTab, matchName)
+      matchedTab = tfilter(deptTab, matchName)
       matchedRow = getRow(matchedTab, 0)
       getValue(matchedRow, "Department Name")
     end
@@ -218,7 +218,7 @@ There are several problems in this program. First, in the body of `employeeToDep
         function(r):
           getValue(r, "Last Name") == name
         end
-      matchedTab = filter(emplTab, matchName)
+      matchedTab = tfilter(emplTab, matchName)
       matchedRow = getRow(matchedTab, 0)
       deptId = getValue(matchedRow, "Department ID")
       deptIdToDeptName(deptTab, deptId)
@@ -278,7 +278,7 @@ The programmer was asked to find Alice's favorite color.
 ```lua
 > getValue(
     getRow(
-      filter(students,
+      tfilter(students,
         function(r):
           getValue(r, "name") == "Alice"
         end),
@@ -295,7 +295,7 @@ There is only one row that matches the filtering criteria. So the only valid ind
 ```lua
 > getValue(
     getRow(
-      filter(students,
+      tfilter(students,
         function(r):
           getValue(r, "name") == "Alice"
         end),
@@ -318,7 +318,7 @@ The programmer was asked to define a function that finds all participants who li
 ```lua
 > participantsLikeGreen =
     function(t):
-      filter(t,
+      tfilter(t,
         function(r):
           getValue(r, "favorite-color")
         end)
@@ -334,7 +334,7 @@ The programmer returns `getValue(r, "favorite-color")` directly in the predicate
 ```lua
 > participantsLikeGreen =
     function(t):
-      filter(t,
+      tfilter(t,
         function(r):
           getValue(r, "favorite-color") == "green"
         end)

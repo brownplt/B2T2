@@ -147,7 +147,7 @@ In R, `colnames(t)`
 
 In CS111 Pyret, `transform-column(t, c, f)`
 
-## `filter :: t1:Table * f:(r:Row -> b:Boolean) -> t2:Table`
+## `tfilter :: t1:Table * f:(r:Row -> b:Boolean) -> t2:Table`
 
 ### Origins
 

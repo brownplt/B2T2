@@ -32,7 +32,7 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
       makeGroup =
         function(kr):
           k = getValue(kr, "key")
-          filter(t,
+          tfilter(t,
             function(r):
               getValue(r, c) == k
             end)
@@ -46,7 +46,7 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
         function(kr):
           k = getValue(kr, "key")
           g =
-            filter(t,
+            tfilter(t,
               function(r):
                 getValue(r, c) == k
               end)
