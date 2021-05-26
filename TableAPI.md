@@ -37,6 +37,7 @@ Operators are collected from the following resources:
 - `startsWith`: checks whether a string starts with another string
 - `average`: computes the average of a sequence of numbers
 - `filter`: the conventional sequence (e.g. lists) filter
+- `map`: the conventional sequence (e.g. lists) map
 - `removeDuplicates`: consumes a sequence and produces a subsequence with all duplicated elements removed
 
 ### Relations
