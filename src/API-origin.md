@@ -37,9 +37,8 @@ In R, `t1[,selector]`
 
 ## `head :: t1:Table * n:Number -> t2:Table`
 
-### Origins
-
 - In pandas, `t1.head(n)`
+- In pandas, `df.tail` is similar so not included.
 
 ## `getRow :: t:Table * n:Number -> r:Row`
 
@@ -77,6 +76,7 @@ In CS111 Pyret, `t.get-column(c)`.
 ### Origins
 
 - In R, `nrow(t)`
+- pandas, `len(t)`
 - In CS111 Pyret, `t.length()`
 
 
@@ -235,6 +235,14 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 - SQL `VALUES`
 
+## `dropna :: t1:Table -> t2:Table`
+
+- pandas `dropna`
+
+## `fillna :: t1:Table * c:ColName * v:Value -> t2:Table`
+
+- Similar to pandas' `fillna`
+
 ## `orderBy :: t1:Table * Seq<getKey:(r:Row -> k:Value) * compare:(k1:Value * k2:Value -> Boolean)> -> t2:Table`
 
 ### Origins
@@ -282,6 +290,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 - In CS111 Pyret, `histogram(t, c, n)`
 - In Bootstrap Pyret, `histogram(t, c, n)`
+- In pandas, `df.plot.hist()`
 
 ### Notes
 
@@ -295,6 +304,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 ### Origins
 
 - In CS111 Pyret, `scatter-plot(t, c1, c2)`
+- In pandas, `t.plot.scatter(x=c1, y=c2)`
 
 ### Notes
 

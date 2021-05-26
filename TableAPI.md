@@ -376,7 +376,6 @@ Returns a `Number` representing the number of rows in the `Table`.
 3
 ```
 
-
 ## `ncols :: t:Table -> n:Number`
 
 ### Constraints
@@ -732,6 +731,64 @@ Return a `Seq<Boolean>` with `true` entries indicating rows without missing valu
 [true, true, true]
 > completeCases(studentsMissing, "age")
 [false, true, true]
+```
+
+## `dropna :: t1:Table -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+- `schema(t2)` is equal to `schema(t1)`
+
+### Description
+
+Remove rows that have some values missing
+
+```lua
+> dropna(studentMissing)
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Alice" | 17  | "green"        |
+> dropna(gradebookMissing)
+| name  | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ----- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob" | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+```
+
+## `fillna : t1:Table * c:ColName * v:Value -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- `c` is in `header(t1)`
+- `v` is of type `schema(t1)[c]`
+
+__Ensures:__
+
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `nrows(t1)`
+
+### Description
+
+Scan the named column and when a cell is missing value, fill in `v`.
+
+```lua
+> fillna(studentsMissing, "favorite-color", "white")
+| name    | age | favorite-color |
+| ------- | --- | -------------- |
+| "Bob"   |     | "blue"         |
+| "Alice" | 17  | "green"        |
+| "Eve"   | 13  | "white"        |
+> fillna(gradebookMissing, "quiz1", 0)
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Alice" | 17  | 6     | 8     | 88      |       | 7     | 85    |
+| "Eve"   | 13  | 0     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ## `flatten :: t1:Table * cs:Seq<ColName> -> t2:Table`
