@@ -281,6 +281,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 ## `leftJoin :: t1:Table * t2:Table * cs:Table -> t3:Table`
 
 - Julia, `leftjoin`
+- Similar to `pd.merge(_, _, how="left", on=_)` in pandas
 - SQL, `LEFT JOIN`. But our `leftJoin` does not prefix column names and does not delete shared columns.
 - `leftJoin` is chosen as a representative of various other join operators (e.g. right join, inner join, and outer join)
 
