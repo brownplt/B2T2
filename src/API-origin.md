@@ -183,7 +183,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 ### Origins
 
 - In R, `select(df, -cs)`. The negation symbol makes the selection dropping.
-- In Python pandas, `t1.drop(cs, axis=1)`
+- In Python pandas, `t1.drop(columns=cs)`
 
 ## `distinct :: t1:Table -> t2:Table`
 

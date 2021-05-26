@@ -41,6 +41,7 @@ Operators are collected from the following resources:
 - `filter`: the conventional sequence (e.g. lists) filter
 - `map`: the conventional sequence (e.g. lists) map
 - `removeDuplicates`: consumes a sequence and produces a subsequence with all duplicated elements removed
+- `remove`: consumes two sequences and produces a subsequence of the first input, removing all elements that also appear in the second input.
 
 ### Relations
 
@@ -1037,6 +1038,45 @@ Returns a `Table` that is the same as `t`, except without the columns whose name
 | "Eve"   | 13  | 7     | 9     | 8     | 8     |
 ```
 
+## `renameColumns : t1:Table * ccs:Seq<ColName * ColName> -> t2:Table`
+
+Let `n` be the length of `ccs` Let `c11 ... c1n` be the first components of the elements of `ccs` and `c21 ... c2n` be the second components.
+
+### Constraints
+
+__Requires:__
+
+- `c1i` is in `header(t1)` for all `i`
+- `[c1i ... c1n]` has no duplicate
+- `header(t1)` with all `c1i` replaced with the `c2i` has no duplicate
+
+__Ensures:__
+
+- `header(t2)` is equal to `header(t1)` with all `c1i` replaced with `c2i`
+- for all `c` in `header(t2)`,
+  - if `c` is equal to `c2i` then `schema(t2)[c2i]` is equal to `schema(t2)[c1i]`
+  - otherwise, `schema(t2)[c]` is equal to `schema(t2)[c]`
+- `nrows(t2)` is equal to `nrows(t1)`
+
+### Description
+
+Update column names. Each element of `ccs` specifies the old name and the new name.
+
+```lua
+> renameColumns(students, [("favorite-color", "favorite color"), ("name", "firstname")])
+| firstname | age | favorite color |
+| --------- | --- | -------------- |
+| "Bob"     | 12  | "blue"         |
+| "Alice"   | 17  | "green"        |
+| "Eve"     | 13  | "red"          |
+> renameColumns(gradebook, [("midterm", "final"), ("final", "midterm")])
+| name    | age | quiz1 | quiz2 | final | quiz3 | quiz4 | midterm |
+| ------- | --- | ----- | ----- | ----- | ----- | ----- | ------- |
+| "Bob"   | 12  | 8     | 9     | 77    | 7     | 9     | 87      |
+| "Alice" | 17  | 6     | 8     | 88    |       | 7     | 85      |
+| "Eve"   | 13  |       | 9     | 84    | 8     | 8     | 77      |
+```
+
 ## `empty :: t1:Table -> t2:Table`
 
 ### Constraints:
@@ -1207,7 +1247,7 @@ ensures:
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
 - `schema(t2)["members"]` is a subtype of `Table`
 - `getColumn(t2, "key")` has no duplicates
-- for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `remove(header(t1), c)`
+- for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `remove(header(t1), [c])`
 - for all `t` in `getColumn(t2, "members")`, `schema(t)` is included in `schema(t1)`
 
 ### Description
