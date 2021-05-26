@@ -243,7 +243,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 - Similar to pandas' `fillna`
 
-## `orderBy :: t1:Table * Seq<getKey:(r:Row -> k:Value) * compare:(k1:Value * k2:Value -> Boolean)> -> t2:Table`
+## `orderBy :: t1:Table * Seq<Exists K . getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`
 
 ### Origins
 

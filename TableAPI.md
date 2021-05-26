@@ -1683,7 +1683,7 @@ Returns a sequence of one or more rows as a table.
 | "Bob"   | 13  |
 ```
 
-## `orderBy<K> :: t1:Table * Seq<getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`
+## `orderBy :: t1:Table * Seq<Exists K . getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`
 
 ### Constraints
 
