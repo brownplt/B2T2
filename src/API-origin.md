@@ -22,12 +22,15 @@ In R, `t1[,selector]`
 
 ### Origins
 
-In R, `t1[,selector]`
+- pandas, `t1.iloc[:, selector]`
+- julia, `t1[:, selector]`
+- In R, `t1[,selector]`
 
 ## (overload 3/3) `selectColumns :: t1:Table * selector:Seq<ColName> -> t2:Table`
 
 ### Origins
 
+- julia, `select`
 - In R, `t1[,selector]`
 - In CS111 Pyret, `select-columns(t, selector)`.
 - This function is similar to `select` in R
@@ -108,10 +111,15 @@ In R, `colnames(t)`
 
 In R, `colnames(t)`
 
+## `renameColumns : t1:Table * ccs:Seq<ColName * ColName> -> t2:Table`
+
+- pandas, `DataFrame.rename`
+- julia, `rename`
+- R, `rename`
+
 ## `buildColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table`
 
-### Origin
-
+- In Julia, `transform`
 - In Python, `t.assign(c=f)`, where `c` must be a literal column name. If `c` is already in `t`, the old column will be updated.
 - In R, `mutate(t, c=f)`, where `c` must be a literal column name. If `c` is already in `t`, the old column will be updated.
 - In CS111 Pyret, `build-column(t, c, f)`.
@@ -178,15 +186,20 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 ### Origins
 
-- In pandas, `del t[c]`
-- In cs111 Pyret, `t.drop(c)`
+- Julia DataFrame's `sort` is similar but less general
+- pandas' `DataFrame.sort_value(by = [c ...], ascending = [b ...])`
+
+## `orderBy :: t1:Table * Seq<Exists K . getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`
+
+- This funtion is a combination of LINQ's `OrderBy` and `ThenBy`.
 
 ## `dropColumns :: t1:Table * cs:Seq<ColName> -> t2:Table`
 
 ### Origins
 
 - In R, `select(df, -cs)`. The negation symbol makes the selection dropping.
-- In Python pandas, `t1.drop(columns=cs)`
+- Python pandas: `del t1[c]` or `t1.drop(columns=cs)`
+- CS111 Pyret, `t1.drop(c)`
 
 ## `distinct :: t1:Table -> t2:Table`
 
@@ -194,6 +207,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 - In R, `distinct(t1)`
 - In pandas, `t1.drop_duplicates()`
+- julia, `unique`
 
 ## `count :: t1:Table * c:ColName -> t2:Table`
 
@@ -241,15 +255,11 @@ In CS111 Pyret, `transform-column(t, c, f)`
 ## `dropna :: t1:Table -> t2:Table`
 
 - pandas `dropna`
+- Julia `dropmissing`
 
 ## `fillna :: t1:Table * c:ColName * v:Value -> t2:Table`
 
 - Similar to pandas' `fillna`
-
-## `orderBy :: t1:Table * Seq<Exists K . getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`
-
-- This funtion is a combination of LINQ's `OrderBy` and `ThenBy`.
-- Julia DataFrame's `sort` is similar but less general
 
 ## `flatten :: t1:Table * cs:Seq<ColName> -> t2:Table`
 
@@ -279,6 +289,10 @@ In CS111 Pyret, `transform-column(t, c, f)`
 - Python pandas, `pd.melt`
 - R TidyVerse, `df.pivot`
 - Julia, `unstack`
+
+## `pivotTable :: t1:Table * cs:Seq<ColName> * agg:Seq<ColName * ColName * Function> -> t2:Table`
+
+- pandas, `pivotTable`
 
 ## `leftJoin :: t1:Table * t2:Table * cs:Table -> t3:Table`
 
