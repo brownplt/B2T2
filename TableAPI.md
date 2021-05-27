@@ -14,19 +14,20 @@ Real-world programming medias contain lots of operations. Collecting all of them
 
 Operators are collected from the following resources:
 
-- [Pyret taught in Brown CS111](https://hackmd.io/@cs111/table)
-- [Pyret taught in the Data Science curriculumn of the Bootstrap project](https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml)
-  - [the definition of methods and some functions](https://www.pyret.org/docs/latest/tables.html)
-  - [the definition of other functions](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB)
-- Python pandas
-  - [cheatsheet](https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf)
-  - [DataFrame attributes and methods](https://pandas.pydata.org/pandas-docs/stable/reference/frame.html)
-- [Compare Python pandas with R](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html)
+- [Python pandas](https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf)
+- [R dplyr cheatsheets](https://github.com/rstudio/cheatsheets/blob/master/data-transformation.pdf)
 - [R tibbles](https://adv-r.hadley.nz/vectors-chap.html#tibble)
-- [R TidyVerse](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
+- [R Tidy data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
 - [LINQ](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/query-expression-syntax-for-standard-query-operators)
 - [MySQL](https://dev.mysql.com/doc/refman/8.0/en/sql-data-manipulation-statements.html)
 - [PostgreSQL](https://www.postgresql.org/docs/current/dml.html)
+- [Pyret taught in Brown CS111](https://hackmd.io/@cs111/table)
+- [Pyret taught in the Bootstrap DS](https://bootstrapworld.org/materials/spring2021/en-us/courses/data-science/pathway-lessons.shtml)
+  - [the definition of methods and some functions](https://www.pyret.org/docs/latest/tables.html)
+  - [the definition of other functions](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB)
+- [Compare Python pandas with R TidyVerse](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html)
+- [Compare Python pandas with SQl](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_sql.html)
+- [Compare Julia DataFrame with Python pandas and R TidyVerse](https://dataframes.juliadata.org/stable/man/comparisons/)
 
 For our convenience, we sometimes apply table operators to rows (e.g. `selectColumns(r, ["foo", "bar"])`). A implementation of Table API can either view rows as a subtype of tables, overload those operators, or give different names to row variants of the operators.
 

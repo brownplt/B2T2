@@ -3,6 +3,7 @@
 ### Origins
 
 - In R, `t1[selector,]`
+- R, `slice`
 - In pandas, `t1.iloc[selector]`
 
 ## (overload 2/2) `selectRows :: t1:Table * selector:Seq<Boolean> -> t2:Table`
@@ -245,7 +246,8 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 ## `union :: t1:Table * t2:Table -> t3:Table`
 
-- SQL `UNION`
+- R, `union`
+- SQL `UNION ALL`
 - pandas, `pd.concat`
 
 ## `values :: rs:Seq<Row> -> t:Table`
@@ -296,6 +298,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 ## `leftJoin :: t1:Table * t2:Table * cs:Table -> t3:Table`
 
+- R, `left_join`
 - Julia, `leftjoin`
 - Similar to `pd.merge(_, _, how="left", on=_)` in pandas
 - SQL, `LEFT JOIN`. But our `leftJoin` does not prefix column names and does not delete shared columns.
