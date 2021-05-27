@@ -30,7 +30,7 @@ Construct a selector for many columns:
 - `byNames :: Seq<ColName> -> MCS`
 - `byIndices :: Seq<Integer> -> MCS`
 - `byBooleans :: Seq<Boolean> -> MCS`
-- `byCriteria :: (ColName -> Boolean) -> MCS`.  Common predicates used with `byCriteria`. We abbreviate `(ColName -> Boolean)` with `Pred`
+- `where :: (ColName -> Boolean) -> MCS`.  Common predicates used with `where`. We abbreviate `(ColName -> Boolean)` with `Pred`
   - `startsWith :: ColName -> Pred`: keeps column names starting with a prefix
   - `endsWith :: ColName -> Pred`: keeps column names end with a surfix
   - `match :: RegExp -> Pred`: keeps column names that matches the input regular expression.
@@ -42,5 +42,15 @@ Use a many-column selector:
 
 ## important ways to use column names
 
-- in construction of column selectors
-- name columns to be created, e.g. `buildColumn` and `pivotLonger`
+Column names are often used in selecting columns.
+
+- `byName("midterm")`
+- `byNames(["midterm", "final"])`
+- `between(byName("quiz1"), byName("final"))`
+- `where(startsWith("quiz"))`
+- `where(endsWith("foobar"))`
+- `where(match(re"quiz[0-9]+"))`
+
+Of couse, column selectors can be combined, for example, `union(where(startsWith("quiz")), byNames(["midterm", "final"]))`
+
+Besides, column names involved when creating new columns, e.g. `buildColumn` and `pivotLonger`
