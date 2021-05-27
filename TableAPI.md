@@ -221,15 +221,6 @@ Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a 
 | 77    | "Eve"   | 84      |
 ```
 
-### Notes
-
-- This function is similar to `select` in R
-- This function is similar to `DataFrame.loc` in pandas.
-
-## `subTable :: t1:Table * rowSelector:Seq * columnSelector:Seq -> t2:Table`
-
-`subTable(t, x, y)` is defined as `selectColumns(selectRows(t, x), y)`. This function has 6 overloadings because `selectRows` has 2 overloadings and that `selectColumns` has 3. Each of the 6 overloadings has the constraints given by combining the constraints of the corresponding `selectRows` and `selectColumns` in the obvious way.
-
 ## `head :: t1:Table * n:Number -> t2:Table`
 
 ### Constraints
@@ -251,10 +242,6 @@ __Ensures:__
 ### Description
 
 This function returns the first `n` rows of the table based on position. It is useful for quickly testing if your table has the right type of data in it. For negative values of `n`, this function returns all rows except the last `n` rows.
-
-### Note
-
-- This function is similar to `head(t1, n = n)` in R.
 
 ## `getRow :: t:Table * n:Number -> r:Row`
 
@@ -327,12 +314,6 @@ Returns a `Seq` of the values in the named column in `t`.
 > getColumn(gradebook, "name")
 ["Bob", "Alice", "Eve"]
 ```
-
-### Notes
-
-In R, `t[[c]]`.
-
-In CS111 Pyret, `t.get-column(c)`.
 
 ## `getValue :: r:Row * c:ColName -> v:Value`
 

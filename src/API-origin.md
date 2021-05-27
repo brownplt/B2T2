@@ -30,6 +30,8 @@ In R, `t1[,selector]`
 
 - In R, `t1[,selector]`
 - In CS111 Pyret, `select-columns(t, selector)`.
+- This function is similar to `select` in R
+- This function is similar to `DataFrame.loc` in pandas.
 
 ## `subTable :: t1:Table * rowSelector:Seq * columnSelector:Seq -> t2:Table`
 
@@ -39,6 +41,7 @@ In R, `t1[,selector]`
 
 - In pandas, `t1.head(n)`
 - In pandas, `df.tail` is similar so not included.
+- This function is similar to `head(t1, n = n)` in R.
 
 ## `getRow :: t:Table * n:Number -> r:Row`
 
