@@ -28,6 +28,8 @@ Operators are collected from the following resources:
 - [MySQL](https://dev.mysql.com/doc/refman/8.0/en/sql-data-manipulation-statements.html)
 - [PostgreSQL](https://www.postgresql.org/docs/current/dml.html)
 
+For our convenience, we sometimes apply table operators to rows (e.g. `selectColumns(r, ["foo", "bar"])`). A implementation of Table API can either view rows as a subtype of tables, overload those operators, or give different names to row variants of the operators.
+
 ## Assumptions
 
 ### Functions
