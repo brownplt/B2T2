@@ -2,6 +2,24 @@
 
 This file challenges type systems with some programs that might be difficult to typecheck.
 
+## dotProduct
+
+This example defines a function that computes the dot-product of two numeric columns. When assigning a type to `dotProduct`, the type system should try to enforce that both `c1` and `c2` refer to numeric columns in `t`.
+
+```lua
+> dotProduct =
+    function(t, c1, c2):
+      ns = getColumn(t, c1)
+      ms = getColumn(t, c1)
+      sum(map(range(nrows(t)),
+        function(i):
+          ns[i] * ms[i]
+        end))
+    end
+> dotProduct(gradebook, "quiz1", "quiz2")
+183
+```
+
 ## sampleRows
 
 This example defines a function that randomly samples rows of a table. This function might be interesting when working with tidy tables, where each row is one observation. "Pure" languages (e.g. Haskell) might find typing this example challenging because generating random number is stateful.
