@@ -245,9 +245,8 @@ In CS111 Pyret, `transform-column(t, c, f)`
 
 ## `orderBy :: t1:Table * Seq<Exists K . getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`
 
-### Origins
-
 - This funtion is a combination of LINQ's `OrderBy` and `ThenBy`.
+- Julia DataFrame's `sort` is similar but less general
 
 ## `flatten :: t1:Table * cs:Seq<ColName> -> t2:Table`
 
