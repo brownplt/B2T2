@@ -44,6 +44,11 @@ A type system should try to realize that `sampleRows` requires `n` is in `range(
 This example defines two groupBy functions. `groupByOriginal` catagorizes rows of the input table into groups by the key of each row. The key is computed by accessing the named column. `groupBySubtracted` is similar to `groupByOriginal` but the named column is removed in the output. Ideally, the two user-defined functions should have the same constraints as in Table API.
 
 ```lua
+> tableOfColumn =
+    function(c, vs):
+      t1 = addRows(emptyTable, map(vs, function(_): [row:] end))
+      addColumn(t1, c, vs)
+    end
 > groupByOriginal =
     function(t, c):
       keys = tableOfColumn("key", removeDuplicates(getColumn(t, c)))

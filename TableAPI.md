@@ -57,6 +57,21 @@ Operators are collected from the following resources:
 - `x` is non-negative
 - `x` is negative
 
+## `emptyTable :: t:Table`
+
+### Constraints
+
+__Requires:__
+
+__Ensures:__
+
+- `schema(t)` is equal to `[]`
+- `nrows(t)` is equal to `0`
+
+### Description
+
+Create an empty table.
+
 ## (overload 1/2) `selectRows :: t1:Table * selector:Seq<Number> -> t2:Table`
 
 ### Constraints
@@ -597,38 +612,6 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
-```
-
-## `tableOfColumn :: c:ColName * vs:Seq<Value> -> t:Table`
-
-### Constraints
-
-__Requires:__
-
-__Ensures:__
-
-- `header(t)` is equal to `[c]`
-- `schema(t)[c]` is equal to the element sort of `vs`
-- `nrows(t)` is equal to `length(vs)`
-
-### Description
-
-Construct a single-column table. The only column is equal to the input sequence of values.
-
-```lua
-> tableOfColumn("colors", ["red", "green", "blue"])
-| colors  |
-| ------- |
-| "red"   |
-| "green" |
-| "blue"  |
-> tableOfColumn("PLs", ["C", "Java", "Agda", "Scheme"])
-| PLs      |
-| -------- |
-| "C"      |
-| "Java"   |
-| "Agda"   |
-| "Scheme" |
 ```
 
 ## `addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table`
