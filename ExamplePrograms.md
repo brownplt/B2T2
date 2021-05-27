@@ -125,7 +125,11 @@ This example also computes the average quiz score for each student in `gradebook
       quizTable,
       "average",
       function(r):
-        average(listOfRow(r))
+        ns = map(header(r),
+          function(c):
+            getValue(r, c)
+          end)
+        average(ns)
       end)
 > addColumn(
     gradebook,
