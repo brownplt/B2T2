@@ -4,60 +4,43 @@ Many programming medias (e.g. R dplyr and Julia) provide several ways to select 
 
 Given a table `t`, every single-column selector (`CS`) means an integer `i` in `range(ncols(t))`, and every multi-column selector (`MCS`) means a sequence of `CS` that has no duplicate.
 
-Every single column selectors is constructed by one of the following operators.
+## important ways to use column selectors
 
-```haskell
-begin :: Seq<ColName> -> CS
-begin hd = 0
+Construct a selector for one column:
 
-end :: Seq<ColName> -> CS
-end hd = length hd - 1
+- `begin :: CS`: select the first column
+- `end :: CS`: select the last column
+- `byName :: ColName -> CS`: select the named column
+- `byIndex :: Int -> CS`: select the indexed column. The index counts from the beginning if it is non-negative, otherwise it counts from the end.
 
-byName :: ColName -> Seq<ColName> -> CS
-(byName c) hd = indexOf c hd
+Use a single-column selector:
 
-byIndex :: Int -> Seq<ColName> -> CS
-(byIndex i) hd = if i < 0 then (length hd - i) else i
-```
+- various plotting functions, e.g. `scatterPlot`
+- extract, update or delete one column, e.g.`getColumn`, `transformColumn`, and`dropColumn`
+- access one column for other purpose, e.g. `sort`, `count`, `renameColumns`, `groupBy`, and `pivotWider`
 
-The remaining file lists operators for multi-column selectors. It is assumed that `ncols(t)` is bound to `n`
+Construct a selector for many columns:
 
-## `difference :: MCS * MCS -> MCS`
+- `everything :: MCS`
+- `difference :: MCS * MCS -> MCS`
+- `complement :: MCS -> MCS`
+- `union :: MCS * MCS -> MCS`
+- `intersection :: MCS * MCS -> MCS`
+- `between :: CS * CS -> MCS`
+- `byNames :: Seq<ColName> -> MCS`
+- `byIndices :: Seq<Integer> -> MCS`
+- `byBooleans :: Seq<Boolean> -> MCS`
+- `byCriteria :: (ColName -> Boolean) -> MCS`.  Common predicates used with `byCriteria`. We abbreviate `(ColName -> Boolean)` with `Pred`
+  - `startsWith :: ColName -> Pred`: keeps column names starting with a prefix
+  - `endsWith :: ColName -> Pred`: keeps column names end with a surfix
+  - `match :: RegExp -> Pred`: keeps column names that matches the input regular expression.
 
-## `complement :: MCS -> MCS`
+Use a many-column selector:
 
-`complement(x) = difference(range(n), x)`
+- extract or delete many column, including `selectColumns` and `dropColumns`
+- access many columns for other purpose, including `sortByColumns`, `pivotLonger`, `pivotTable`
 
-## `union :: MCS * MCS -> MCS`
+## important ways to use column names
 
-Concatenate two sequences then remove duplicates.
-
-## `intersection :: MCS * MCS -> MCS`
-
-`intersection(x, y) = difference(x, complement(y))`
-
-## `between :: s1:CS * s2:CS -> MCS`
-
-Produces a sequence of column indices starting from `s1` and end with `s2`.
-
-## `everything :: MCS`
-
-`everything = complement([])`
-
-## `filter :: s1:MCS * p:(CS -> Boolean) -> MCS`
-
-## `byNames :: Seq<ColName> -> MCS`
-
-`byNames(cs) = map(cs, byName)`
-
-## `byIndices :: Seq<Integer> -> MCS`
-
-`byIndices(cs) = map(cs, byIndex)`
-
-## `byBooleans :: bs:Seq<Boolean> -> MCS`
-
-Requires:
-
-- `length(bs)` is equal to `n`
-
-Produces a sequence of `i` where `bs[i]` is true.
+- in construction of column selectors
+- name columns to be created, e.g. `buildColumn` and `pivotLonger`

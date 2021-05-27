@@ -170,7 +170,7 @@ __Ensures:__
 
 ### Description
 
-Consumes a `Table` and a `Seq<ColName>` containing column indices, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
+Consumes a `Table` and a `Seq<Number>` containing column indices, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
 
 
 ```lua
