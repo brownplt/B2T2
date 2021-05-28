@@ -1170,6 +1170,30 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 | 13    | 1     |
 ```
 
+## `find :: t:Table * r:Row -> n:Number`
+
+### Constraints
+
+__Requires:__
+
+- for all `c` in `header(r)`, `c` is in `header(t)`
+- for all `c` in `header(r)`, `schema(r)[c]` is equal to `schema(t)[c]`
+
+__Ensures:__
+
+- either `n` is equal to `-1` or `n` is in `range(nrows(t))`
+
+### Description
+
+Find the index of the first row that matches `r`.
+
+```lua
+> find(students, [row: ("age", 13)])
+2
+> find(students, [row: ("age", 14)])
+-1
+```
+
 ## `groupByOriginal :: t1:Table * c:ColName -> t2:Table`
 
 ### Constraints
