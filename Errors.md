@@ -197,7 +197,7 @@ The programmer was given two tables, one maps employee names to department IDs, 
 
 ### What is the Bug?
 
-There are several problems in this program. First, in the body of `employeeToDepartment`, the programmer returned the extended table, but they should return a cost. Another problem is in the name of the helper function, `lastNameToDeptId`. The name suggests that this function maps the last names of employees to department IDs. However, this suggestion is inconsistent with the application of this function in `employeeToDepartment`, which is expecting a cost. Finally, the first parameter of `lastNameToDeptId`, `deptTab`, has a name that is inconsistent with its use. The name suggests a department table. However, the identifier is used as an employee table.
+There are several problems in this program. First, in the body of `employeeToDepartment`, the programmer returned the extended table, but they should return a department name. Another problem is in the name of the helper function, `lastNameToDeptId`. The name suggests that this function maps the last names of employees to department IDs. However, this suggestion is inconsistent with the application of this function in `employeeToDepartment`, which is expecting a department name. Finally, the first parameter of `lastNameToDeptId`, `deptTab`, has a name that is inconsistent with its use. The name suggests a department table. However, the identifier is used as an employee table.
 
 ### A Corrected Prgram
 
