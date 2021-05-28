@@ -8,7 +8,7 @@ The Brown Benchmark for Table Types
 - [Example Tables](ExampleTables.md)
 - [Table API](TableAPI.md)
 - [Example Programs](ExamplePrograms.md)
-- [Errors](ErrorIllustrations.md)
+- [Errors](Errors.md)
 
 ## Paper
 
