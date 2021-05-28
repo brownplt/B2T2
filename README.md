@@ -18,6 +18,7 @@ This benchmark accompanies a paper currently under review in *The Art, Science, 
 
 A draft version, open for comment, is currently a
 [Google Doc](https://docs.google.com/document/d/1th11PED6j8j2lZeU61f8pgsQpVMVhw9sG8X8vk00RVU/edit).
-Please be sure to suggest in **private browsing mode**
-to avoid leaking your identity.
+
+*Please be sure to suggest in **private browsing mode**
+to avoid leaking your identity.*
 
