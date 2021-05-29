@@ -1170,7 +1170,7 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 | 13    | 1     |
 ```
 
-## `find :: t:Table * r:Row -> n:Number`
+## `find :: t:Table * r:Row -> n:Error<Number>`
 
 ### Constraints
 
@@ -1181,7 +1181,7 @@ __Requires:__
 
 __Ensures:__
 
-- either `n` is equal to `-1` or `n` is in `range(nrows(t))`
+- either `n` is equal to `error("not found")` or `n` is in `range(nrows(t))`
 
 ### Description
 
@@ -1191,7 +1191,7 @@ Find the index of the first row that matches `r`.
 > find(students, [row: ("age", 13)])
 2
 > find(students, [row: ("age", 14)])
--1
+error("not found")
 ```
 
 ## `groupByOriginal :: t1:Table * c:ColName -> t2:Table`
