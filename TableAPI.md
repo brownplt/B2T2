@@ -1980,6 +1980,39 @@ __Ensures:__
 
 Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram.
 
+## `bin :: t1:Table * c:ColName * n:Number -> t2:Table`
+
+### Constraints
+
+__Requires:__
+
+- `c` is in `header(t1)`
+- `schema(t1)[c]` is a subtype of `Number`
+
+__Ensures:__
+
+- `header(t2)` is equal to `["group", "count"]`
+- `schema(t2)["group"]` is a subtype of `String`
+- `schema(t2)["count"]` is a subtype of `Number`
+
+### Description
+
+Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram.
+
+```lua
+> bin(students, "age", 5)
+| group            | count |
+| ---------------- | ----- |
+| "10 <= age < 15" | 2     |
+| "15 <= age < 20" | 1     |
+> bin(gradebook, "final", 5)
+| group            | count |
+| ---------------- | ----- |
+| "75 <= age < 80" | 1     |
+| "80 <= age < 85" | 0     |
+| "85 <= age < 90" | 2     |
+```
+
 ## `scatterPlot :: t:Table * c1:ColName * c2:ColName -> i:Image`
 
 Displays an `Image` of a scatter plot from the given table. `c1` names the column in `t` to use for x-values, and `c2` names the column in `t` to use for y-values. Both columns must contain `Number` values.
