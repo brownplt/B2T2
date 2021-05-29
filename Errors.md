@@ -166,8 +166,8 @@ The program supplies a table produced by `count` to `pieChart`, which also expec
 
 ### Context
 
-- `employee`
-- `department`
+- `employees`
+- `departments`
 
 ### Task
 

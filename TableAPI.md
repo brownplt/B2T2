@@ -1552,7 +1552,7 @@ Look up more information on rows of the first table and add those information to
 | "Bob"   | 12  | "blue"         | 8     | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | "green"        | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"   | 13  | "red"          | 7     | 9     | 84      | 8     | 8     | 77    |
-> leftJoin(employee, department, ["Department ID"])
+> leftJoin(employees, departments, ["Department ID"])
 | Last Name    | Department ID | Department Name |
 | ------------ | ------------- | --------------- |
 | "Rafferty"   | 31            | "Sales"         |

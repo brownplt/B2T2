@@ -77,7 +77,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 |         |     | | 4     | 8     | |         |       |
 ```
 
-## `employee`: a table that contains employees and their department IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
+## `employees`: a table that contains employees and their department IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
 
 ```lua
 | Last Name    | Department ID |
@@ -90,7 +90,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 | "Williams"   |               |
 ```
 
-## `department`: a table that contains departments and their IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
+## `departments`: a table that contains departments and their IDs ([source](https://en.wikipedia.org/wiki/Join_(SQL)))
 
 ```lua
 | Department ID | Department Name |
