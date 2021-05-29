@@ -5,7 +5,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 ## `students`: a simple table with no values missing.
 
 ```lua
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Alice" | 17  | "green"        |
@@ -15,7 +15,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 ## `studentsMissing`: a simple table with some values missing.
 
 ```lua
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   |     | "blue"         |
 | "Alice" | 17  | "green"        |

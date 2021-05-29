@@ -283,7 +283,7 @@ The programmer was asked to find Alice's favorite color.
           getValue(r, "name") == "Alice"
         end),
       1),
-    "favorite-color")
+    "favorite color")
 ```
 
 ### What is the Bug?
@@ -300,7 +300,7 @@ There is only one row that matches the filtering criteria. So the only valid ind
           getValue(r, "name") == "Alice"
         end),
       0),
-    "favorite-color")
+    "favorite color")
 ```
 
 ## Infer the Types of Accessed Columns
@@ -320,14 +320,14 @@ The programmer was asked to define a function that finds all participants who li
     function(t):
       tfilter(t,
         function(r):
-          getValue(r, "favorite-color")
+          getValue(r, "favorite color")
         end)
     end
 ```
 
 ### What is the Bug?
 
-The programmer returns `getValue(r, "favorite-color")` directly in the predicate but should return a boolean.
+The programmer returns `getValue(r, "favorite color")` directly in the predicate but should return a boolean.
 
 ### A Corrected Program
 
@@ -336,7 +336,7 @@ The programmer returns `getValue(r, "favorite-color")` directly in the predicate
     function(t):
       tfilter(t,
         function(r):
-          getValue(r, "favorite-color") == "green"
+          getValue(r, "favorite color") == "green"
         end)
     end
 ```

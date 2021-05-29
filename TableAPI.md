@@ -95,7 +95,7 @@ Given a `Table` and a `Seq<Number>` containing row indices, and produces a new `
 
 ```lua
 > selectRows(students, [2, 0, 2, 1])
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Eve"   | 13  | "red"          |
 | "Bob"   | 12  | "blue"         |
@@ -128,7 +128,7 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 
 ```lua
 > selectRows(students, [true, false, true])
-| name  | age | favorite-color |
+| name  | age | favorite color |
 | ----- | --- | -------------- |
 | "Bob" | 12  | "blue"         |
 | "Eve" | 13  | "red"          |
@@ -193,7 +193,7 @@ Consumes a `Table` and a `Seq<Number>` containing column indices, and produces a
 
 ```lua
 > selectColumns(students, [2, 1])
-| favorite-color | age |
+| favorite color | age |
 | -------------- | --- |
 | "blue"         | 12  |
 | "green"        | 17  |
@@ -225,8 +225,8 @@ __Ensures:__
 Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
 
 ```lua
-> selectColumns(students, ["favorite-color", "age"])
-| favorite-color | age |
+> selectColumns(students, ["favorite color", "age"])
+| favorite color | age |
 | -------------- | --- |
 | "blue"         | 12  |
 | "green"        | 17  |
@@ -279,7 +279,7 @@ Extract a row out of a table by a numeric index.
 
 ```lua
 > getRow(students, 0)
-[row: ("name", "Bob"), ("age", 12), ("favorite-color", "blue")]
+[row: ("name", "Bob"), ("age", 12), ("favorite color", "blue")]
 > getRow(gradebook, 1)
 [row:
   ("name", "Alice"), ("age", 17),
@@ -412,7 +412,7 @@ Returns a `Seq` representing the column names in the `Table`.
 
 ```lua
 > header(students)
-["name", "age", "favorite-color"]
+["name", "age", "favorite color"]
 > header(gradebook)
 ["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
 ```
@@ -433,7 +433,7 @@ Returns a `Seq` representing the column names in the `Row`.
 
 ```lua
 > header(getRow(students, 0))
-["name", "age", "favorite-color"]
+["name", "age", "favorite color"]
 > header(getRow(gradebook, 0))
 ["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]
 ```
@@ -464,7 +464,7 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
       12 < getValue(r, "age") and getValue(r, "age") < 20
     end
 > buildColumn(students, "is-teenager", isTeenagerBuilder)
-| name    | age | favorite-color | is-teenager |
+| name    | age | favorite color | is-teenager |
 | ------- | --- | -------------- | ----------- |
 | "Bob"   | 12  | "blue"         | false       |
 | "Alice" | 17  | "green"        | true        |
@@ -512,7 +512,7 @@ Consumes an existing `Table` and produces a new `Table` with the named columns u
       end
     end
 > update(students, abstractAge)
-| name    | age        | favorite-color |
+| name    | age        | favorite color |
 | ------- | ---------- | -------------- |
 | "Bob"   | "kid"      | "blue"         |
 | "Alice" | "teenager" | "green"        |
@@ -555,8 +555,8 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
     students,
     [row: 
       ("name", "Colton"), ("age", 19),
-      ("favorite-color", "blue")])
-| name     | age | favorite-color |
+      ("favorite color", "blue")])
+| name     | age | favorite color |
 | -------- | --- | -------------- |
 | "Bob"    | 12  | "blue"         |
 | "Alice"  | 17  | "green"        |
@@ -601,9 +601,9 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
     [
       [row: 
         ("name", "Colton"), ("age", 19),
-        ("favorite-color", "blue")]
+        ("favorite color", "blue")]
     ])
-| name     | age | favorite-color |
+| name     | age | favorite color |
 | -------- | --- | -------------- |
 | "Bob"    | 12  | "blue"         |
 | "Alice"  | 17  | "green"        |
@@ -640,7 +640,7 @@ Consumes a column name and a `Seq` of values and produces a new `Table` with the
 ```lua
 > hairColor = ["brown", "red", "blonde"]
 > addColumn(students, "hair-color", hairColor)
-| name    | age | favorite-color | hair-color |
+| name    | age | favorite color | hair-color |
 | ------- | --- | -------------- | ---------- |
 | "Bob"   | 12  | "blue"         | "brown"    |
 | "Alice" | 17  | "green"        | "red"      |
@@ -693,7 +693,7 @@ Remove rows that have some values missing
 
 ```lua
 > dropna(studentMissing)
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Alice" | 17  | "green"        |
 > dropna(gradebookMissing)
@@ -721,8 +721,8 @@ __Ensures:__
 Scan the named column and when a cell is missing value, fill in `v`.
 
 ```lua
-> fillna(studentsMissing, "favorite-color", "white")
-| name    | age | favorite-color |
+> fillna(studentsMissing, "favorite color", "white")
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   |     | "blue"         |
 | "Alice" | 17  | "green"        |
@@ -832,7 +832,7 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
       Strings.concat(name, “ Smith”)
     end
 > transformColumn(students, “name”, addLastName)
-| name          | age | favorite-color |
+| name          | age | favorite color |
 | ------------- | --- | -------------- |
 | "Bob Smith"   | 12  | "blue"         |
 | "Alice Smith" | 17  | "green"        |
@@ -877,7 +877,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
       getValue(r, “age”) < 15
     end
 > tfilter(students, ageUnderFifteen)
-| name  | age | favorite-color |
+| name  | age | favorite color |
 | ----- | --- | -------------- |
 | "Bob" | 12  | "blue"         |
 | "Eve" | 13  | "red"          |
@@ -917,7 +917,7 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 
 ```lua
 > sort(students, "age", true)
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
@@ -953,7 +953,7 @@ Given a `Table` and a sequence of column names in that `Table`, return a `Table`
 
 ```lua
 > sort(students, ["age"])
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
@@ -989,7 +989,7 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 
 ```lua
 > dropColumn(students, "age")
-| name    | favorite-color |
+| name    | favorite color |
 | ------- | -------------- |
 | "Bob"   | "blue"         |
 | "Alice" | "green"        |
@@ -1026,7 +1026,7 @@ Returns a `Table` that is the same as `t`, except without the columns whose name
 
 ```lua
 > dropColumns(students, ["age"])
-| name    | favorite-color |
+| name    | favorite color |
 | ------- | -------------- |
 | "Bob"   | "blue"         |
 | "Alice" | "green"        |
@@ -1064,12 +1064,12 @@ __Ensures:__
 Update column names. Each element of `ccs` specifies the old name and the new name.
 
 ```lua
-> renameColumns(students, [("favorite-color", "favorite color"), ("name", "firstname")])
-| firstname | age | favorite color |
-| --------- | --- | -------------- |
-| "Bob"     | 12  | "blue"         |
-| "Alice"   | 17  | "green"        |
-| "Eve"     | 13  | "red"          |
+> renameColumns(students, [("favorite color", "preferred color"), ("name", "firstname")])
+| firstname | age | preferred color |
+| --------- | --- | --------------- |
+| "Bob"     | 12  | "blue"          |
+| "Alice"   | 17  | "green"         |
+| "Eve"     | 13  | "red"           |
 > renameColumns(gradebook, [("midterm", "final"), ("final", "midterm")])
 | name    | age | quiz1 | quiz2 | final | quiz3 | quiz4 | midterm |
 | ------- | --- | ----- | ----- | ----- | ----- | ----- | ------- |
@@ -1095,7 +1095,7 @@ Remove all rows but keep the schema.
 
 ```lua
 > empty(students)
-| name | age | favorite-color |
+| name | age | favorite color |
 | ---- | --- | -------------- |
 > empty(gradebook)
 | name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
@@ -1123,7 +1123,7 @@ Retain only unique/distinct rows from an input `Table`.
 
 ```lua
 > distinct(students)
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Alice" | 17  | "green"        |
@@ -1156,7 +1156,7 @@ __Ensures:__
 Takes a `Table` and a `ColName` representing the name of a column in that `Table`. Produces a `Table` that summarizes how many rows have each value in the given column.
 
 ```lua
-> count(students, "favorite-color")
+> count(students, "favorite color")
 | value   | count |
 | ------- | ----- |
 | "blue"  | 1     |
@@ -1216,22 +1216,22 @@ ensures:
 Catagorize rows of the input table into groups by the key of each row. The key is computed by accessing the named column. 
 
 ```lua
-> groupByOriginal(students, "favorite-color")
+> groupByOriginal(students, "favorite color")
 | key     | members  |
 | ------- | -------- |
 | "blue"  | <table1> |
 | "green" | <table2> |
 | "red"   | <table3> |
 <table1> =
-| name  | age | favorite-color |
+| name  | age | favorite color |
 | ----- | --- | -------------- |
 | "Bob" | 12  | "blue"         |
 <table2> =
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Alice" | 17  | "green"        |
 <table3> =
-| name  | age | favorite-color |
+| name  | age | favorite color |
 | ----- | --- | -------------- |
 | "Eve" | 13  | "red"          |
 > groupByOriginal(jellyAnon, "brown")
@@ -1280,7 +1280,7 @@ ensures:
 Similar to `groupByOriginal` but the named column is removed in the output.
 
 ```lua
-> groupBySubtracted(students, "favorite-color")
+> groupBySubtracted(students, "favorite color")
 | key     | members  |
 | ------- | -------- |
 | "blue"  | <table1> |
@@ -1343,7 +1343,7 @@ Groups the rows of a table according to a specified key selector function and cr
 ```lua
 > colorTemp =
     function(r):
-      if getValue(r, "favorite-color") == "red":
+      if getValue(r, "favorite color") == "red":
         "warm"
       else:
         "cool"
@@ -1417,7 +1417,7 @@ Correlates the rows of two tables based on equality of keys and groups the resul
       addColumn(r, average(getColumn(t, "final")))
     end
 > groupJoin(students, gradebook, getName, getName, averageFinal)
-| name    | age | favorite-color | final |
+| name    | age | favorite color | final |
 | ------- | --- | -------------- | ----- |
 | "Bob"   | 12  | "blue"         | 87    |
 | "Alice" | 17  | "green"        | 85    |
@@ -1454,7 +1454,7 @@ Correlates the rows of two tables based on matching keys.
       addColumn(r1, "grade", getValue(r2, "final"))
     end
 > join(students, gradebook, getName, getName, addGradeColumn)
-| name    | age | favorite-color | final |
+| name    | age | favorite color | final |
 | ------- | --- | -------------- | ----- |
 | "Bob"   | 12  | "blue"         | 87    |
 | "Alice" | 17  | "green"        | 85    |
@@ -1481,7 +1481,7 @@ __Ensures:__
 
 ```lua
 > hconcat(students, dropColumns(gradebook, ["name", "age"]))
-| name    | age | favorite-color | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| name    | age | favorite color | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | -------------- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | "blue"         | 8     | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | "green"        | 6     | 8     | 88      | 8     | 7     | 85    |
@@ -1515,7 +1515,7 @@ Compute the cartesian product of two tables.
 | true     | false | false |
 | true     | false | true  |
 > crossJoin(students, petiteJelly)
-| name    | age | favorite-color | get-acne | red   | black |
+| name    | age | favorite color | get-acne | red   | black |
 | ------- | --- | -------------- | -------- | ----- | ----- |
 | "Bob"   | 12  | "blue"         | true     | false | false |
 | "Bob"   | 12  | "blue"         | true     | false | true  |
@@ -1547,7 +1547,7 @@ Look up more information on rows of the first table and add those information to
 
 ```lua
 > leftJoin(students, gradebook, ["name", "age"])
-| name    | age | favorite-color | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| name    | age | favorite color | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | -------------- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | "blue"         | 8     | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | "green"        | 6     | 8     | 88      | 8     | 7     | 85    |
@@ -1586,7 +1586,7 @@ Combining two tables vertically. The output table starts with rows from the firs
       [row: ("name", 1 + getValue(r, "age"))]
     end
 > union(students, update(students, increaseAge))
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Alice" | 17  | "green"        |
@@ -1676,7 +1676,7 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
       n1 <= n2
     end
 > orderBy(students, [(nameLength, le)])
-| name    | age | favorite-color |
+| name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
@@ -1720,10 +1720,10 @@ Projects each `Row` of a `Table` into a new `Table`.
     function(r, n):
       [row: 
         ("id", n),
-        ("COLOR", getValue(r, "favorite-color")),
+        ("COLOR", getValue(r, "favorite color")),
         ("AGE", getValue(r, "age"))]
     end)
-| id  | favorite-color | age |
+| id  | favorite color | age |
 | --- | -------------- | --- |
 | 0   | "blue"         | 12  |
 | 1   | "green"        | 17  |
@@ -1775,7 +1775,7 @@ Projects each row of a table to a new table, flattens the resulting tables into 
     function(r1, r2):
       r2
     end)
-| name  | age | favorite-color |
+| name  | age | favorite color |
 | ----- | --- | -------------- |
 | "Bob" | 12  | "blue"         |
 | "Eve" | 13  | "red"          |
@@ -1939,8 +1939,8 @@ __Ensures:__
 Partition rows into groups and summarize each group with the functions in `agg`. Each element of `agg` specifies the output column, the input column, and the function that compute the summarizing value (e.g. average, sum, and count).
 
 ```lua
-> pivotTable(students, ["favorite-color"], [("age", "age-average", average)])
-| favorite-color | age-average |
+> pivotTable(students, ["favorite color"], [("age", "age-average", average)])
+| favorite color | age-average |
 | -------------- | ----------- |
 | "blue"         | 12          |
 | "green"        | 17          |
