@@ -761,7 +761,7 @@ __Ensures:__
 When columns `cs` of table `t` have sequences, return a `Table` where each element of each `c` in `cs` is flattened, meaning the column corresponding to `c` becomes a longer column where the original entries are concatenated. Elements of row `i` of `t` in columns other than `cs` will be repeated according to the length of `getValue(getRow(t1, i), c1)`. These lengths must therefore be the same for each `c` in `cs`.
 
 ```lua
-> flatten(gradebookList, ["quizzes"])
+> flatten(gradebookSeq, ["quizzes"])
 | name    | age | quizzes | midterm | final |
 | ------- | --- | ------- | ------- | ----- |
 | "Bob"   | 12  | 8       | 77      | 87    |
@@ -776,7 +776,7 @@ When columns `cs` of table `t` have sequences, return a `Table` where each eleme
 | "Eve"   | 13  | 9       | 84      | 77    |
 | "Eve"   | 13  | 8       | 84      | 77    |
 | "Eve"   | 13  | 8       | 84      | 77    |
-> t = buildColumn(gradebookList, "quiz-pass?"
+> t = buildColumn(gradebookSeq, "quiz-pass?"
     function(r):
       isPass =
         function(n):
@@ -790,7 +790,7 @@ When columns `cs` of table `t` have sequences, return a `Table` where each eleme
 | "Bob"   | 12  | [8, 9, 7, 9] | 77      | 87    | [true, true, false, true]  |
 | "Alice" | 17  | [6, 8, 8, 7] | 88      | 85    | [false, true, true, false] |
 | "Eve"   | 13  | [7, 9, 8, 8] | 84      | 77    | [false, true, true, true]  |
-> flatten(gradebookList, ["quiz-pass?", "quizzes"])
+> flatten(gradebookSeq, ["quiz-pass?", "quizzes"])
 | name    | age | quizzes | midterm | final | quiz-pass? |
 | ------- | --- | ------- | ------- | ----- | ---------- |
 | "Bob"   | 12  | 8       | 77      | 87    | true       |
@@ -1444,8 +1444,6 @@ Correlates the rows of two tables based on matching keys.
 
 [TODO: need one more example]
 
-[TODO: this code only makes sense when `Row <: Table` because of `addColumn`]
-
 ```lua
 > getName =
     function(r):
@@ -1537,6 +1535,7 @@ __Requires:__
 - for all `c` in `cs`, `c` is in `header(t1)`
 - for all `c` in `cs`, `c` is in `header(t2)`
 - for all `c` in `cs`, `schema(t1)[c]` is equal to `schema(t2)[c]`
+- `concat(removeAll(header(t1), cs), removeAll(header(t2), cs))` has no duplicates
 
 __Ensures:__
 

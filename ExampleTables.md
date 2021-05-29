@@ -42,7 +42,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
 ```
 
-## `gradebookList`: a gradebook table with list cells
+## `gradebookSeq`: a gradebook table with sequence cells
 
 ```lua
 | name    | age | quizzes      | midterm | final |
