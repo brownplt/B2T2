@@ -39,44 +39,35 @@ A type system should try to realize that `sampleRows` requires `n` is in `range(
 | "Alice" | 17  | 6     | 8     | 88      |       | 7     | 85    |
 ```
 
-## groupBy
+## pHackingHomogeneous
 
-This example defines two groupBy functions. `groupByOriginal` catagorizes rows of the input table into groups by the key of each row. The key is computed by accessing the named column. `groupBySubtracted` is similar to `groupByOriginal` but the named column is removed in the output. Ideally, the two user-defined functions should have the same constraints as in Table API.
+Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `jellyAnon`, is homogeneous because all of its columns contain boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `jellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
 
 ```lua
-> tableOfColumn =
-    function(c, vs):
-      t1 = addRows(emptyTable, map(vs, function(_): [row:] end))
-      addColumn(t1, c, vs)
-    end
-> groupByOriginal =
-    function(t, c):
-      keys = tableOfColumn("key", removeDuplicates(getColumn(t, c)))
-      makeGroup =
-        function(kr):
-          k = getValue(kr, "key")
-          tfilter(t,
-            function(r):
-              getValue(r, c) == k
-            end)
+> pHacking =
+    function(t):
+      colAcne = getColumn(t, "get-acne")
+      jellyAnon = drop(t, "get-acne")
+      for c in header(jellyAnon):
+        colJB = getColumn(t, c)
+        p = fisherTest(colAcne, colJB)
+        if p < 0.05:
+          println(
+            "We found a link between " ++
+            c ++ " jelly beans and acne (p < 0.05).")
         end
-      buildColumn(keys, makeGroup)
-    end
-> groupBySubtracted =
-    function(t, c):
-      keys = tableOfColumn("key", removeDuplicates(getColumn(t, c)))
-      makeGroup =
-        function(kr):
-          k = getValue(kr, "key")
-          g =
-            tfilter(t,
-              function(r):
-                getValue(r, c) == k
-              end)
-          dropColumn(g, c)
-        end
-      buildColumn(keys, makeGroup)
-    end
+      end
+> pHacking(jellyAnon)
+We found a link between orange jelly beans and acne (p < 0.05).
+```
+
+## pHackingHeterogeneous
+
+This example program is similar to pHackingHomogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table contains only boolean values.
+
+```lua
+> pHacking(dropColumn(jellyNamed, "name"))
+We found a link between orange jelly beans and acne (p < 0.05).
 ```
 
 ## quizScoreFilter
@@ -143,34 +134,42 @@ This example also computes the average quiz score for each student in `gradebook
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 8            |
 ```
 
+## groupBy
 
-## pHackingHomogeneous
-
-Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `jellyAnon`, is homogeneous because all of its columns contain boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `jellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
+This example defines two groupBy functions. `groupByOriginal` catagorizes rows of the input table into groups by the key of each row. The key is computed by accessing the named column. `groupBySubtracted` is similar to `groupByOriginal` but the named column is removed in the output. Ideally, the two user-defined functions should have the same constraints as in Table API.
 
 ```lua
-> pHacking =
-    function(t):
-      colAcne = getColumn(t, "get-acne")
-      jellyAnon = drop(t, "get-acne")
-      for c in header(jellyAnon):
-        colJB = getColumn(t, c)
-        p = fisherTest(colAcne, colJB)
-        if p < 0.05:
-          println(
-            "We found a link between " ++ 
-            c ++ " jelly beans and acne (p < 0.05).")
+> tableOfColumn =
+    function(c, vs):
+      t1 = addRows(emptyTable, map(vs, function(_): [row:] end))
+      addColumn(t1, c, vs)
+    end
+> groupByOriginal =
+    function(t, c):
+      keys = tableOfColumn("key", removeDuplicates(getColumn(t, c)))
+      makeGroup =
+        function(kr):
+          k = getValue(kr, "key")
+          tfilter(t,
+            function(r):
+              getValue(r, c) == k
+            end)
         end
-      end
-> pHacking(jellyAnon)
-We found a link between orange jelly beans and acne (p < 0.05).
-```
-
-## pHackingHeterogeneous
-
-This example program is similar to pHackingHomogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table contains only boolean values.
-
-```lua
-> pHacking(dropColumn(jellyNamed, "name"))
-We found a link between orange jelly beans and acne (p < 0.05).
+      buildColumn(keys, makeGroup)
+    end
+> groupBySubtracted =
+    function(t, c):
+      keys = tableOfColumn("key", removeDuplicates(getColumn(t, c)))
+      makeGroup =
+        function(kr):
+          k = getValue(kr, "key")
+          g =
+            tfilter(t,
+              function(r):
+                getValue(r, c) == k
+              end)
+          dropColumn(g, c)
+        end
+      buildColumn(keys, makeGroup)
+    end
 ```
