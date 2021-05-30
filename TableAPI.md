@@ -1993,7 +1993,7 @@ __Ensures:__
 
 ### Description
 
-Displays an `Image` of a histogram of values in the named column, which must contain numeric data. `n` indicates the width of bins in the histogram.
+Group the values of a numeric column into bins. The parameter `n` specifie the bin width. This function is useful in creating histograms and converting continuous random variables to categorical ones.
 
 ```lua
 > bin(students, "age", 5)
