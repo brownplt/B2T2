@@ -4,6 +4,195 @@ This file presents a diagnostic challenge. Each example includes a buggy program
 
 These examples are adapted from student code collected in CS111 at Brown University.
 
+## Missing Schema
+
+### Task
+
+The programmer was asked to write a table constant representing the `students` table.
+
+### A Buggy Program
+
+```lua
+| "Bob"   | 12 | "blue"  |
+| "Alice" | 17 | "green" |
+| "Eve"   | 13 | "red"   |
+```
+
+### What is the Bug?
+
+This malformed table misses the schema.
+
+### A Corrected Program
+
+```lua
+| name    | age    | favorite color |
+| String  | Number | String         |
+| ------- | ------ | -------------- |
+| "Bob"   | 12     | "blue"         |
+| "Alice" | 17     | "green"        |
+| "Eve"   | 13     | "red"          |
+```
+
+## Missing Row
+
+### Task
+
+The programmer was asked to write a table constant representing the `students` table.
+
+### A Buggy Program
+
+```lua
+| name    | age    | favorite color |
+| String  | Number | String         |
+| ------- | ------ | -------------- |
+| "Bob"   | 12     | "blue"         |
+| "Alice" | 17     | "green"        |
+|                                   |
+```
+
+### What is the Bug?
+
+This malformed table misses the content of the last row. (*Note:* this error is not representable in languages that pad short rows with empty cells)
+
+### A Corrected Program
+
+```lua
+| name    | age    | favorite color |
+| String  | Number | String         |
+| ------- | ------ | -------------- |
+| "Bob"   | 12     | "blue"         |
+| "Alice" | 17     | "green"        |
+| "Eve"   | 13     | "red"          |
+```
+
+## Missing Cell
+
+### Task
+
+The programmer was asked to write a table constant representing the `students` table.
+
+### A Buggy Program
+
+```lua
+| name    | age    | favorite color |
+| String  | Number | String         |
+| ------- | ------ | -------------- |
+| "Bob"   | "blue" |
+| "Alice" | 17     | "green"        |
+| "Eve"   | 13     | "red"          |
+```
+
+### What is the Bug?
+
+The first row of this malformed table misses a cell.
+
+### A Corrected Program
+
+```lua
+| name    | age    | favorite color |
+| String  | Number | String         |
+| ------- | ------ | -------------- |
+| "Bob"   | 12     | "blue"         |
+| "Alice" | 17     | "green"        |
+| "Eve"   | 13     | "red"          |
+```
+
+## Swapped Columns
+
+### Task
+
+The programmer was asked to write a table constant representing the `students` table.
+
+### A Buggy Program
+
+```lua
+| name   | age     | favorite color |
+| String | Number  | String         |
+| ------ | ------- | -------------- |
+| 12     | "Bob"   | "blue"         |
+| 17     | "Alice" | "green"        |
+| 13     | "Eve"   | "red"          |
+```
+
+### What is the Bug?
+
+The rows disagree with the schema on the ordering of the first two columns.
+
+### A Corrected Program
+
+```lua
+| name    | age    | favorite color |
+| String  | Number | String         |
+| ------- | ------ | -------------- |
+| "Bob"   | 12     | "blue"         |
+| "Alice" | 17     | "green"        |
+| "Eve"   | 13     | "red"          |
+```
+
+## Schema Too Short
+
+### Task
+
+The programmer was asked to write a table constant representing the `students` table.
+
+### A Buggy Program
+
+```lua
+| name    | age    |
+| String  | Number |
+| ------- | ------ |
+| "Bob"   | 12     | "blue"         |
+| "Alice" | 17     | "green"        |
+| "Eve"   | 13     | "red"          |
+```
+
+### What is the Bug?
+
+The schema specifies that there are two columns. But the rows have three columns.
+
+### A Corrected Program
+
+```lua
+| name    | age    | favorite color |
+| String  | Number | String         |
+| ------- | ------ | -------------- |
+| "Bob"   | 12     | "blue"         |
+| "Alice" | 17     | "green"        |
+| "Eve"   | 13     | "red"          |
+```
+
+## Schema Too Long
+
+### Task
+
+The programmer was asked to write a table constant representing the `students` table.
+.
+### A Buggy Program
+
+```lua
+| name    | age    | favorite number | favorite color |
+| String  | Number | Number          | String         |
+| ------- | ------ | --------------- |----------------|
+| "Bob"   | 12     | "blue"          |
+| "Alice" | 17     | "green"         |
+| "Eve"   | 13     | "red"           |
+```
+
+### What is the Bug?
+
+The schema specifies that there are four columns. But the rows specifices that there are three columns.
+
+### A Corrected Program
+
+```lua
+| name    | age    | favorite color |
+| String  | Number | String         |
+| ------- | ------ | -------------- |
+| "Bob"   | 12     | "blue"         |
+| "Alice" | 17     | "green"        |
+| "Eve"   | 13     | "red"          |
+```
+
 ## Mistyped Column Name
 
 ### Context
