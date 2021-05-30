@@ -143,21 +143,21 @@ The programmer was asked to visualize the proportion of participants getting acn
 ```lua
 > showAcneProportions =
     function(t):
-      pieChart(count(t, "get-acne"), "true", "get-acne")
+      pieChart(count(t, "get acne"), "true", "get acne")
     end
 > showAcneProportions(jellyAnon)
 ```
 
 ### What is the Bug?
 
-The program supplies a table produced by `count` to `pieChart`, which also expects two column names of its input table. The table produced by `count` contains two column names, `"value"` and `"count"`. Neither of the supplied colum names, `"true"` and `"get-acne"`, are valid.
+The program supplies a table produced by `count` to `pieChart`, which also expects two column names of its input table. The table produced by `count` contains two column names, `"value"` and `"count"`. Neither of the supplied colum names, `"true"` and `"get acne"`, are valid.
 
 ### A Corrected Program
 
 ```lua
 > showAcneProportions =
     function(t):
-      pieChart(count(t, "get-acne"), "value", "count")
+      pieChart(count(t, "get acne"), "value", "count")
     end
 > showAcneProportions(jellyAnon)
 ```
@@ -240,27 +240,27 @@ The programmer was asked to compute how many participants consumed brown jelly b
 ```lua
 > brownAndGetAcne =
     function(r):
-      getValue(r, "brown") and getValue(r, "get-acne")
+      getValue(r, "brown") and getValue(r, "get acne")
     end
 > brownAndGetAcneTable =
     buildColumn(jellyNamed, "part2", brownAndGetAcne)
-> count(brownAndGetAcneTable, "brown-and-get-acne")
+> count(brownAndGetAcneTable, "brown and get acne")
 ```
 
 ### What is the Bug?
 
-The built column was named inconsistently. In `buildColumn(...)`, the column was named `"part2"` but when `count`ed, the column was accessed with `"brown-and-get-acne"`.
+The built column was named inconsistently. In `buildColumn(...)`, the column was named `"part2"` but when `count`ed, the column was accessed with `"brown and get acne"`.
 
 ### A Corrected Program
 
 ```lua
 > brownAndGetAcne =
     function(r):
-      getValue(r, "brown") and getValue(r, "get-acne")
+      getValue(r, "brown") and getValue(r, "get acne")
     end
 > brownAndGetAcneTable =
-    buildColumn(jellyNamed, "brown-and-get-acne", brownAndGetAcne)
-> count(brownAndGetAcneTable, "brown-and-get-acne")
+    buildColumn(jellyNamed, "brown and get acne", brownAndGetAcne)
+> count(brownAndGetAcneTable, "brown and get acne")
 ```
 
 ## Invalid Row Index

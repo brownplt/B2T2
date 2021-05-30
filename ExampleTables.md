@@ -49,7 +49,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 ## `jellyAnon`: a jelly bean table that contains only boolean data
 
 ```lua
-| get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
+| get acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
 | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
 | true     | false | false | false | true  | false  | false | true   | false | false  |
 | true     | false | true  | false | true  | true   | false | false  | false | false  |
@@ -66,7 +66,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 ## `jellyNamed`: a jelly bean table that contains booleans and strings
 
 ```lua
-| name       | get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
+| name       | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
 | ---------- | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
 | "Emily"    | true     | false | false | false | true  | false  | false | true   | false | false  |
 | "Jacob"    | true     | false | true  | false | true  | true   | false | false  | false | false  |

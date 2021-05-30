@@ -1235,26 +1235,22 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 | ----- | --- | -------------- |
 | "Eve" | 13  | "red"          |
 > groupByOriginal(jellyAnon, "brown")
-| key   | members  |
-| ----- | -------- |
-| true  | <table1> |
-| false | <table2> |
-<table1> =
-| get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
-| -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
-| true     | false | false | false | true  | false  | false | true   | false | false  |
-| true     | false | true  | false | true  | true   | false | false  | false | false  |
-| false    | false | false | false | true  | false  | false | false  | true  | false  |
-| false    | false | false | false | false | true   | false | false  | false | false  |
-| false    | false | false | false | false | true   | false | false  | true  | false  |
-| true     | false | true  | false | false | false  | false | true   | true  | false  |
-| false    | false | true  | false | false | false  | false | false  | true  | false  |
-| true     | false | false | false | false | false  | false | true   | false | false  |
-<table2> =
-| get-acne | red   | black | white | green | yellow | brown | orange | pink  | purple |
-| -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ |
-| true     | false | false | false | false | false  | true  | true   | false | false  |
-| false    | true  | false | false | false | true   | true  | false  | true  | false  |
+| key   | members                                                                                 |
+| ----- | --------------------------------------------------------------------------------------- |
+| true  | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
+|       | | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ | |
+|       | | true     | false | false | false | true  | false  | false | true   | false | false  | |
+|       | | true     | false | true  | false | true  | true   | false | false  | false | false  | |
+|       | | false    | false | false | false | true  | false  | false | false  | true  | false  | |
+|       | | false    | false | false | false | false | true   | false | false  | false | false  | |
+|       | | false    | false | false | false | false | true   | false | false  | true  | false  | |
+|       | | true     | false | true  | false | false | false  | false | true   | true  | false  | |
+|       | | false    | false | true  | false | false | false  | false | false  | true  | false  | |
+|       | | true     | false | false | false | false | false  | false | true   | false | false  | |
+| false | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
+|       | | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ | |
+|       | | true     | false | false | false | false | false  | true  | true   | false | false  | |
+|       | | false    | true  | false | false | false | true   | true  | false  | true  | false  | |
 ```
   
 ## `groupBySubtracted :: t1:Table * c:ColName -> t2:Table`
@@ -1304,7 +1300,7 @@ Similar to `groupByOriginal` but the named column is removed in the output.
 | true  | <table1> |
 | false | <table2> |
 <table1> =
-| get-acne | red   | black | white | green | yellow | orange | pink  | purple |
+| get acne | red   | black | white | green | yellow | orange | pink  | purple |
 | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ |
 | true     | false | false | false | true  | false  | true   | false | false  |
 | true     | false | true  | false | true  | true   | false  | false | false  |
@@ -1315,7 +1311,7 @@ Similar to `groupByOriginal` but the named column is removed in the output.
 | false    | false | true  | false | false | false  | false  | true  | false  |
 | true     | false | false | false | false | false  | true   | false | false  |
 <table2> =
-| get-acne | red   | black | white | green | yellow | orange | pink  | purple |
+| get acne | red   | black | white | green | yellow | orange | pink  | purple |
 | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ |
 | true     | false | false | false | false | false  | true   | false | false  |
 | false    | true  | false | false | false | true   | false  | true  | false  |
@@ -1510,12 +1506,12 @@ Compute the cartesian product of two tables.
 ```lua
 > petiteJelly = subTable(jellyAnon, [0, 1], [0, 1, 2])
 > petiteJelly
-| get-acne | red   | black |
+| get acne | red   | black |
 | -------- | ----- | ----- |
 | true     | false | false |
 | true     | false | true  |
 > crossJoin(students, petiteJelly)
-| name    | age | favorite color | get-acne | red   | black |
+| name    | age | favorite color | get acne | red   | black |
 | ------- | --- | -------------- | -------- | ----- | ----- |
 | "Bob"   | 12  | "blue"         | true     | false | false |
 | "Bob"   | 12  | "blue"         | true     | false | true  |
@@ -1952,12 +1948,12 @@ Partition rows into groups and summarize each group with the functions in `agg`.
     end
 > pivotTable(
     jellyNamed,
-    ["brown", "get-acne"],
+    ["brown", "get acne"],
     [
       ("red", "red proportion", proportion),
       ("red", "red proportion", proportion)
     ])
-| get-acne | brown | red | pink |
+| get acne | brown | red | pink |
 | -------- | ----- | --- | ---- |
 | false    | false | 0   | 3/4  |
 | false    | true  | 1   | 1    |
