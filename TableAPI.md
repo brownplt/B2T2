@@ -684,7 +684,7 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 
 #### Description
 
-Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be kept, and produces a new `Table` containing only those columns. The order of the columns is as given in the input `Seq`.
+Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be kept, and produces a new `Table` containing only those columns. The order of the columns is as in the input table.
 
 ```lua
 > selectColumns(students, [true, true, false])
@@ -701,20 +701,20 @@ Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be k
 | "Eve"   | 84      | 77    |
 ```
 
-### (overload 2/3) `selectColumns :: t1:Table * selector:Seq<Number> -> t2:Table`
+### (overload 2/3) `selectColumns :: t1:Table * ns:Seq<Number> -> t2:Table`
   
 #### Constraints
 
 ##### Requires:
 
-- `selector` has no duplicates
-- for all `n` in `selector`, `n` is in `range(ncols(t1))`
+- `ns` has no duplicates
+- for all `n` in `ns`, `n` is in `range(ncols(t1))`
 
 ##### Ensures:
 
-- `length(header(t2))` is equal to `length(selector)`
-- for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
-- `schema(t2)` is included in `schema(t2)`
+- `length(header(t2))` is equal to `length(ns)`
+- for all `i` in `range(length(ns))`, `header(t2)[i]` is equal to `header(t1)[ns[i]]`
+- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
 
@@ -736,19 +736,19 @@ Consumes a `Table` and a `Seq<Number>` containing column indices, and produces a
 | 77    | "Eve"   | 84      |
 ```
 
-### (overload 3/3) `selectColumns :: t1:Table * selector:Seq<ColName> -> t2:Table`
+### (overload 3/3) `selectColumns :: t1:Table * cs:Seq<ColName> -> t2:Table`
 
 #### Constraints
 
 ##### Requires:
 
-- `selector` has no duplicates
-- for all `c` in `selector`, `c` is in `header(t1)`
+- `cs` has no duplicates
+- for all `c` in `cs`, `c` is in `header(t1)`
 
 ##### Ensures:
 
 - `header(t2)` is equal to `cs` 
-- `schema(t2)` is included in `schema(t2)`
+- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
 
