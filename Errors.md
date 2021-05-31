@@ -6,7 +6,7 @@ These examples are adapted from student code collected in CS111 at Brown Univers
 
 ## Malformed Tables
 
-This section lists errors that programmers can make when constructing table constants. All these malformed tables should be corrected to the `students` table, which is repeated below.
+This section lists errors that programmers can make when constructing table constants. All these malformed tables should be corrected to the `students` table, which is shown below with a full schema declaration.
 
 ```lua
 | name    | age    | favorite color |
@@ -29,7 +29,7 @@ This malformed table misses the schema.
 
 ### missingRow
 
-This malformed table misses the content of the last row. (*Note:* the last row is **not** a row with 3 missing values but a row with no value.)
+This malformed table misses the content of the last row. (*Note:* the last row is **not** a row with 3 missing values, but rather a row with no value.)
 
 ```lua
 | name    | age    | favorite color |
