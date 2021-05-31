@@ -67,7 +67,7 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -82,7 +82,7 @@ Create an empty table.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `schema(r)` is equal to `schema(t1)`
 
@@ -125,7 +125,7 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * for all `r` in `rs`, `schema(r)` is equal to `schema(t1)`
 
@@ -164,7 +164,7 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c` is not in `header(t1)`
 - `length(vs)` is equal to `nrows(t1)`
@@ -202,7 +202,7 @@ Consumes a column name and a `Seq` of values and produces a new `Table` with the
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c` is not in `header(t1)`
 
@@ -246,7 +246,7 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `schema(t1)` is equal to `schema(t2)`
 
@@ -298,7 +298,7 @@ Combines two tables vertically. The output table starts with rows from the first
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `concat(header(t1), header(t2))` has no duplicates
 - `nrows(t1)` is equal to `nrows(t2)`
@@ -331,7 +331,7 @@ Combines two tables horizontally. The output table starts with columns from the 
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - for all `r1` and `r2` in `rs`, `schema(r1)` is equal to `schema(r2)`
 - `length(rs)` is positive
@@ -366,7 +366,7 @@ Returns a sequence of one or more rows as a table.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `concat(header(t1), header(t2))` has no duplicate
 
@@ -404,7 +404,7 @@ Computes the cartesian product of two tables.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `cs` has no duplicates
 - for all `c` in `cs`, `c` is in `header(t1)`
@@ -448,7 +448,7 @@ Looks up more information on rows of the first table and add those information t
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -469,7 +469,7 @@ Returns a `Number` representing the number of rows in the `Table`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -490,7 +490,7 @@ Returns a `Number` representing the number of columns in the `Table`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -513,7 +513,7 @@ Returns a `Seq` representing the column names in the `Table`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `n` is in `range(nrows(t))`
 
@@ -539,7 +539,7 @@ Extract a row out of a table by a numeric index.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `c` is in header(r)
 
@@ -560,7 +560,7 @@ Retrieve the value for the column `c` in the row `r`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `n` is in `range(ncols(t))`
 
@@ -583,7 +583,7 @@ Returns a `Seq` of the values in the indexed column in `t`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `c` is in `header(t)`
 
@@ -608,7 +608,7 @@ Returns a `Seq` of the values in the named column in `t`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * for all `n` in `selector`, `n` is in `range(nrows(t1))`
 
@@ -640,7 +640,7 @@ Given a `Table` and a `Seq<Number>` containing row indices, and produces a new `
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `length(selector)` is equal to `nrows(t1)`
 
@@ -669,7 +669,7 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `length(selector)` is equal to `ncols(t1)`
 
@@ -702,7 +702,7 @@ Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be k
   
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `selector` has no duplicates
 * for all `n` in `selector`, `n` is in `range(ncols(t1))`
@@ -737,7 +737,7 @@ Consumes a `Table` and a `Seq<Number>` containing column indices, and produces a
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `selector` has no duplicates
 * for all `c` in `selector`, `c` is in `header(t1)`
@@ -770,7 +770,7 @@ Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a 
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - if `n` is non-negative then `n` is not greater than `nrows(t1)`
 - if `n` is negative then `- n` is not greater than `nrows(t1)`
@@ -791,7 +791,7 @@ This function returns the first `n` rows of the table based on position. It is u
 
 #### Constraints:
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -815,7 +815,7 @@ Remove all rows but keep the schema.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -847,7 +847,7 @@ Retain only unique/distinct rows from an input `Table`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c` in `header(t1)`
 
@@ -883,7 +883,7 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - for all `c` in `cs`, `c` is in `header(t1)`
 - `cs` has no duplicates
@@ -920,7 +920,7 @@ Returns a `Table` that is the same as `t`, except without the columns whose name
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -960,7 +960,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c` is in `header(t1)`
 - `schema(t1)[c]` is `Number`
@@ -996,7 +996,7 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - for all `c` in `cs`, `c` is in `header(t1)`
 - `cs` has no duplicates
@@ -1031,7 +1031,7 @@ Given a `Table` and a sequence of column names in that `Table`, return a `Table`
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -1080,7 +1080,7 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c` is in `header(t1)`
 - Either 
@@ -1115,7 +1115,7 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c` is in `header(t1)`
 - `schema(t1)[c]` is `Number`
@@ -1150,7 +1150,7 @@ Group the values of a numeric column into bins. The parameter `n` specifies the 
 
 Let's name each component of each element of `aggs` as `c_i1` and `c_i2` and `f_i` respectively. Let `n` be `length(agg)`
 
-__Requires:__
+##### Requires:
 
 - for all `c` in `cs`, `c` is in `header(t1)`
 - for all `c` in `cs`, `schema(t1)[c]` is categorical
@@ -1199,7 +1199,7 @@ Partition rows into groups and summarize each group with the functions in `agg`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -1263,7 +1263,7 @@ Groups the rows of a table according to a specified key selector function and cr
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * for all `c` in `header(r2)`, `c` is in `header(t1)`
 * for all `c` in `header(r2)`, `schema(r2)[c]` is `schema(t1)[c]`
@@ -1313,7 +1313,7 @@ Consumes an existing `Table` and produces a new `Table` with the named columns u
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -1358,7 +1358,7 @@ Projects each `Row` of a `Table` into a new `Table`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -1419,7 +1419,7 @@ Projects each row of a table to a new table, flattens the resulting tables into 
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -1460,7 +1460,7 @@ Correlates the rows of two tables based on equality of keys and groups the resul
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -1500,7 +1500,7 @@ Correlates the rows of two tables based on matching keys.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c` is in `header(t)`
 
@@ -1523,7 +1523,7 @@ Return a `Seq<Boolean>` with `true` entries indicating rows without missing valu
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 __Ensures:__
 
@@ -1548,7 +1548,7 @@ Remove rows that have some values missing
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c` is in `header(t1)`
 - `v` is a `schema(t1)[c]`
@@ -1583,7 +1583,7 @@ Scan the named column and when a cell is missing value, fill in `v`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `length(cs)` is positive
 - `cs` has no duplicates
@@ -1635,7 +1635,7 @@ Reshape the input table and make it longer. The data kept in the named columns a
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c1` is in `header(t1)`
 - `c2` is in `header(t1)`
@@ -1696,7 +1696,7 @@ The inverse of `pivotLonger`.
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 [TODO: non-structural desc]
 
@@ -1768,7 +1768,7 @@ When columns `cs` of table `t` have sequences, return a `Table` where each eleme
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 * `c` is in `header(t1)`
 
@@ -1816,7 +1816,7 @@ Let `n` be the length of `ccs` Let `c11 ... c1n` be the first components of the 
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - `c1i` is in `header(t1)` for all `i`
 - `[c1i ... c1n]` has no duplicate
@@ -1853,7 +1853,7 @@ Update column names. Each element of `ccs` specifies the old name and the new na
 
 #### Constraints
 
-__Requires:__
+##### Requires:
 
 - for all `c` in `header(r)`, `c` is in `header(t)`
 - for all `c` in `header(r)`, `schema(r)[c]` is equal to `schema(t)[c]`
