@@ -263,7 +263,7 @@ The program supplies a table produced by `count` to `pieChart`, which also expec
 
 #### Task
 
-The programmer was given two tables, one maps employee names to department IDs, the other maps department IDs to department names. The programmer was asked to define a function, `employeeToDepartment` that consumes the two tables and looks up the a department name that an employee belongs to.
+The programmer was given two tables, one maps employee names to department IDs, the other maps department IDs to department names. The task is to define a function, `employeeToDepartment` that consumes the two tables and looks up the a department name that an employee belongs to.
 
 #### A Buggy Program
 
