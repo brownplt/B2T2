@@ -783,14 +783,23 @@ Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a 
 - `schema(t2)` is equal to `schema(t1)`
 - if `n` is non-negative then `nrows(t2)` is equal to `n`
 - if `n` is negative then `nrows(t2)` is equal to `nrows(t1) + n`
-- `ncols(t2)` is equal to `ncols(t1)`
-- for all `i` in `range(nrows(t2))`, `getRow(t2, i)` is equal to `getRow(t1, i)`
 
 #### Description
 
-This function returns the first `n` rows of the table based on position. It is useful for quickly testing if your table has the right type of data in it. For negative values of `n`, this function returns all rows except the last `n` rows.
+Returns the first `n` rows of the table based on position. For negative values of `n`, this function returns all rows except the last `n` rows.
 
-### `empty :: t1:Table -> t2:Table`
+```lua
+> head(students, 1)
+| name    | age | favorite color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+> head(students, -2)
+| name    | age | favorite color |
+| ------- | --- | -------------- |
+| "Bob"   | 12  | "blue"         |
+```
+
+### `empty :: t1:Table -> t2:Table` [TODO: maybe delete? See `head`]
 
 #### Constraints:
 
@@ -1212,8 +1221,6 @@ Partition rows into groups and summarize each group with the functions in `agg`.
 #### Description
 
 Groups the rows of a table according to a specified key selector function and creates a result value from each group and its key. The rows of each group are projected by using a specified function.
-
-[TODO: this code only makes sense when `Row <: Table`]
 
 ```lua
 > colorTemp =
