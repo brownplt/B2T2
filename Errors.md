@@ -68,8 +68,7 @@ The rows disagree with the schema on the ordering of the first two columns.
 
 ### schemaTooShort
 
-The schema specifies that there are two columns. 
-have three columns.
+The schema specifies that there are two columns. But the rows have three columns.
 
 ```lua
 | name    | age    |
