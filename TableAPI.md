@@ -45,7 +45,7 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 - `filter`: the conventional sequence (e.g. lists) filter
 - `map`: the conventional sequence (e.g. lists) map
 - `removeDuplicates`: consumes a sequence and produces a subsequence with all duplicated elements removed
-- `remove`: consumes two sequences and produces a subsequence of the first input, removing all elements that also appear in the second input.
+- `removeAll`: consumes two sequences and produces a subsequence of the first input, removing all elements that also appear in the second input.
 
 #### Relations
 
@@ -1940,7 +1940,7 @@ ensures:
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
 - `schema(t2)["members"]` is a subtype of `Table`
 - `getColumn(t2, "key")` has no duplicates
-- for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `remove(header(t1), [c])`
+- for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `removeAll(header(t1), [c])`
 - for all `t` in `getColumn(t2, "members")`, `schema(t)` is included in `schema(t1)`
 
 #### Description
