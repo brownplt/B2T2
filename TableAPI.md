@@ -88,7 +88,6 @@ __Requires:__
 
 __Ensures:__
 
-* `header(r)` is equal to `header(t1)`
 * `schema(r)` is equal to `schema(t1)`
 * `header(t2)` is equal to `concat(header(t1), [c])`
 * `v` is a `schema(t2)[c]`
@@ -127,7 +126,6 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
 
 __Requires:__
 
-* `header(r)` is equal to `header(t1)`
 * `schema(r)` is equal to `schema(t1)`
 
 __Ensures:__
@@ -917,7 +915,6 @@ __Requires:__
 
 __Ensures:__
 
-* `header(r)` is equal to `header(t1)`
 * `schema(r)` is equal to `schema(t1)`
 * `header(t2)` is equal to `header(t1)`
 * `schema(t2)` is equal to `schema(t1)`
