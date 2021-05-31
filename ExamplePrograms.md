@@ -134,9 +134,11 @@ This example also computes the average quiz score for each student in `gradebook
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 8            |
 ```
 
-## groupBy
+## groupByRetentive
 
-This example defines two groupBy functions. `groupByOriginal` catagorizes rows of the input table into groups by the key of each row. The key is computed by accessing the named column. `groupBySubtracted` is similar to `groupByOriginal` but the named column is removed in the output. Ideally, the two user-defined functions should have the same constraints as in Table API.
+This example categorizes rows of the input table into groups based on the key in each row and does not drop the key column from the output table.
+
+Ideally, this user-defined function should achieve the same type constraints as the version in the Table API.
 
 ```lua
 > tableOfColumn =
@@ -144,7 +146,7 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
       t1 = addRows(emptyTable, map(vs, function(_): [row:] end))
       addColumn(t1, c, vs)
     end
-> groupByOriginal =
+> groupByRetentive =
     function(t, c):
       keys = tableOfColumn("key", removeDuplicates(getColumn(t, c)))
       makeGroup =
@@ -157,7 +159,21 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
         end
       buildColumn(keys, makeGroup)
     end
-> groupBySubtracted =
+```
+
+## groupBySubtractive
+
+This example categorizes rows of the input table into groups based on the key in each row and drops the key column from the output table.
+
+Ideally, this user-defined function should achieve the same type constraints as the version in the Table API.
+
+```lua
+> tableOfColumn =
+    function(c, vs):
+      t1 = addRows(emptyTable, map(vs, function(_): [row:] end))
+      addColumn(t1, c, vs)
+    end
+> groupBySubtractive =
     function(t, c):
       keys = tableOfColumn("key", removeDuplicates(getColumn(t, c)))
       makeGroup =
@@ -173,3 +189,4 @@ This example defines two groupBy functions. `groupByOriginal` catagorizes rows o
       buildColumn(keys, makeGroup)
     end
 ```
+

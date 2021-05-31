@@ -1860,7 +1860,7 @@ Find the index of the first row that matches `r`.
 error("not found")
 ```
 
-### `groupByOriginal :: t1:Table * c:ColName -> t2:Table`
+### `groupByRetentive :: t1:Table * c:ColName -> t2:Table`
 
 #### Constraints
 
@@ -1879,10 +1879,10 @@ ensures:
 
 #### Description
 
-Catagorize rows of the input table into groups by the key of each row. The key is computed by accessing the named column. 
+Categorize rows of the input table into groups by the key of each row. The key is computed by accessing the named column. 
 
 ```lua
-> groupByOriginal(students, "favorite color")
+> groupByRetentive(students, "favorite color")
 | key     | members                            |
 | ------- | ---------------------------------- |
 | "blue"  | | name    | age | favorite color | |
@@ -1894,7 +1894,7 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 | "red"   | | name    | age | favorite color | |
 |         | | ------- | --- | -------------- | |
 |         | | "Eve"   | 13  | "red"          | |
-> groupByOriginal(jellyAnon, "brown")
+> groupByRetentive(jellyAnon, "brown")
 | key   | members                                                                                 |
 | ----- | --------------------------------------------------------------------------------------- |
 | true  | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
@@ -1913,7 +1913,7 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 |       | | false    | true  | false | false | false | true   | true  | false  | true  | false  | |
 ```
   
-### `groupBySubtracted :: t1:Table * c:ColName -> t2:Table`
+### `groupBySubtractive :: t1:Table * c:ColName -> t2:Table`
 
 #### Constraints
 
@@ -1933,10 +1933,10 @@ ensures:
 
 #### Description
 
-Similar to `groupByOriginal` but the named column is removed in the output.
+Similar to `groupByRetentive` but the named column is removed in the output.
 
 ```lua
-> groupBySubtracted(students, "favorite color")
+> groupBySubtractive(students, "favorite color")
 | key     | members           |
 | ------- | ----------------- |
 | "blue"  | | name    | age | |
@@ -1948,7 +1948,7 @@ Similar to `groupByOriginal` but the named column is removed in the output.
 | "red"   | | name    | age | |
 |         | | ------- | --- | |
 |         | | "Eve"   | 13  | |
-> groupBySubtracted(jellyAnon, "brown")
+> groupBySubtractive(jellyAnon, "brown")
 | key   | members                                                                         |
 | ----- | ------------------------------------------------------------------------------- |
 | true  | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
