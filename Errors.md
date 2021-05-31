@@ -142,7 +142,7 @@ The schema specifies that there are two columns. But the rows have three columns
 ```
 
 ## schemaTooLong
-.
+
 ### A Buggy Program
 
 ```lua
