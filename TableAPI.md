@@ -91,8 +91,8 @@ __Ensures:__
 - `schema(r)` is equal to `schema(t1)`
 - `header(t2)` is equal to `concat(header(t1), [c])`
 - for all `c'` in `header(t2)`
-  - if `c'` is equal to `c` then `schema(t2)[c']` is equal to `schema(t1)[c']`
-  - otherwise, `schema(t2)[c']` is equal to the sort of `v`
+  - if `c'` is equal to `c` then `schema(t2)[c']` is equal to the sort of `v`
+  - otherwise, `schema(t2)[c']` is equal to `schema(t1)[c']`
 
 #### Description
 
