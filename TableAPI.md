@@ -121,7 +121,7 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | false             |
 ```
 
-### `addRow :: t1:Table * r:Row -> t2:Table`
+### `addRow :: t1:Table * r:Row -> t2:Table` [TODO: maybe delete? See `addRows`]
 
 #### Constraints
 
@@ -170,7 +170,6 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 
 __Requires:__
 
-* for all `r` in `rs`, `header(r)` is equal to `header(t1)`
 * for all `r` in `rs`, `schema(r)` is equal to `schema(t1)`
 
 __Ensures:__
