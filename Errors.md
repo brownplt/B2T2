@@ -183,7 +183,7 @@ The programmer was asked to visualize the proportion of participants getting acn
 
 #### What is the Bug?
 
-The program supplies a table produced by `count` to `pieChart`, which also expects two column names of its input table. The table produced by `count` contains two column names, `"value"` and `"count"`. Neither of the supplied colum names, `"true"` and `"get acne"`, are valid.
+The program supplies a table produced by `count` to `pieChart`, which also expects a table and two of its column names. The table produced by `count` contains two column names, `"value"` and `"count"`. Neither of the supplied colum names, `"true"` and `"get acne"`, are column names of `count(...)`.
 
 #### A Corrected Program
 
