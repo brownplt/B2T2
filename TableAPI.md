@@ -55,8 +55,8 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 - `x` is (not) included in `y`
 - `x` is (not) in `y`
 - `x` is a subsequence of `y` (not changing order)
-- `x` is of type `y`
-- `x` is a subtype of `y`
+- `x` is a `y`
+- `x` is `y`
 - `x` is categorical
 - `x` is non-negative
 - `x` is negative
@@ -91,7 +91,7 @@ __Ensures:__
 * `header(r)` is equal to `header(t1)`
 * `schema(r)` is equal to `schema(t1)`
 * `header(t2)` is equal to `concat(header(t1), [c])`
-* `v` is of type `schema(t2)[c]`
+* `v` is a `schema(t2)[c]`
 * for all `c` in `header(t1)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
@@ -220,7 +220,7 @@ __Ensures:__
 
 * `header(t2)` is equal to `concat(header(t1), [c])`
 * `schema(t1)` is included in `schema(t2)`
-* for all `v` in `vs`, `vs` is of type `schema(t2)[c]`
+* for all `v` in `vs`, `vs` is a `schema(t2)[c]`
 * `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
@@ -536,7 +536,7 @@ __Requires:__
 
 __Ensures:__
 
-* `v` is of type `schema(r)[c]`
+* `v` is a `schema(r)[c]`
 
 #### Description
 
@@ -557,7 +557,7 @@ __Requires:__
 
 __Ensures:__
 
-* for all `v` in `vs`, `v` is of type `schema(t)[header(t)[n]]`
+* for all `v` in `vs`, `v` is a `schema(t)[header(t)[n]]`
 
 #### Description
 
@@ -580,7 +580,7 @@ __Requires:__
 
 __Ensures:__
 
-* for all `v` in `vs`, `v` is of type `schema(t)[c]`
+* for all `v` in `vs`, `v` is a `schema(t)[c]`
 
 #### Description
 
@@ -960,7 +960,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 __Requires:__
 
 - `c` is in `header(t1)`
-- `schema(t1)[c]` is a subtype of `Number`
+- `schema(t1)[c]` is `Number`
 
 __Ensures:__
 
@@ -998,7 +998,7 @@ __Requires:__
 
 - for all `c` in `cs`, `c` is in `header(t1)`
 - `cs` has no duplicates
-- `schema(t1)[c]` is a subtype of `Number`
+- `schema(t1)[c]` is `Number`
 
 __Ensures:__
 
@@ -1117,13 +1117,13 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 __Requires:__
 
 - `c` is in `header(t1)`
-- `schema(t1)[c]` is a subtype of `Number`
+- `schema(t1)[c]` is `Number`
 
 __Ensures:__
 
 - `header(t2)` is equal to `["group", "count"]`
-- `schema(t2)["group"]` is a subtype of `String`
-- `schema(t2)["count"]` is a subtype of `Number`
+- `schema(t2)["group"]` is `String`
+- `schema(t2)["count"]` is `Number`
 
 #### Description
 
@@ -1265,7 +1265,7 @@ Groups the rows of a table according to a specified key selector function and cr
 __Requires:__
 
 * for all `c` in `header(r2)`, `c` is in `header(t1)`
-* for all `c` in `header(r2)`, `schema(r2)[c]` is a subtype of `schema(t1)[c]`
+* for all `c` in `header(r2)`, `schema(r2)[c]` is `schema(t1)[c]`
 
 __Ensures:__
 
@@ -1550,7 +1550,7 @@ Remove rows that have some values missing
 __Requires:__
 
 - `c` is in `header(t1)`
-- `v` is of type `schema(t1)[c]`
+- `v` is a `schema(t1)[c]`
 
 __Ensures:__
 
@@ -1638,7 +1638,7 @@ __Requires:__
 
 - `c1` is in `header(t1)`
 - `c2` is in `header(t1)`
-- `schema(t1)[c1]` is a subtype of `ColName`
+- `schema(t1)[c1]` is `ColName`
 - for all `c` in `removeDuplicates(getColumn(t1, c1))`, `c` is not in `header(t1)`
 
 __Ensures:__
@@ -1773,10 +1773,10 @@ __Requires:__
 
 __Ensures:__
 
-* `v1` is of type `schema(t1)[c]`
+* `v1` is a `schema(t1)[c]`
 * `header(t2)` is equal to `header(t1)`
 * for all `c'` in `header(t1)`, if `c'` is not equal to `c` then `schema(t2)[c]` is equal to `schema(t1)[c]`
-* `v2` is of type `schema(t2)[c]`
+* `v2` is a `schema(t2)[c]`
 
 #### Description
 
@@ -1885,7 +1885,7 @@ ensures:
 
 - `header(t2)` is equal to `["key", "members"]`
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
-- `schema(t2)["members"]` is a subtype of `Table`
+- `schema(t2)["members"]` is `Table`
 - `getColumn(t2, "key")` has no duplicates
 - for all `t` in `getColumn(t2, "members")`, `schema(t)` is equal to `schema(t1)`
 
@@ -1938,7 +1938,7 @@ ensures:
 
 - `header(t2)` is equal to `["key", "members"]`
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
-- `schema(t2)["members"]` is a subtype of `Table`
+- `schema(t2)["members"]` is `Table`
 - `getColumn(t2, "key")` has no duplicates
 - for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `removeAll(header(t1), [c])`
 - for all `t` in `getColumn(t2, "members")`, `schema(t)` is included in `schema(t1)`
