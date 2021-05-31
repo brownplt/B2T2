@@ -257,7 +257,7 @@ __Ensures:__
 
 #### Description
 
-Combining two tables vertically. The output table starts with rows from the first input table, followed by the rows from the second input table.
+Combines two tables vertically. The output table starts with rows from the first input table, followed by the rows from the second input table.
 
 ```lua
 > increaseAge =
@@ -305,12 +305,12 @@ __Requires:__
 
 __Ensures:__
 
-- `header(t3)` is equal to `concat(header(t1), header(t2))`
+- `schema(t3)` is equal to `concat(schema(t1), schema(t2))`
 - `nrows(t3)` is equal to `nrows(t1)`
 
 #### Description
 
-[TODO: one more example]
+Combines two tables horizontally. The output table starts with columns from the first input, followed by the columns from the second input.
 
 ```lua
 > hconcat(students, dropColumns(gradebook, ["name", "age"]))
@@ -319,6 +319,12 @@ __Ensures:__
 | "Bob"   | 12  | "blue"         | 8     | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | "green"        | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"   | 13  | "red"          | 7     | 9     | 84      | 8     | 8     | 77    |
+> hconcat(dropColumns(students, ["name", "age"]), gradebook)
+| favorite color | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| -------------- | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "blue"         | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "green"        | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "red"          | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ### `values :: rs:Seq<Row> -> t:Table`
