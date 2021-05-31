@@ -44,7 +44,7 @@ This malformed table misses the schema.
 
 ### What is the Bug?
 
-This malformed table misses the content of the last row. (*Note:* this error is not representable in languages that pad short rows with empty cells)
+This malformed table misses the content of the last row. (*Note:* the last row is **not** a row with 3 missing values.)
 
 ### A Corrected Program
 

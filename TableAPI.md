@@ -1993,7 +1993,7 @@ __Ensures:__
 
 ### Description
 
-Group the values of a numeric column into bins. The parameter `n` specifie the bin width. This function is useful in creating histograms and converting continuous random variables to categorical ones.
+Group the values of a numeric column into bins. The parameter `n` specifies the bin width. This function is useful in creating histograms and converting continuous random variables to categorical ones.
 
 ```lua
 > bin(students, "age", 5)
