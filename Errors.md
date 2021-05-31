@@ -68,7 +68,8 @@ The rows disagree with the schema on the ordering of the first two columns.
 
 ### schemaTooShort
 
-The schema specifies that there are two columns. But the rows have three columns.
+The schema specifies that there are two columns. 
+have three columns.
 
 ```lua
 | name    | age    |
@@ -81,7 +82,7 @@ The schema specifies that there are two columns. But the rows have three columns
 
 ### schemaTooLong
 
-The schema specifies that there are four columns. But the rows specifices that there are three columns.
+The schema specifies that there are four columns. But the rows have three columns.
 
 ```lua
 | name    | age    | favorite number | favorite color |
