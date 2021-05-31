@@ -338,7 +338,7 @@ __Requires:__
 
 __Ensures:__
 
-- for some `r` in `rs`, `schema(t)` is equal to `schema(r)`
+- for all `r` in `rs`, `schema(t)` is equal to `schema(r)`
 - `nrows(t)` is equal to `length(rs)`
 
 #### Description
