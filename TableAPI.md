@@ -78,49 +78,6 @@ __Ensures:__
 
 Create an empty table.
 
-### `buildColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table`
-
-#### Constraints
-
-__Requires:__
-
-- `c` is not in `header(t1)`
-
-__Ensures:__
-
-- `schema(r)` is equal to `schema(t1)`
-- `header(t2)` is equal to `concat(header(t1), [c])`
-- for all `c'` in `header(t2)`
-  - if `c'` is equal to `c` then `schema(t2)[c']` is equal to the sort of `v`
-  - otherwise, `schema(t2)[c']` is equal to `schema(t1)[c']`
-
-#### Description
-
-Consumes an existing `Table` and produces a new `Table` containing an additional column with the given `ColName`, using `f` to compute the values for that column, once for each row.
-
-```lua
-> isTeenagerBuilder =
-    function(r):
-      12 < getValue(r, "age") and getValue(r, "age") < 20
-    end
-> buildColumn(students, "is-teenager", isTeenagerBuilder)
-| name    | age | favorite color | is-teenager |
-| ------- | --- | -------------- | ----------- |
-| "Bob"   | 12  | "blue"         | false       |
-| "Alice" | 17  | "green"        | true        |
-| "Eve"   | 13  | "red"          | true        |
-> didWellInFinal =
-    function(r):
-      85 <= getValue(r, "final")
-    end
-> buildColumn(gradebook, "did-well-in-final", didWellInFinal)
-| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | did-well-in-final |
-| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ----------------- |
-| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | true              |
-| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    | true              |
-| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | false             |
-```
-
 ### `addRow :: t1:Table * r:Row -> t2:Table` [TODO: maybe delete? See `addRows`]
 
 #### Constraints
@@ -209,19 +166,20 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
 
 __Requires:__
 
-* `c` is not in `header(t1)`
-* `length(vs)` is equal to `nrows(t1)`
+- `c` is not in `header(t1)`
+- `length(vs)` is equal to `nrows(t1)`
 
 __Ensures:__
 
-* `header(t2)` is equal to `concat(header(t1), [c])`
-* `schema(t1)` is included in `schema(t2)`
-* for all `v` in `vs`, `vs` is a `schema(t2)[c]`
-* `nrows(t2)` is equal to `nrows(t1)`
+- `header(t2)` is equal to `concat(header(t1), [c])`
+- for all `c'` in `header(t2)`
+  - if `c'` is equal to `c` then `schema(t2)[c']` is the sort of elements of `vs`
+  - otherwise, `schema(t2)[c']` is equal to `schema(t1)[c']`
+- `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
 
-Consumes a column name and a `Seq` of values and produces a new `Table` with the columns of the input `Table` followed by a column with the given name and values. Note that the length of `vs` must equal the length of the `Table`. [cs111]
+Consumes a column name and a `Seq` of values and produces a new `Table` with the columns of the input `Table` followed by a column with the given name and values. Note that the length of `vs` must equal the length of the `Table`.
 
 ```lua
 > hairColor = ["brown", "red", "blonde"]
@@ -238,6 +196,50 @@ Consumes a column name and a `Seq` of values and produces a new `Table` with the
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | 9            |
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    | 9            |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | 6            |
+```
+
+### `buildColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table`
+
+#### Constraints
+
+__Requires:__
+
+- `c` is not in `header(t1)`
+
+__Ensures:__
+
+- `schema(r)` is equal to `schema(t1)`
+- `header(t2)` is equal to `concat(header(t1), [c])`
+- for all `c'` in `header(t2)`
+  - if `c'` is equal to `c` then `schema(t2)[c']` is equal to the sort of `v`
+  - otherwise, `schema(t2)[c']` is equal to `schema(t1)[c']`
+- `nrows(t2)` is equal to `nrows(t1)`
+
+#### Description
+
+Consumes an existing `Table` and produces a new `Table` containing an additional column with the given `ColName`, using `f` to compute the values for that column, once for each row.
+
+```lua
+> isTeenagerBuilder =
+    function(r):
+      12 < getValue(r, "age") and getValue(r, "age") < 20
+    end
+> buildColumn(students, "is-teenager", isTeenagerBuilder)
+| name    | age | favorite color | is-teenager |
+| ------- | --- | -------------- | ----------- |
+| "Bob"   | 12  | "blue"         | false       |
+| "Alice" | 17  | "green"        | true        |
+| "Eve"   | 13  | "red"          | true        |
+> didWellInFinal =
+    function(r):
+      85 <= getValue(r, "final")
+    end
+> buildColumn(gradebook, "did-well-in-final", didWellInFinal)
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | did-well-in-final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ----------------- |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | true              |
+| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    | true              |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | false             |
 ```
 
 ### `union :: t1:Table * t2:Table -> t3:Table`
