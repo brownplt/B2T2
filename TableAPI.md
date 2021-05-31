@@ -1542,7 +1542,7 @@ Return a `Seq<Boolean>` with `true` entries indicating rows without missing valu
 
 #### Description
 
-Remove rows that have some values missing
+Removes rows that have some values missing
 
 ```lua
 > dropna(studentMissing)
@@ -1571,7 +1571,7 @@ Remove rows that have some values missing
 
 #### Description
 
-Scan the named column and when a cell is missing value, fill in `v`.
+Scans the named column and fills in `v` when a cell is missing value.
 
 ```lua
 > fillna(studentsMissing, "favorite color", "white")
@@ -1604,8 +1604,6 @@ Scan the named column and when a cell is missing value, fill in `v`.
 - for all `c`, `schema(t1)[c]` is equal to `schema(t1)[cs[0]]`
 
 ##### Ensures:
-
-[TODO: the description is non-structural]
 
 - `schema(t2)[c1]` is equal to `ColName`
 - `schema(t2)[c2]` is equal to `schema(t1)[cs[0]]`
@@ -1708,8 +1706,6 @@ The inverse of `pivotLonger`.
 #### Constraints
 
 ##### Requires:
-
-[TODO: non-structural desc]
 
 - `cs` has no duplicates
 - for all `c` in `cs`, `c` is in `header(t1)`
