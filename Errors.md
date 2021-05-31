@@ -161,65 +161,6 @@ invalid column `"black and white"` instead.
 > buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
 ```
 
-### brownJellybeans
-
-#### Context
-
-`jellyAnon`
-
-#### Task
-
-The programmer was asked to count the number of participants that consumed
-jelly bean of a given color.
-
-#### A Buggy Program
-
-```lua
-> countParticipants =
-    function(t, color):
-      nrows(tfilter(t, keep))
-    end
-> keep =
-    function(r):
-      r["color"]
-    end
-> countParticipants(jellyAnon, "brown")
-```
-
-#### What is the Bug?
-
-`"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color in `countParticipants`.
-
-#### A Corrected Program (1/2)
-
-```lua
-> countParticipants =
-    function(t, color):
-      nrows(tfilter(t, keep(color)))
-    end
-> keep =
-    function(color):
-      function(r):
-        r[color]
-      end
-    end
-> countParticipants(jellyAnon, "brown")
-```
-
-#### A Corrected Program (2/2)
-
-```lua
-> countParticipants =
-    function(t, color):
-      keep =
-        function(r):
-          r["color"]
-        end
-      nrows(tfilter(t, keep))
-    end
-> countParticipants(jellyAnon, "brown")
-```
-
 ### pieCount
 
 #### Context
@@ -252,69 +193,6 @@ The program supplies a table produced by `count` to `pieChart`, which also expec
       pieChart(count(t, "get acne"), "value", "count")
     end
 > showAcneProportions(jellyAnon)
-```
-
-### employeeToDepartment
-
-#### Context
-
-- `employees`
-- `departments`
-
-#### Task
-
-The programmer was given two tables, one maps employee names to department IDs, the other maps department IDs to department names. The task is to define a function, `employeeToDepartment` that consumes the two tables and looks up the a department name that an employee belongs to.
-
-#### A Buggy Program
-
-```lua
-> lastNameToDeptId =
-    function(deptTab, name):
-      matchName =
-        function(r):
-          getValue(r, "Last Name") == name
-        end
-      matchedTab = tfilter(deptTab, matchName)
-      matchedRow = getRow(matchedTab, 0)
-      getValue(matchedRow, "Department ID")
-    end
-> employeeToDepartment =
-    function(name, emplTab, deptTab):
-      buildColumn(emplTab, "Department Name",
-        function(r):
-          lastNameToDeptId(deptTab, getValue(r, "Last Name"))
-        end)
-    end
-```
-
-#### What is the Bug?
-
-There are several problems in this program. First, `employeeToDepartment` is expected to return a department name, but it returns a table. Another problem is that the helper function is named `lastNameToDeptId`. The name suggests that this function maps the employee names to department IDs. But in `employeeToDepartment`, `lastNameToDeptId` is expected to produce department names. Finally, `deptTab`, the first parameter of `lastNameToDeptId`, has a name suggesting that it is bound to a department table. `lastNameToDeptId` uses `deptTab` as an employee table.
-
-#### A Corrected Prgram
-
-```lua
-> deptIdToDeptName =
-    function(deptTab, name):
-      matchName =
-        function(r):
-          getValue(r, "Department ID") == name
-        end
-      matchedTab = tfilter(deptTab, matchName)
-      matchedRow = getRow(matchedTab, 0)
-      getValue(matchedRow, "Department Name")
-    end
-> employeeToDepartment =
-    function(name, emplTab, deptTab):
-      matchName =
-        function(r):
-          getValue(r, "Last Name") == name
-        end
-      matchedTab = tfilter(emplTab, matchName)
-      matchedRow = getRow(matchedTab, 0)
-      deptId = getValue(matchedRow, "Department ID")
-      deptIdToDeptName(deptTab, deptId)
-    end
 ```
 
 ### brownGetAcne
@@ -430,5 +308,127 @@ The programmer returns `getValue(r, "favorite color")` directly in the predicate
         function(r):
           getValue(r, "favorite color") == "green"
         end)
+    end
+```
+
+### brownJellybeans
+
+#### Context
+
+`jellyAnon`
+
+#### Task
+
+The programmer was asked to count the number of participants that consumed
+jelly bean of a given color.
+
+#### A Buggy Program
+
+```lua
+> countParticipants =
+    function(t, color):
+      nrows(tfilter(t, keep))
+    end
+> keep =
+    function(r):
+      r["color"]
+    end
+> countParticipants(jellyAnon, "brown")
+```
+
+#### What is the Bug?
+
+`"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color in `countParticipants`.
+
+#### A Corrected Program (1/2)
+
+```lua
+> countParticipants =
+    function(t, color):
+      nrows(tfilter(t, keep(color)))
+    end
+> keep =
+    function(color):
+      function(r):
+        r[color]
+      end
+    end
+> countParticipants(jellyAnon, "brown")
+```
+
+#### A Corrected Program (2/2)
+
+```lua
+> countParticipants =
+    function(t, color):
+      keep =
+        function(r):
+          r["color"]
+        end
+      nrows(tfilter(t, keep))
+    end
+> countParticipants(jellyAnon, "brown")
+```
+
+### employeeToDepartment
+
+#### Context
+
+- `employees`
+- `departments`
+
+#### Task
+
+The programmer was given two tables, one maps employee names to department IDs, the other maps department IDs to department names. The task is to define a function, `employeeToDepartment` that consumes the two tables and looks up the a department name that an employee belongs to.
+
+#### A Buggy Program
+
+```lua
+> lastNameToDeptId =
+    function(deptTab, name):
+      matchName =
+        function(r):
+          getValue(r, "Last Name") == name
+        end
+      matchedTab = tfilter(deptTab, matchName)
+      matchedRow = getRow(matchedTab, 0)
+      getValue(matchedRow, "Department ID")
+    end
+> employeeToDepartment =
+    function(name, emplTab, deptTab):
+      buildColumn(emplTab, "Department Name",
+        function(r):
+          lastNameToDeptId(deptTab, getValue(r, "Last Name"))
+        end)
+    end
+```
+
+#### What is the Bug?
+
+There are several problems in this program. First, `employeeToDepartment` is expected to return a department name, but it returns a table. Another problem is that the helper function is named `lastNameToDeptId`. The name suggests that this function maps the employee names to department IDs. But in `employeeToDepartment`, `lastNameToDeptId` is expected to produce department names. Finally, `deptTab`, the first parameter of `lastNameToDeptId`, has a name suggesting that it is bound to a department table. `lastNameToDeptId` uses `deptTab` as an employee table.
+
+#### A Corrected Prgram
+
+```lua
+> deptIdToDeptName =
+    function(deptTab, name):
+      matchName =
+        function(r):
+          getValue(r, "Department ID") == name
+        end
+      matchedTab = tfilter(deptTab, matchName)
+      matchedRow = getRow(matchedTab, 0)
+      getValue(matchedRow, "Department Name")
+    end
+> employeeToDepartment =
+    function(name, emplTab, deptTab):
+      matchName =
+        function(r):
+          getValue(r, "Last Name") == name
+        end
+      matchedTab = tfilter(emplTab, matchName)
+      matchedRow = getRow(matchedTab, 0)
+      deptId = getValue(matchedRow, "Department ID")
+      deptIdToDeptName(deptTab, deptId)
     end
 ```
