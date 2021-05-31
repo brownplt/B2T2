@@ -236,19 +236,21 @@ In CS111 Pyret, `transform-column(t, c, f)`
 - In LINQ, `Join`
 - This operator seems to be more general than any variant of SQL `JOIN`
 
-## `hconcat :: t1:Table * t2:Table -> t3:Table`
+## `hcat :: t1:Table * t2:Table -> t3:Table`
 
+- julia, `hcat`
 - pandas, `pd.concat`
 
 ## `crossJoin :: t1:Table * t2:Table -> t3:Table`
 
 - SQL `CROSS JOIN`
 
-## `union :: t1:Table * t2:Table -> t3:Table`
+## `vcat :: t1:Table * t2:Table -> t3:Table`
 
 - R, `union`
 - SQL `UNION ALL`
 - pandas, `pd.concat`
+- julia, `vcat`
 
 ## `values :: rs:Seq<Row> -> t:Table`
 

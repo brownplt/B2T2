@@ -242,7 +242,7 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    | false             |
 ```
 
-### `union :: t1:Table * t2:Table -> t3:Table`
+### `vcat :: t1:Table * t2:Table -> t3:Table`
 
 #### Constraints
 
@@ -264,7 +264,7 @@ Combines two tables vertically. The output table starts with rows from the first
     function(r):
       [row: ("name", 1 + getValue(r, "age"))]
     end
-> union(students, update(students, increaseAge))
+> vcat(students, update(students, increaseAge))
 | name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
@@ -283,7 +283,7 @@ Combines two tables vertically. The output table starts with rows from the first
         ("midterm", curve(getValue("midterm"))),
         ("final", curve(getValue("final")))]
     end
-> union(gradebook, update(gradebook, curveFinal))
+> vcat(gradebook, update(gradebook, curveFinal))
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
@@ -294,7 +294,7 @@ Combines two tables vertically. The output table starts with rows from the first
 | "Eve"   | 13  | 7     | 9     | 89      | 8     | 8     | 82    |
 ```
 
-### `hconcat :: t1:Table * t2:Table -> t3:Table`
+### `hcat :: t1:Table * t2:Table -> t3:Table`
 
 #### Constraints
 
@@ -313,13 +313,13 @@ __Ensures:__
 Combines two tables horizontally. The output table starts with columns from the first input, followed by the columns from the second input.
 
 ```lua
-> hconcat(students, dropColumns(gradebook, ["name", "age"]))
+> hcat(students, dropColumns(gradebook, ["name", "age"]))
 | name    | age | favorite color | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | -------------- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | "blue"         | 8     | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | "green"        | 6     | 8     | 88      | 8     | 7     | 85    |
 | "Eve"   | 13  | "red"          | 7     | 9     | 84      | 8     | 8     | 77    |
-> hconcat(dropColumns(students, ["name", "age"]), gradebook)
+> hcat(dropColumns(students, ["name", "age"]), gradebook)
 | favorite color | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | -------------- | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "blue"         | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
