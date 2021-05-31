@@ -1218,23 +1218,17 @@ Catagorize rows of the input table into groups by the key of each row. The key i
 
 ```lua
 > groupByOriginal(students, "favorite color")
-| key     | members  |
-| ------- | -------- |
-| "blue"  | <table1> |
-| "green" | <table2> |
-| "red"   | <table3> |
-<table1> =
-| name  | age | favorite color |
-| ----- | --- | -------------- |
-| "Bob" | 12  | "blue"         |
-<table2> =
-| name    | age | favorite color |
-| ------- | --- | -------------- |
-| "Alice" | 17  | "green"        |
-<table3> =
-| name  | age | favorite color |
-| ----- | --- | -------------- |
-| "Eve" | 13  | "red"          |
+| key     | members                            |
+| ------- | ---------------------------------- |
+| "blue"  | | name    | age | favorite color | |
+|         | | ------- | --- | -------------- | |
+|         | | "Bob"   | 12  | "blue"         | |
+| "green" | | name    | age | favorite color | |
+|         | | ------- | --- | -------------- | |
+|         | | "Alice" | 17  | "green"        | |
+| "red"   | | name    | age | favorite color | |
+|         | | ------- | --- | -------------- | |
+|         | | "Eve"   | 13  | "red"          | |
 > groupByOriginal(jellyAnon, "brown")
 | key   | members                                                                                 |
 | ----- | --------------------------------------------------------------------------------------- |
@@ -1278,44 +1272,34 @@ Similar to `groupByOriginal` but the named column is removed in the output.
 
 ```lua
 > groupBySubtracted(students, "favorite color")
-| key     | members  |
-| ------- | -------- |
-| "blue"  | <table1> |
-| "green" | <table2> |
-| "red"   | <table3> |
-<table1> =
-| name  | age |
-| ----- | --- |
-| "Bob" | 12  |
-<table2> =
-| name    | age |
-| ------- | --- |
-| "Alice" | 17  |
-<table3> =
-| name  | age |
-| ----- | --- |
-| "Eve" | 13  |
+| key     | members           |
+| ------- | ----------------- |
+| "blue"  | | name    | age | |
+|         | | ------- | --- | |
+|         | | "Bob"   | 12  | |
+| "green" | | name    | age | |
+|         | | ------- | --- | |
+|         | | "Alice" | 17  | |
+| "red"   | | name    | age | |
+|         | | ------- | --- | |
+|         | | "Eve"   | 13  | |
 > groupBySubtracted(jellyAnon, "brown")
-| key   | members  |
-| ----- | -------- |
-| true  | <table1> |
-| false | <table2> |
-<table1> =
-| get acne | red   | black | white | green | yellow | orange | pink  | purple |
-| -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ |
-| true     | false | false | false | true  | false  | true   | false | false  |
-| true     | false | true  | false | true  | true   | false  | false | false  |
-| false    | false | false | false | true  | false  | false  | true  | false  |
-| false    | false | false | false | false | true   | false  | false | false  |
-| false    | false | false | false | false | true   | false  | true  | false  |
-| true     | false | true  | false | false | false  | true   | true  | false  |
-| false    | false | true  | false | false | false  | false  | true  | false  |
-| true     | false | false | false | false | false  | true   | false | false  |
-<table2> =
-| get acne | red   | black | white | green | yellow | orange | pink  | purple |
-| -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ |
-| true     | false | false | false | false | false  | true   | false | false  |
-| false    | true  | false | false | false | true   | false  | true  | false  |
+| key   | members                                                                         |
+| ----- | ------------------------------------------------------------------------------- |
+| true  | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
+|       | | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ | |
+|       | | true     | false | false | false | true  | false  | true   | false | false  | |
+|       | | true     | false | true  | false | true  | true   | false  | false | false  | |
+|       | | false    | false | false | false | true  | false  | false  | true  | false  | |
+|       | | false    | false | false | false | false | true   | false  | false | false  | |
+|       | | false    | false | false | false | false | true   | false  | true  | false  | |
+|       | | true     | false | true  | false | false | false  | true   | true  | false  | |
+|       | | false    | false | true  | false | false | false  | false  | true  | false  | |
+|       | | true     | false | false | false | false | false  | true   | false | false  | |
+| false | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
+|       | | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ | |
+|       | | true     | false | false | false | false | false  | true   | false | false  | |
+|       | | false    | true  | false | false | false | true   | false  | true  | false  | |
 ```
 
 ## `groupBy<K,V> :: t1:Table * key:(r1:Row -> k1:K) * project:(r2:Row -> v:V) * aggregate:(k2:K * vs:Seq<V> -> r3:Row) -> t2:Table`
