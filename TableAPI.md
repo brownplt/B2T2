@@ -832,14 +832,10 @@ Remove all rows but keep the schema.
 ##### Ensures:
 
 - `schema(t2)` is equal to `schema(t1)`
-- `ncols(t2)` is equal to `ncols(t1)`
-- `nrows(t2)` is not greater than `nrowsr(t1)`
-- for all `i` and `j` in `range(nrows(t2))` if `i` is not equal to `j` then `getRow(t2, i)` is not equal to `getRow(t2, j)`
-- for all `i1` in `range(nrows(t2))`, there exists an `i2` such that `getRow(t2, i2)` is equal to `getRow(t1, i1)`
 
 #### Description
 
-Retain only unique/distinct rows from an input `Table`.
+Retains only unique/distinct rows from an input `Table`.
 
 ```lua
 > distinct(students)
