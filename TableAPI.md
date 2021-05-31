@@ -1599,24 +1599,31 @@ Scans the named column and fills in `v` when a cell is missing value.
 - `length(cs)` is positive
 - `cs` has no duplicates
 - for all `c` in `cs`, `c` is in `header(t1)`
-- `c1` is not in `header(t1)`
-- `c2` is not in `header(t1)`
-- for all `c`, `schema(t1)[c]` is equal to `schema(t1)[cs[0]]`
+- for all `c` in `cs`, `schema(t1)[c]` is equal to `schema(t1)[cs[0]]`
+- `concat(removeAll(header(t1), cs), [c1, c2])` has no duplicates
 
 ##### Ensures:
 
-- `schema(t2)[c1]` is equal to `ColName`
-- `schema(t2)[c2]` is equal to `schema(t1)[cs[0]]`
-- `header(t2)` is equal to `header(t1)` with the column names in `cs` removed then concatenated with `[c1, c2]`
-- for all `c` in `header(t2)`, if `c` is in `header(t1)` then `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `header(t2)` is equal to `concat(removeAll(header(t1), cs), [c1, c2])`
+- for all `c` in `header(t2)`
+  - if `c` is equal to `c1` then `schema(t2)[c]` is equal to `ColName`
+  - if `c` is equal to `c2` then `schema(t2)[c]` is equal to `schema(t1)[cs[0]]`
+  - otherwise, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
 
-Reshape the input table and make it longer. The data kept in the named columns are moved to two new columns, one for the column names and the other for the cell values. 
-
-[TODO: one more example]
+Reshapes the input table and make it longer. The data kept in the named columns are moved to two new columns, one for the column names and the other for the cell values.
 
 ```lua
+> pivotLonger(gradebook, ["midterm", "final"], "exam", "score")
+| name    | age | quiz1 | quiz2 | quiz3 | quiz4 | exam      | score |
+| ------- | --- | ----- | ----- | ----- | ----- | --------- | ----- |
+| "Bob"   | 12  | 8     | 9     | 7     | 9     | "midterm" | 77    |
+| "Bob"   | 12  | 8     | 9     | 7     | 9     | "final"   | 87    |
+| "Alice" | 17  | 6     | 8     | 8     | 7     | "midterm" | 88    |
+| "Alice" | 17  | 6     | 8     | 8     | 7     | "final"   | 85    |
+| "Eve"   | 13  | 7     | 9     | 8     | 8     | "midterm" | 84    |
+| "Eve"   | 13  | 7     | 9     | 8     | 8     | "final"   | 77    |
 > pivotLonger(gradebook, ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"], "test", "score")
 | name    | age | test    | score |
 | ------- | --- | ------- | ----- |
