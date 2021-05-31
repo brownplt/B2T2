@@ -668,19 +668,19 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 | "Eve" | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
-### (overload 1/3) `selectColumns :: t1:Table * selector:Seq<Boolean> -> t2:Table`
+### (overload 1/3) `selectColumns :: t1:Table * bs:Seq<Boolean> -> t2:Table`
 
 #### Constraints
 
 ##### Requires:
 
-- `length(selector)` is equal to `ncols(t1)`
+- `length(bs)` is equal to `ncols(t1)`
 
 ##### Ensures:
 
 - `header(t2)` is a subsequence of `header(t1)`
-- for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
-- `schema(t2)` is included in `schema(t1)`
+- for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs[i]` is equal to `true`
+- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
 
@@ -860,7 +860,7 @@ Retain only unique/distinct rows from an input `Table`.
 - `ncols(t2)` is equal to `ncols(t1) - 1`
 - `header(t2)` is a subsequence of `header(t1)`
 - `c` is not in `header(t2)`
-- `schema(t2)` is included in `schema(t1)`
+- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 - for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
@@ -897,7 +897,7 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 - `ncols(t2)` is equal to `ncols(t1) - length(cs)`
 - `header(t2)` is a subsequence of `header(t1)`
 - for all `c` in `cs`, `c` is not in `header(t2)`
-- `schema(t2)` is included in `schema(t1)`
+- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 - for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
