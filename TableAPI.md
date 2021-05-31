@@ -969,14 +969,11 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 ##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
-- `ncols(t2)` is equal to `ncols(t1)`
 - `schema(t2)` is equal to `schema(t1)`
-- If `b` is equal to `true` then `getColumn(t2, c)` is in ascending order
-- If `b` is equal to `false` then `getColumn(t2, c)` is in descending order
 
 #### Description
 
-Given a `Table` and the name of a column in that `Table`, return a `Table` with the same rows ordered based on the named column. If `b` is `true`, the `Table` will be sorted in ascending order, otherwise it will be in descending order.
+Given a `Table` and one of its column names, returns a `Table` with the same rows ordered based on the named column. If `b` is `true`, the `Table` will be sorted in ascending order, otherwise it will be in descending order.
 
 ```lua
 > sort(students, "age", true)
@@ -999,28 +996,27 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 
 ##### Requires:
 
-- for all `c` in `cs`, `c` is in `header(t1)`
 - `cs` has no duplicates
-- `schema(t1)[c]` is `Number`
+- for all `c` in `cs`, `c` is in `header(t1)`
+- for all `c` in `cs`, `schema(t1)[c]` is `Number`
 
 ##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
-- `ncols(t2)` is equal to `ncols(t1)`
 - `schema(t2)` is equal to `schema(t1)`
 
 #### Description
 
-Given a `Table` and a sequence of column names in that `Table`, return a `Table` with the same rows ordered based on the named columns.
+Given a `Table` and a sequence of column names in that `Table`, return a `Table` with the same rows ordered ascendingly based on the named columns.
 
 ```lua
-> sort(students, ["age"])
+> sortByColumns(students, ["age"])
 | name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
 | "Alice" | 17  | "green"        |
-> sort(gradebook, ["quiz2", "quiz1",])
+> sortByColumns(gradebook, ["quiz2", "quiz1",])
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
