@@ -319,8 +319,7 @@ The programmer returns `getValue(r, "favorite color")` directly in the predicate
 
 #### Task
 
-The programmer was asked to count the number of participants that consumed
-jelly bean of a given color.
+The programmer was asked to count the number of participants that consumed jelly beans of a given color.
 
 #### A Buggy Program
 
