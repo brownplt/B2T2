@@ -337,7 +337,7 @@ The programmer was asked to count the number of participants that consumed jelly
 
 #### What is the Bug?
 
-`"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color in `countParticipants`.
+`"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color defined in `countParticipants`.
 
 #### A Corrected Program (1/2)
 
