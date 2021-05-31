@@ -61,7 +61,7 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 - `x` is non-negative
 - `x` is negative
 
-## Constructor
+## Constructors
 
 ### `emptyTable :: t:Table`
 
