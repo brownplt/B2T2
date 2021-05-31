@@ -1476,8 +1476,6 @@ Correlates the rows of two tables based on equality of keys and groups the resul
 
 Correlates the rows of two tables based on matching keys.
 
-[TODO: need one more example]
-
 ```lua
 > getName =
     function(r):
@@ -1488,13 +1486,24 @@ Correlates the rows of two tables based on matching keys.
       addColumn(r1, "grade", getValue(r2, "final"))
     end
 > join(students, gradebook, getName, getName, addGradeColumn)
-| name    | age | favorite color | final |
+| name    | age | favorite color | grade |
 | ------- | --- | -------------- | ----- |
 | "Bob"   | 12  | "blue"         | 87    |
 | "Alice" | 17  | "green"        | 85    |
 | "Eve"   | 13  | "red"          | 77    |
+> nameLength =
+    function(r):
+      length(getValue(r, "name"))
+    end
+> join(students, gradebook, nameLength, nameLength, addGradeColumn)
+| name    | age | favorite color | grade |
+| ------- | --- | -------------- | ----- |
+| "Bob"   | 12  | "blue"         | 87    |
+| "Bob"   | 12  | "blue"         | 77    |
+| "Alice" | 17  | "green"        | 85    |
+| "Eve"   | 13  | "red"          | 87    |
+| "Eve"   | 13  | "red"          | 77    |
 ```
-
 
 ## Missing values
 
