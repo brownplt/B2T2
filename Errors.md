@@ -378,7 +378,7 @@ The programmer was asked to count the number of participants that consumed jelly
 
 #### Task
 
-The programmer was given two tables, one maps employee names to department IDs, the other maps department IDs to department names. The task is to define a function, `employeeToDepartment` that consumes the two tables and looks up the a department name that an employee belongs to.
+The programmer was given two tables, one maps employee names to department IDs, the other maps department IDs to department names. The task is to define a function, `employeeToDepartment` that consumes the two tables and looks up the a department name that an employee corresponds to.
 
 #### A Buggy Program
 
