@@ -928,7 +928,6 @@ Returns a `Table` that is the same as `t`, except without the named columns.
 
 - `schema(r)` is equal to `schema(t1)`
 - `schema(t2)` is equal to `schema(t1)`
-- `nrows(t2)` is not greater than `nrows(t1)`
 
 #### Description
 
