@@ -857,19 +857,17 @@ Retains only unique/distinct rows from an input `Table`.
 
 ##### Requires:
 
-- `c` in `header(t1)`
+- `c` is in `header(t1)`
 
 ##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
-- `ncols(t2)` is equal to `ncols(t1) - 1`
-- `header(t2)` is a subsequence of `header(t1)`
-- `c` is not in `header(t2)`
-- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `schema(t2)` is a subsequence of `schema(t1)`
+- `header(t2)` is equal to `removeAll(header(t1), [c])`
 
 #### Description
 
-Returns a `Table` that is the same as `t`, except without the column whose name is `c`.
+Returns a `Table` that is the same as `t`, except without the named column.
 
 ```lua
 > dropColumn(students, "age")
@@ -898,14 +896,12 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 ##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
-- `ncols(t2)` is equal to `ncols(t1) - length(cs)`
-- `header(t2)` is a subsequence of `header(t1)`
-- for all `c` in `cs`, `c` is not in `header(t2)`
-- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `schema(t2)` is a subsequence of `schema(t1)`
+- `header(t2)` is equal to `removeAll(header(t1), cs)`
 
 #### Description
 
-Returns a `Table` that is the same as `t`, except without the columns whose name is in `cs`.
+Returns a `Table` that is the same as `t`, except without the named columns.
 
 ```lua
 > dropColumns(students, ["age"])
