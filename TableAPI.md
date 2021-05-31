@@ -1416,13 +1416,13 @@ Projects each row of a table to a new table, flattens the resulting tables into 
 
 ##### Ensures:
 
-- `schema(r1)` == `schema(t1)`
-- `schema(r2)` == `schema(t2)`
-- `schema(r3)` == `schema(t1)`
-- `schema(t3)` == `schema(t2)`
+- `schema(r1)` is equal to `schema(t1)`
+- `schema(r2)` is equal to `schema(t2)`
+- `schema(r3)` is equal to `schema(t1)`
+- `schema(t3)` is equal to `schema(t2)`
 - `nrows(t3)` is not greater than `nrows(t2)`
-- `schema(t4)` == `schema(r4)`
-- `nrows(t4)` == `nrows(t1)`
+- `schema(t4)` is equal to `schema(r4)`
+- `nrows(t4)` is equal to `nrows(t1)`
 
 #### Description
 
@@ -1455,11 +1455,11 @@ Correlates the rows of two tables based on equality of keys and groups the resul
 
 ##### Ensures:
 
-- `schema(r1)` == `schema(t1)`
-- `schema(r2)` == `schema(t2)`
-- `schema(r3)` == `schema(t1)`
-- `schema(r4)` == `schema(t2)`
-- `schema(t3)` == `schema(r5)`
+- `schema(r1)` is equal to `schema(t1)`
+- `schema(r2)` is equal to `schema(t2)`
+- `schema(r3)` is equal to `schema(t1)`
+- `schema(r4)` is equal to `schema(t2)`
+- `schema(t3)` is equal to `schema(r5)`
 
 #### Description
 
