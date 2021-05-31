@@ -84,12 +84,12 @@ Create an empty table.
 
 ##### Requires:
 
-* `schema(r)` is equal to `schema(t1)`
+- `schema(r)` is equal to `schema(t1)`
 
 ##### Ensures:
 
-* `schema(t2)` is equal to `schema(t1)`
-* `nrows(t2)` is equal to `nrows(t1) + 1`
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `nrows(t1) + 1`
 
 #### Description
 
@@ -127,12 +127,12 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 
 ##### Requires:
 
-* for all `r` in `rs`, `schema(r)` is equal to `schema(t1)`
+- for all `r` in `rs`, `schema(r)` is equal to `schema(t1)`
 
 ##### Ensures:
 
-* `schema(t2)` is equal to `schema(t1)`
-* `nrows(t2)` is equal to `nrows(t1) + length(rs)`
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `nrows(t1) + length(rs)`
 
 #### Description
 
@@ -452,7 +452,7 @@ Looks up more information on rows of the first table and add those information t
 
 ##### Ensures:
 
-* `n` is equal to `nrows(t)`
+- `n` is equal to `nrows(t)`
 
 #### Description
 
@@ -473,7 +473,7 @@ Returns a `Number` representing the number of rows in the `Table`.
 
 ##### Ensures:
 
-* `n` is equal to `ncols(t)`
+- `n` is equal to `ncols(t)`
 
 #### Description
 
@@ -494,7 +494,7 @@ Returns a `Number` representing the number of columns in the `Table`.
 
 ##### Ensures:
 
-* `cs` is equal to `header(t)`
+- `cs` is equal to `header(t)`
 
 #### Description
 
@@ -515,11 +515,11 @@ Returns a `Seq` representing the column names in the `Table`.
 
 ##### Requires:
 
-* `n` is in `range(nrows(t))`
+- `n` is in `range(nrows(t))`
 
 ##### Ensures:
 
-* `r` is equal to `getRow(t, n)`
+- `r` is equal to `getRow(t, n)`
 
 #### Description
 
@@ -541,11 +541,11 @@ Extracts a row out of a table by a numeric index.
 
 ##### Requires:
 
-* `c` is in header(r)
+- `c` is in header(r)
 
 ##### Ensures:
 
-* `v` is a `schema(r)[c]`
+- `v` is a `schema(r)[c]`
 
 #### Description
 
@@ -564,11 +564,12 @@ Retrieves the value for the column `c` in the row `r`.
 
 ##### Requires:
 
-* `n` is in `range(ncols(t))`
+- `n` is in `range(ncols(t))`
 
 ##### Ensures:
 
-* for all `v` in `vs`, `v` is a `schema(t)[header(t)[n]]`
+- `length(vs)` is equal to `nrows(t)`
+- for all `v` in `vs`, `v` is a `schema(t)[header(t)[n]]`
 
 #### Description
 
@@ -587,11 +588,11 @@ Returns a `Seq` of the values in the indexed column in `t`.
 
 ##### Requires:
 
-* `c` is in `header(t)`
+- `c` is in `header(t)`
 
 ##### Ensures:
 
-* for all `v` in `vs`, `v` is a `schema(t)[c]`
+- for all `v` in `vs`, `v` is a `schema(t)[c]`
 
 #### Description
 
@@ -612,12 +613,12 @@ Returns a `Seq` of the values in the named column in `t`.
 
 ##### Requires:
 
-* for all `n` in `selector`, `n` is in `range(nrows(t1))`
+- for all `n` in `selector`, `n` is in `range(nrows(t1))`
 
 ##### Ensures:
 
-* `schema(t2)` is equal to `schema(t1)`
-* `nrows(t2)` is equal to `length(selector)`
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `length(selector)`
 
 #### Description
 
@@ -644,12 +645,12 @@ Given a `Table` and a `Seq<Number>` containing row indices, and produces a new `
 
 ##### Requires:
 
-* `length(selector)` is equal to `nrows(t1)`
+- `length(selector)` is equal to `nrows(t1)`
 
 ##### Ensures:
 
-* `schema(t2)` is equal to `schema(t1)`
-* `nrows(t2)` is not greater than `nrows(t1)`
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is not greater than `nrows(t1)`
 
 #### Description
 
@@ -673,13 +674,13 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 
 ##### Requires:
 
-* `length(selector)` is equal to `ncols(t1)`
+- `length(selector)` is equal to `ncols(t1)`
 
 ##### Ensures:
 
-* `header(t2)` is a subsequence of `header(t1)`
-* for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
-* `schema(t2)` is included in `schema(t1)`
+- `header(t2)` is a subsequence of `header(t1)`
+- for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
+- `schema(t2)` is included in `schema(t1)`
 
 #### Description
 
@@ -706,14 +707,14 @@ Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be k
 
 ##### Requires:
 
-* `selector` has no duplicates
-* for all `n` in `selector`, `n` is in `range(ncols(t1))`
+- `selector` has no duplicates
+- for all `n` in `selector`, `n` is in `range(ncols(t1))`
 
 ##### Ensures:
 
-* `length(header(t2))` is equal to `length(selector)`
-* for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
-* `schema(t2)` is included in `schema(t2)`
+- `length(header(t2))` is equal to `length(selector)`
+- for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
+- `schema(t2)` is included in `schema(t2)`
 
 #### Description
 
@@ -741,13 +742,13 @@ Consumes a `Table` and a `Seq<Number>` containing column indices, and produces a
 
 ##### Requires:
 
-* `selector` has no duplicates
-* for all `c` in `selector`, `c` is in `header(t1)`
+- `selector` has no duplicates
+- for all `c` in `selector`, `c` is in `header(t1)`
 
 ##### Ensures:
 
-* `header(t2)` is equal to `cs` 
-* `schema(t2)` is included in `schema(t2)`
+- `header(t2)` is equal to `cs` 
+- `schema(t2)` is included in `schema(t2)`
 
 #### Description
 
@@ -926,9 +927,9 @@ Returns a `Table` that is the same as `t`, except without the columns whose name
 
 ##### Ensures:
 
-* `schema(r)` is equal to `schema(t1)`
-* `schema(t2)` is equal to `schema(t1)`
-* `nrows(t2)` is not greater than `nrows(t1)`
+- `schema(r)` is equal to `schema(t1)`
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is not greater than `nrows(t1)`
 
 #### Description
 
@@ -1267,14 +1268,14 @@ Groups the rows of a table according to a specified key selector function and cr
 
 ##### Requires:
 
-* for all `c` in `header(r2)`, `c` is in `header(t1)`
-* for all `c` in `header(r2)`, `schema(r2)[c]` is `schema(t1)[c]`
+- for all `c` in `header(r2)`, `c` is in `header(t1)`
+- for all `c` in `header(r2)`, `schema(r2)[c]` is `schema(t1)[c]`
 
 ##### Ensures:
 
-* `schema(r1)` is equal to `schema(t1)`
-* `schema(t2)` is equal to `schema(t1)`
-* `nrows(t2)` is equal to `nrows(t1)`
+- `schema(r1)` is equal to `schema(t1)`
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
 
@@ -1772,14 +1773,14 @@ When columns `cs` of table `t` have sequences, return a `Table` where each eleme
 
 ##### Requires:
 
-* `c` is in `header(t1)`
+- `c` is in `header(t1)`
 
 ##### Ensures:
 
-* `v1` is a `schema(t1)[c]`
-* `header(t2)` is equal to `header(t1)`
-* for all `c'` in `header(t1)`, if `c'` is not equal to `c` then `schema(t2)[c]` is equal to `schema(t1)[c]`
-* `v2` is a `schema(t2)[c]`
+- `v1` is a `schema(t1)[c]`
+- `header(t2)` is equal to `header(t1)`
+- for all `c'` in `header(t1)`, if `c'` is not equal to `c` then `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `v2` is a `schema(t2)[c]`
 
 #### Description
 
