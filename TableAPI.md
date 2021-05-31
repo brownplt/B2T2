@@ -1420,15 +1420,12 @@ Projects each row of a table to a new table, flattens the resulting tables into 
 - `schema(r2)` is equal to `schema(t2)`
 - `schema(r3)` is equal to `schema(t1)`
 - `schema(t3)` is equal to `schema(t2)`
-- `nrows(t3)` is not greater than `nrows(t2)`
 - `schema(t4)` is equal to `schema(r4)`
 - `nrows(t4)` is equal to `nrows(t1)`
 
 #### Description
 
 Correlates the rows of two tables based on equality of keys and groups the results.
-
-[TODO: need one more example]
 
 ```lua
 > getName =
@@ -1437,7 +1434,7 @@ Correlates the rows of two tables based on equality of keys and groups the resul
     end
 > averageFinal =
     function(r, t):
-      addColumn(r, average(getColumn(t, "final")))
+      addColumn(r, "final", [average(getColumn(t, "final"))])
     end
 > groupJoin(students, gradebook, getName, getName, averageFinal)
 | name    | age | favorite color | final |
@@ -1445,6 +1442,20 @@ Correlates the rows of two tables based on equality of keys and groups the resul
 | "Bob"   | 12  | "blue"         | 87    |
 | "Alice" | 17  | "green"        | 85    |
 | "Eve"   | 13  | "red"          | 77    |
+> nameLength =
+    function(r):
+      length(getValue(r, "name"))
+    end
+> tableNRows =
+    function(r, t):
+      addColumn(r, "nrows", [nrows(t)])
+    end
+> groupJoin(students, gradebook, nameLength, nameLength, tableNRows)
+| name    | age | favorite color | nrows |
+| ------- | --- | -------------- | ----- |
+| "Bob"   | 12  | "blue"         | 2     |
+| "Alice" | 17  | "green"        | 1     |
+| "Eve"   | 13  | "red"          | 2     |
 ```
 
 ### `join<K> :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:K) * getKey2:(r2:Row -> k2:K) * combine:(r3:Row * r4:Row -> r5:Row) -> t3:Table`
