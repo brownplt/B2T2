@@ -4,21 +4,9 @@ This file presents a diagnostic challenge. Each example includes a buggy program
 
 These examples are adapted from student code collected in CS111 at Brown University.
 
-## missingSchema
+## Malformed Tables
 
-### A Buggy Program
-
-```lua
-| "Bob"   | 12 | "blue"  |
-| "Alice" | 17 | "green" |
-| "Eve"   | 13 | "red"   |
-```
-
-### What is the Bug?
-
-This malformed table misses the schema.
-
-### A Corrected Program
+This section lists errors that programmers can make when constructing table constants. All these malformed tables should be corrected to the `students` table, which is repeated below.
 
 ```lua
 | name    | age    | favorite color |
@@ -29,9 +17,19 @@ This malformed table misses the schema.
 | "Eve"   | 13     | "red"          |
 ```
 
-## missingRow
+### missingSchema
 
-### A Buggy Program
+This malformed table misses the schema.
+
+```lua
+| "Bob"   | 12 | "blue"  |
+| "Alice" | 17 | "green" |
+| "Eve"   | 13 | "red"   |
+```
+
+### missingRow
+
+This malformed table misses the content of the last row. (*Note:* the last row is **not** a row with 3 missing values.)
 
 ```lua
 | name    | age    | favorite color |
@@ -42,24 +40,9 @@ This malformed table misses the schema.
 |                                   |
 ```
 
-### What is the Bug?
+### missingCell
 
-This malformed table misses the content of the last row. (*Note:* the last row is **not** a row with 3 missing values.)
-
-### A Corrected Program
-
-```lua
-| name    | age    | favorite color |
-| String  | Number | String         |
-| ------- | ------ | -------------- |
-| "Bob"   | 12     | "blue"         |
-| "Alice" | 17     | "green"        |
-| "Eve"   | 13     | "red"          |
-```
-
-## missingCell
-
-### A Buggy Program
+The first row of this malformed table misses a cell.
 
 ```lua
 | name    | age    | favorite color |
@@ -70,24 +53,9 @@ This malformed table misses the content of the last row. (*Note:* the last row i
 | "Eve"   | 13     | "red"          |
 ```
 
-### What is the Bug?
+### swappedColumns
 
-The first row of this malformed table misses a cell.
-
-### A Corrected Program
-
-```lua
-| name    | age    | favorite color |
-| String  | Number | String         |
-| ------- | ------ | -------------- |
-| "Bob"   | 12     | "blue"         |
-| "Alice" | 17     | "green"        |
-| "Eve"   | 13     | "red"          |
-```
-
-## swappedColumns
-
-### A Buggy Program
+The rows disagree with the schema on the ordering of the first two columns.
 
 ```lua
 | name   | age     | favorite color |
@@ -98,24 +66,9 @@ The first row of this malformed table misses a cell.
 | 13     | "Eve"   | "red"          |
 ```
 
-### What is the Bug?
+### schemaTooShort
 
-The rows disagree with the schema on the ordering of the first two columns.
-
-### A Corrected Program
-
-```lua
-| name    | age    | favorite color |
-| String  | Number | String         |
-| ------- | ------ | -------------- |
-| "Bob"   | 12     | "blue"         |
-| "Alice" | 17     | "green"        |
-| "Eve"   | 13     | "red"          |
-```
-
-## schemaTooShort
-
-### A Buggy Program
+The schema specifies that there are two columns. But the rows have three columns.
 
 ```lua
 | name    | age    |
@@ -126,24 +79,9 @@ The rows disagree with the schema on the ordering of the first two columns.
 | "Eve"   | 13     | "red"          |
 ```
 
-### What is the Bug?
+### schemaTooLong
 
-The schema specifies that there are two columns. But the rows have three columns.
-
-### A Corrected Program
-
-```lua
-| name    | age    | favorite color |
-| String  | Number | String         |
-| ------- | ------ | -------------- |
-| "Bob"   | 12     | "blue"         |
-| "Alice" | 17     | "green"        |
-| "Eve"   | 13     | "red"          |
-```
-
-## schemaTooLong
-
-### A Buggy Program
+The schema specifies that there are four columns. But the rows specifices that there are three columns.
 
 ```lua
 | name    | age    | favorite number | favorite color |
@@ -154,61 +92,50 @@ The schema specifies that there are two columns. But the rows have three columns
 | "Eve"   | 13     | "red"           |
 ```
 
-### What is the Bug?
+## Using Tables
 
-The schema specifies that there are four columns. But the rows specifices that there are three columns.
+This section lists errors in using tables. Each example comes with a context, which lists the used tables, and a task, which states how the table(s) should be used.
 
-### A Corrected Program
+### midFinal
 
-```lua
-| name    | age    | favorite color |
-| String  | Number | String         |
-| ------- | ------ | -------------- |
-| "Bob"   | 12     | "blue"         |
-| "Alice" | 17     | "green"        |
-| "Eve"   | 13     | "red"          |
-```
-
-## midFinal
-
-### Context
+#### Context
 
 `gradebook`
 
-### Task
+#### Task
 
 The programmer was asked to visualize as a scatter plot the connection between
 midterm and final exam grades.
 
-### A Buggy Program
+#### A Buggy Program
 
 ```lua
 > scatterPlot(gradebook, "mid", "final")
 ```
 
-### What is the Bug?
+#### What is the Bug?
 
 The `"mid"` is not a valid column name of `gradebook`. However, the table
 contains a `"midterm"` column.
 
-### A Corrected Program
+#### A Corrected Program
 
 ```lua
 > scatterPlot(gradebook, "midterm", "final")
 ```
 
-## blackAndWhite
+### blackAndWhite
 
-### Context
+#### Context
 
 `jellyAnon`
 
-### Task
+#### Task
 
 The programmer was asked to build a column that indicates whether "a
 participant consumed black jelly beans and white ones".
 
-### A Buggy Program
+#### A Buggy Program
 
 ```lua
 > eatBlackAndWhite =
@@ -218,13 +145,13 @@ participant consumed black jelly beans and white ones".
 > buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)?
 ```
 
-### What is the Bug?
+#### What is the Bug?
 
 The logical `and` appears at a wrong place. The task is asking the programmer
 to write `r["black"] and r["white"]`, but the buggy program accesses the
 invalid column `"black and white"` instead.
 
-### A Corrected Program
+#### A Corrected Program
 
 ```lua
 > eatBlackAndWhite =
@@ -234,18 +161,18 @@ invalid column `"black and white"` instead.
 > buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
 ```
 
-## brownJellybeans
+### brownJellybeans
 
-### Context
+#### Context
 
 `jellyAnon`
 
-### Task
+#### Task
 
 The programmer was asked to count the number of participants that consumed
 jelly bean of a given color.
 
-### A Buggy Program
+#### A Buggy Program
 
 ```lua
 > countParticipants =
@@ -259,11 +186,11 @@ jelly bean of a given color.
 > countParticipants(jellyAnon, "brown")
 ```
 
-### What is the Bug?
+#### What is the Bug?
 
 `"color"` is not a valid column name. Instead of a string literal, the color should be a variable refering to the color in `countParticipants`.
 
-### A Corrected Program (1/2)
+#### A Corrected Program (1/2)
 
 ```lua
 > countParticipants =
@@ -279,7 +206,7 @@ jelly bean of a given color.
 > countParticipants(jellyAnon, "brown")
 ```
 
-### A Corrected Program (2/2)
+#### A Corrected Program (2/2)
 
 ```lua
 > countParticipants =
@@ -293,17 +220,17 @@ jelly bean of a given color.
 > countParticipants(jellyAnon, "brown")
 ```
 
-## pieCount
+### pieCount
 
-### Context
+#### Context
 
 `jellyAnon`
 
-### Task
+#### Task
 
 The programmer was asked to visualize the proportion of participants getting acne.
 
-### A Buggy Program
+#### A Buggy Program
 
 ```lua
 > showAcneProportions =
@@ -313,11 +240,11 @@ The programmer was asked to visualize the proportion of participants getting acn
 > showAcneProportions(jellyAnon)
 ```
 
-### What is the Bug?
+#### What is the Bug?
 
 The program supplies a table produced by `count` to `pieChart`, which also expects two column names of its input table. The table produced by `count` contains two column names, `"value"` and `"count"`. Neither of the supplied colum names, `"true"` and `"get acne"`, are valid.
 
-### A Corrected Program
+#### A Corrected Program
 
 ```lua
 > showAcneProportions =
@@ -327,18 +254,18 @@ The program supplies a table produced by `count` to `pieChart`, which also expec
 > showAcneProportions(jellyAnon)
 ```
 
-## employeeToDepartment
+### employeeToDepartment
 
-### Context
+#### Context
 
 - `employees`
 - `departments`
 
-### Task
+#### Task
 
 The programmer was given two tables, one maps employee names to department IDs, the other maps department IDs to department names. The programmer was asked to define a function, `employeeToDepartment` that consumes the two tables and looks up the a department name that an employee belongs to.
 
-### A Buggy Program
+#### A Buggy Program
 
 ```lua
 > lastNameToDeptId =
@@ -360,11 +287,11 @@ The programmer was given two tables, one maps employee names to department IDs, 
     end
 ```
 
-### What is the Bug?
+#### What is the Bug?
 
 There are several problems in this program. First, `employeeToDepartment` is expected to return a department name, but it returns a table. Another problem is that the helper function is named `lastNameToDeptId`. The name suggests that this function maps the employee names to department IDs. But in `employeeToDepartment`, `lastNameToDeptId` is expected to produce department names. Finally, `deptTab`, the first parameter of `lastNameToDeptId`, has a name suggesting that it is bound to a department table. `lastNameToDeptId` uses `deptTab` as an employee table.
 
-### A Corrected Prgram
+#### A Corrected Prgram
 
 ```lua
 > deptIdToDeptName =
@@ -390,17 +317,17 @@ There are several problems in this program. First, `employeeToDepartment` is exp
     end
 ```
 
-## brownGetAcne
+### brownGetAcne
 
-### Context
+#### Context
 
 `jellyNamed`
 
-### Task
+#### Task
 
 The programmer was asked to compute how many participants consumed brown jelly beans and got acne, and how many did not.
 
-### A Buggy Program
+#### A Buggy Program
 
 ```lua
 > brownAndGetAcne =
@@ -412,11 +339,11 @@ The programmer was asked to compute how many participants consumed brown jelly b
 > count(brownAndGetAcneTable, "brown and get acne")
 ```
 
-### What is the Bug?
+#### What is the Bug?
 
 The built column was named inconsistently. In `buildColumn(...)`, the column was named `"part2"` but when `count`ed, the column was accessed with `"brown and get acne"`.
 
-### A Corrected Program
+#### A Corrected Program
 
 ```lua
 > brownAndGetAcne =
@@ -428,17 +355,17 @@ The built column was named inconsistently. In `buildColumn(...)`, the column was
 > count(brownAndGetAcneTable, "brown and get acne")
 ```
 
-## getOnlyRow
+### getOnlyRow
 
-### Context
+#### Context
 
 `students`
 
-### Task
+#### Task
 
 The programmer was asked to find Alice's favorite color.
 
-### A Buggy Program
+#### A Buggy Program
 
 ```lua
 > getValue(
@@ -451,11 +378,11 @@ The programmer was asked to find Alice's favorite color.
     "favorite color")
 ```
 
-### What is the Bug?
+#### What is the Bug?
 
 There is only one row that matches the filtering criteria. So the only valid index is `0`, not `1`.
 
-### A Corrected Program
+#### A Corrected Program
 
 ```lua
 > getValue(
@@ -468,17 +395,17 @@ There is only one row that matches the filtering criteria. So the only valid ind
     "favorite color")
 ```
 
-## favoriteColor
+### favoriteColor
 
-### Context
+#### Context
 
 `students`
 
-### Task
+#### Task
 
 The programmer was asked to define a function that finds all participants who like `"green"`.
 
-### A Buggy Program
+#### A Buggy Program
 
 ```lua
 > participantsLikeGreen =
@@ -490,11 +417,11 @@ The programmer was asked to define a function that finds all participants who li
     end
 ```
 
-### What is the Bug?
+#### What is the Bug?
 
 The programmer returns `getValue(r, "favorite color")` directly in the predicate but should return a boolean.
 
-### A Corrected Program
+#### A Corrected Program
 
 ```lua
 > participantsLikeGreen =
