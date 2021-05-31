@@ -523,7 +523,7 @@ Returns a `Seq` representing the column names in the `Table`.
 
 #### Description
 
-Extract a row out of a table by a numeric index. 
+Extracts a row out of a table by a numeric index.
 
 ```lua
 > getRow(students, 0)
@@ -549,9 +549,11 @@ Extract a row out of a table by a numeric index.
 
 #### Description
 
-Retrieve the value for the column `c` in the row `r`.
+Retrieves the value for the column `c` in the row `r`.
 
 ```lua
+> getValue([row: ("name", "Bob"),  ("age", 12)], "name")
+"Bob"
 > getValue([row: ("name", "Bob"),  ("age", 12)], "age")
 12
 ```
