@@ -69,7 +69,7 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(t)` is equal to `[]`
 - `nrows(t)` is equal to `0`
@@ -86,7 +86,7 @@ Create an empty table.
 
 * `schema(r)` is equal to `schema(t1)`
 
-__Ensures:__
+##### Ensures:
 
 * `schema(t2)` is equal to `schema(t1)`
 * `nrows(t2)` is equal to `nrows(t1) + 1`
@@ -129,7 +129,7 @@ Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows 
 
 * for all `r` in `rs`, `schema(r)` is equal to `schema(t1)`
 
-__Ensures:__
+##### Ensures:
 
 * `schema(t2)` is equal to `schema(t1)`
 * `nrows(t2)` is equal to `nrows(t1) + length(rs)`
@@ -169,7 +169,7 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
 - `c` is not in `header(t1)`
 - `length(vs)` is equal to `nrows(t1)`
 
-__Ensures:__
+##### Ensures:
 
 - `header(t2)` is equal to `concat(header(t1), [c])`
 - for all `c'` in `header(t2)`
@@ -206,7 +206,7 @@ Consumes a column name and a `Seq` of values and produces a new `Table` with the
 
 - `c` is not in `header(t1)`
 
-__Ensures:__
+##### Ensures:
 
 - `schema(r)` is equal to `schema(t1)`
 - `header(t2)` is equal to `concat(header(t1), [c])`
@@ -250,7 +250,7 @@ Consumes an existing `Table` and produces a new `Table` containing an additional
 
 - `schema(t1)` is equal to `schema(t2)`
 
-__Ensures:__
+##### Ensures:
 
 - `schema(t3)` is equal to `schema(t1)`
 - `nrows(t3)` is equal to `nrows(t1) + nrows(t2)`
@@ -303,7 +303,7 @@ Combines two tables vertically. The output table starts with rows from the first
 - `concat(header(t1), header(t2))` has no duplicates
 - `nrows(t1)` is equal to `nrows(t2)`
 
-__Ensures:__
+##### Ensures:
 
 - `schema(t3)` is equal to `concat(schema(t1), schema(t2))`
 - `nrows(t3)` is equal to `nrows(t1)`
@@ -336,7 +336,7 @@ Combines two tables horizontally. The output table starts with columns from the 
 - for all `r1` and `r2` in `rs`, `schema(r1)` is equal to `schema(r2)`
 - `length(rs)` is positive
 
-__Ensures:__
+##### Ensures:
 
 - for all `r` in `rs`, `schema(t)` is equal to `schema(r)`
 - `nrows(t)` is equal to `length(rs)`
@@ -370,7 +370,7 @@ Returns a sequence of one or more rows as a table.
 
 - `concat(header(t1), header(t2))` has no duplicate
 
-__Ensures:__
+##### Ensures:
 
 - `schema(t3)` is equal to `concat(schema(t1), schema(t2))`
 - `nrows(t3)` is equal to `nrows(t1) * nrows(t2)`
@@ -412,7 +412,7 @@ Computes the cartesian product of two tables.
 - for all `c` in `cs`, `schema(t1)[c]` is equal to `schema(t2)[c]`
 - `concat(header(t1), removeAll(header(t2), cs))` has no duplicates
 
-__Ensures:__
+##### Ensures:
 
 - `header(t3)` is equal to `concat(header(t1), removeAll(header(t2), cs))`
 - for all `c` in `header(t3)`
@@ -450,7 +450,7 @@ Looks up more information on rows of the first table and add those information t
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 * `n` is equal to `nrows(t)`
 
@@ -471,7 +471,7 @@ Returns a `Number` representing the number of rows in the `Table`.
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 * `n` is equal to `ncols(t)`
 
@@ -492,7 +492,7 @@ Returns a `Number` representing the number of columns in the `Table`.
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 * `cs` is equal to `header(t)`
 
@@ -517,7 +517,7 @@ Returns a `Seq` representing the column names in the `Table`.
 
 * `n` is in `range(nrows(t))`
 
-__Ensures:__
+##### Ensures:
 
 * `r` is equal to `getRow(t, n)`
 
@@ -543,7 +543,7 @@ Extract a row out of a table by a numeric index.
 
 * `c` is in header(r)
 
-__Ensures:__
+##### Ensures:
 
 * `v` is a `schema(r)[c]`
 
@@ -564,7 +564,7 @@ Retrieve the value for the column `c` in the row `r`.
 
 * `n` is in `range(ncols(t))`
 
-__Ensures:__
+##### Ensures:
 
 * for all `v` in `vs`, `v` is a `schema(t)[header(t)[n]]`
 
@@ -587,7 +587,7 @@ Returns a `Seq` of the values in the indexed column in `t`.
 
 * `c` is in `header(t)`
 
-__Ensures:__
+##### Ensures:
 
 * for all `v` in `vs`, `v` is a `schema(t)[c]`
 
@@ -612,7 +612,7 @@ Returns a `Seq` of the values in the named column in `t`.
 
 * for all `n` in `selector`, `n` is in `range(nrows(t1))`
 
-__Ensures:__
+##### Ensures:
 
 * `schema(t2)` is equal to `schema(t1)`
 * `nrows(t2)` is equal to `length(selector)`
@@ -644,7 +644,7 @@ Given a `Table` and a `Seq<Number>` containing row indices, and produces a new `
 
 * `length(selector)` is equal to `nrows(t1)`
 
-__Ensures:__
+##### Ensures:
 
 * `schema(t2)` is equal to `schema(t1)`
 * `nrows(t2)` is not greater than `nrows(t1)`
@@ -673,7 +673,7 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 
 * `length(selector)` is equal to `ncols(t1)`
 
-__Ensures:__
+##### Ensures:
 
 * `header(t2)` is a subsequence of `header(t1)`
 * for all `i` in `range(ncols(t1))`, `header(t1)[i]` in `header(t2)` if and only if `selector[i]` is equal to `true`
@@ -707,7 +707,7 @@ Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be k
 * `selector` has no duplicates
 * for all `n` in `selector`, `n` is in `range(ncols(t1))`
 
-__Ensures:__
+##### Ensures:
 
 * `length(header(t2))` is equal to `length(selector)`
 * for all `i` in `range(length(selector))`, `header(t2)[i]` is equal to `header(t1)[selector[i]]`
@@ -742,7 +742,7 @@ Consumes a `Table` and a `Seq<Number>` containing column indices, and produces a
 * `selector` has no duplicates
 * for all `c` in `selector`, `c` is in `header(t1)`
 
-__Ensures:__
+##### Ensures:
 
 * `header(t2)` is equal to `cs` 
 * `schema(t2)` is included in `schema(t2)`
@@ -775,7 +775,7 @@ Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a 
 - if `n` is non-negative then `n` is not greater than `nrows(t1)`
 - if `n` is negative then `- n` is not greater than `nrows(t1)`
 
-__Ensures:__
+##### Ensures:
 
 - `schema(t2)` is equal to `schema(t1)`
 - if `n` is non-negative then `nrows(t2)` is equal to `n`
@@ -793,7 +793,7 @@ This function returns the first `n` rows of the table based on position. It is u
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(t2)` is equal to `schema(t1)`
 - `nrows(t2)` is equal to `0`
@@ -817,7 +817,7 @@ Remove all rows but keep the schema.
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(t2)` is equal to `schema(t1)`
 - `ncols(t2)` is equal to `ncols(t1)`
@@ -851,7 +851,7 @@ Retain only unique/distinct rows from an input `Table`.
 
 - `c` in `header(t1)`
 
-__Ensures:__
+##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
 - `ncols(t2)` is equal to `ncols(t1) - 1`
@@ -888,7 +888,7 @@ Returns a `Table` that is the same as `t`, except without the column whose name 
 - for all `c` in `cs`, `c` is in `header(t1)`
 - `cs` has no duplicates
 
-__Ensures:__
+##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
 - `ncols(t2)` is equal to `ncols(t1) - length(cs)`
@@ -922,7 +922,7 @@ Returns a `Table` that is the same as `t`, except without the columns whose name
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 * `schema(r)` is equal to `schema(t1)`
 * `schema(t2)` is equal to `schema(t1)`
@@ -965,7 +965,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 - `c` is in `header(t1)`
 - `schema(t1)[c]` is `Number`
 
-__Ensures:__
+##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
 - `ncols(t2)` is equal to `ncols(t1)`
@@ -1002,7 +1002,7 @@ Given a `Table` and the name of a column in that `Table`, return a `Table` with 
 - `cs` has no duplicates
 - `schema(t1)[c]` is `Number`
 
-__Ensures:__
+##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
 - `ncols(t2)` is equal to `ncols(t1)`
@@ -1033,7 +1033,7 @@ Given a `Table` and a sequence of column names in that `Table`, return a `Table`
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(r)` is equal to `schema(t1)`
 - `schema(t2)` is equal to `schema(t1)`
@@ -1086,7 +1086,7 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
 - Either 
   - `schema(t1)[c]` is categorical
 
-__Ensures:__
+##### Ensures:
 
 - `header(t2)` is equal to `["value", "count"]`
 - `schema(t2)["value"]` is equal to `schema(t1)[c]`
@@ -1120,7 +1120,7 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 - `c` is in `header(t1)`
 - `schema(t1)[c]` is `Number`
 
-__Ensures:__
+##### Ensures:
 
 - `header(t2)` is equal to `["group", "count"]`
 - `schema(t2)["group"]` is `String`
@@ -1157,7 +1157,7 @@ Let's name each component of each element of `aggs` as `c_i1` and `c_i2` and `f_
 - `c_i2` is in `header(t1)`
 - `concat(cs, [c_11, ... , c_n1])` has no duplicates
 
-__Ensures:__
+##### Ensures:
 
 - `f_i` will receive a `Seq<T_i>`, where `T_i` is equal to `schema(t1)[c_i2]`
 - `header(t2)` is equal to `concat(cs, [c_11, ... , c_n1])`
@@ -1201,7 +1201,7 @@ Partition rows into groups and summarize each group with the functions in `agg`.
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(r1)` is equal to `schema(t1)`
 - `schema(r2)` is equal to `schema(t1)`
@@ -1268,7 +1268,7 @@ Groups the rows of a table according to a specified key selector function and cr
 * for all `c` in `header(r2)`, `c` is in `header(t1)`
 * for all `c` in `header(r2)`, `schema(r2)[c]` is `schema(t1)[c]`
 
-__Ensures:__
+##### Ensures:
 
 * `schema(r1)` is equal to `schema(t1)`
 * `schema(t2)` is equal to `schema(t1)`
@@ -1315,7 +1315,7 @@ Consumes an existing `Table` and produces a new `Table` with the named columns u
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(r1)` is equal to `schema(t1)`
 - `n` is in `range(nrows(t1))`
@@ -1360,7 +1360,7 @@ Projects each `Row` of a `Table` into a new `Table`.
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(r1)` is equal to `schema(t1)`
 - `n` is in `range(nrows(t1))`
@@ -1421,7 +1421,7 @@ Projects each row of a table to a new table, flattens the resulting tables into 
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(r1)` == `schema(t1)`
 - `schema(r2)` == `schema(t2)`
@@ -1462,7 +1462,7 @@ Correlates the rows of two tables based on equality of keys and groups the resul
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(r1)` == `schema(t1)`
 - `schema(r2)` == `schema(t2)`
@@ -1504,7 +1504,7 @@ Correlates the rows of two tables based on matching keys.
 
 - `c` is in `header(t)`
 
-__Ensures:__
+##### Ensures:
 
 - `length(bs)` is equal to `nrows(t)`
 
@@ -1525,7 +1525,7 @@ Return a `Seq<Boolean>` with `true` entries indicating rows without missing valu
 
 ##### Requires:
 
-__Ensures:__
+##### Ensures:
 
 - `schema(t2)` is equal to `schema(t1)`
 
@@ -1553,7 +1553,7 @@ Remove rows that have some values missing
 - `c` is in `header(t1)`
 - `v` is a `schema(t1)[c]`
 
-__Ensures:__
+##### Ensures:
 
 - `schema(t2)` is equal to `schema(t1)`
 - `nrows(t2)` is equal to `nrows(t1)`
@@ -1592,7 +1592,7 @@ Scan the named column and when a cell is missing value, fill in `v`.
 - `c2` is not in `header(t1)`
 - for all `c`, `schema(t1)[c]` is equal to `schema(t1)[cs[0]]`
 
-__Ensures:__
+##### Ensures:
 
 [TODO: the description is non-structural]
 
@@ -1642,7 +1642,7 @@ Reshape the input table and make it longer. The data kept in the named columns a
 - `schema(t1)[c1]` is `ColName`
 - for all `c` in `removeDuplicates(getColumn(t1, c1))`, `c` is not in `header(t1)`
 
-__Ensures:__
+##### Ensures:
 
 - `header(t2)` is equal to `header(t1)` with `c1` and `c2` removed then concatenated with `removeDuplicates(getColumn(t1, c1))`
 - for all `c` in `header(t2)`, if `c` in `header(t1)` then `schema(t2)[c]` is equal to `schema(t1)[c]`
@@ -1705,7 +1705,7 @@ The inverse of `pivotLonger`.
 - for all `c` in `cs`, for some type `T`, `schema(t1)[c]` is equal to `Seq<T>`
 - for all `i` in `range(nrows(t1))`, for all `c1` and `c2` in `cs`, `length(getValue(getRow(t1, i), c1))` is equal to `length(getValue(getRow(t1, i), c1))`
 
-__Ensures:__
+##### Ensures:
 
 [TODO: elementTypeOf]
 
@@ -1772,7 +1772,7 @@ When columns `cs` of table `t` have sequences, return a `Table` where each eleme
 
 * `c` is in `header(t1)`
 
-__Ensures:__
+##### Ensures:
 
 * `v1` is a `schema(t1)[c]`
 * `header(t2)` is equal to `header(t1)`
@@ -1822,7 +1822,7 @@ Let `n` be the length of `ccs` Let `c11 ... c1n` be the first components of the 
 - `[c1i ... c1n]` has no duplicate
 - `header(t1)` with all `c1i` replaced with the `c2i` has no duplicate
 
-__Ensures:__
+##### Ensures:
 
 - `header(t2)` is equal to `header(t1)` with all `c1i` replaced with `c2i`
 - for all `c` in `header(t2)`,
@@ -1858,7 +1858,7 @@ Update column names. Each element of `ccs` specifies the old name and the new na
 - for all `c` in `header(r)`, `c` is in `header(t)`
 - for all `c` in `header(r)`, `schema(r)[c]` is equal to `schema(t)[c]`
 
-__Ensures:__
+##### Ensures:
 
 - either `n` is equal to `error("not found")` or `n` is in `range(nrows(t))`
 
