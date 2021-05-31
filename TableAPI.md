@@ -18,6 +18,7 @@ Operators are collected from the following resources:
 - [R dplyr cheatsheets](https://github.com/rstudio/cheatsheets/blob/master/data-transformation.pdf)
 - [R tibbles](https://adv-r.hadley.nz/vectors-chap.html#tibble)
 - [R Tidy data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
+- [Julia DataFrames](https://dataframes.juliadata.org/stable/lib/functions/)
 - [LINQ](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/query-expression-syntax-for-standard-query-operators)
 - [MySQL](https://dev.mysql.com/doc/refman/8.0/en/sql-data-manipulation-statements.html)
 - [PostgreSQL](https://www.postgresql.org/docs/current/dml.html)
