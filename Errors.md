@@ -6,10 +6,6 @@ These examples are adapted from student code collected in CS111 at Brown Univers
 
 ## missingSchema
 
-### Task
-
-The programmer was asked to write a table constant representing the `students` table.
-
 ### A Buggy Program
 
 ```lua
@@ -34,10 +30,6 @@ This malformed table misses the schema.
 ```
 
 ## missingRow
-
-### Task
-
-The programmer was asked to write a table constant representing the `students` table.
 
 ### A Buggy Program
 
@@ -67,10 +59,6 @@ This malformed table misses the content of the last row. (*Note:* this error is 
 
 ## missingCell
 
-### Task
-
-The programmer was asked to write a table constant representing the `students` table.
-
 ### A Buggy Program
 
 ```lua
@@ -98,10 +86,6 @@ The first row of this malformed table misses a cell.
 ```
 
 ## swappedColumns
-
-### Task
-
-The programmer was asked to write a table constant representing the `students` table.
 
 ### A Buggy Program
 
@@ -131,10 +115,6 @@ The rows disagree with the schema on the ordering of the first two columns.
 
 ## schemaTooShort
 
-### Task
-
-The programmer was asked to write a table constant representing the `students` table.
-
 ### A Buggy Program
 
 ```lua
@@ -162,10 +142,6 @@ The schema specifies that there are two columns. But the rows have three columns
 ```
 
 ## schemaTooLong
-
-### Task
-
-The programmer was asked to write a table constant representing the `students` table.
 .
 ### A Buggy Program
 
