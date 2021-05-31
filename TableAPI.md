@@ -1261,7 +1261,7 @@ Groups the rows of a table according to a specified key selector function and cr
 ##### Requires:
 
 - for all `c` in `header(r2)`, `c` is in `header(t1)`
-- for all `c` in `header(r2)`, `schema(r2)[c]` is `schema(t1)[c]`
+- for all `c` in `header(r2)`, `schema(r2)[c]` is equal to `schema(t1)[c]`
 
 ##### Ensures:
 
@@ -1326,15 +1326,15 @@ Projects each `Row` of a `Table` into a new `Table`.
     students,
     function(r, n):
       [row: 
-        ("id", n),
+        ("ID", n),
         ("COLOR", getValue(r, "favorite color")),
         ("AGE", getValue(r, "age"))]
     end)
-| id  | favorite color | age |
-| --- | -------------- | --- |
-| 0   | "blue"         | 12  |
-| 1   | "green"        | 17  |
-| 2   | "red"          | 13  |
+| ID | COLOR   | AGE |
+| -- | ------- | --- |
+| 0  | "blue"  | 12  |
+| 1  | "green" | 17  |
+| 2  | "red"   | 13  |
 > select(
     gradebook,
     function(r, n):
@@ -1366,8 +1366,6 @@ Projects each `Row` of a `Table` into a new `Table`.
 #### Description
 
 Projects each row of a table to a new table, flattens the resulting tables into one table, and invokes a result selector function on each row therein. The index of each source row is used in the intermediate projected form of that row.
-
-[TODO: this code only makes sense when `Row <: Table` because I used a row as a table and because of selectColumn]
 
 ```lua
 > selectMany(
@@ -1431,8 +1429,6 @@ Projects each row of a table to a new table, flattens the resulting tables into 
 Correlates the rows of two tables based on equality of keys and groups the results.
 
 [TODO: need one more example]
-
-[TODO: this code only makes sense when `Row <: Table` because of `addColumn`]
 
 ```lua
 > getName =
