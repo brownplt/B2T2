@@ -84,18 +84,19 @@ Create an empty table.
 
 __Requires:__
 
-* `c` is not in `header(t1)`
+- `c` is not in `header(t1)`
 
 __Ensures:__
 
-* `schema(r)` is equal to `schema(t1)`
-* `header(t2)` is equal to `concat(header(t1), [c])`
-* `v` is a `schema(t2)[c]`
-* for all `c` in `header(t1)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `schema(r)` is equal to `schema(t1)`
+- `header(t2)` is equal to `concat(header(t1), [c])`
+- for all `c'` in `header(t2)`
+  - if `c'` is equal to `c` then `schema(t2)[c']` is equal to `schema(t1)[c']`
+  - otherwise, `schema(t2)[c']` is equal to the sort of `v`
 
 #### Description
 
-Consumes an existing `Table` and produces a new `Table` containing an additional column with the given `ColName`, using `f` to produce the values for that column, once for each row.
+Consumes an existing `Table` and produces a new `Table` containing an additional column with the given `ColName`, using `f` to compute the values for that column, once for each row.
 
 ```lua
 > isTeenagerBuilder =
@@ -130,7 +131,6 @@ __Requires:__
 
 __Ensures:__
 
-* `header(t2)` is equal to `header(t1)`
 * `schema(t2)` is equal to `schema(t1)`
 * `nrows(t2)` is equal to `nrows(t1) + 1`
 
@@ -175,7 +175,6 @@ __Requires:__
 
 __Ensures:__
 
-* `header(t2)` is equal to `header(t1)`
 * `schema(t2)` is equal to `schema(t1)`
 * `nrows(t2)` is equal to `nrows(t1) + length(rs)`
 
@@ -603,7 +602,6 @@ __Requires:__
 
 __Ensures:__
 
-* `header(t2)` is equal to `header(t1)`
 * `schema(t2)` is equal to `schema(t1)`
 * `nrows(t2)` is equal to `length(selector)`
 
@@ -636,7 +634,6 @@ __Requires:__
 
 __Ensures:__
 
-* `header(t2)` is equal to `header(t1)`
 * `schema(t2)` is equal to `schema(t1)`
 * `nrows(t2)` is not greater than `nrows(t1)`
 
@@ -916,7 +913,6 @@ __Requires:__
 __Ensures:__
 
 * `schema(r)` is equal to `schema(t1)`
-* `header(t2)` is equal to `header(t1)`
 * `schema(t2)` is equal to `schema(t1)`
 * `nrows(t2)` is not greater than `nrows(t1)`
 
