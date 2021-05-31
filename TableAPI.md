@@ -770,7 +770,6 @@ __Requires:__
 
 __Ensures:__
 
-- `header(t2)` is equal to `header(t1)`
 - `schema(t2)` is equal to `schema(t1)`
 - if `n` is non-negative then `nrows(t2)` is equal to `n`
 - if `n` is negative then `nrows(t2)` is equal to `nrows(t1) + n`
@@ -813,7 +812,6 @@ __Requires:__
 
 __Ensures:__
 
-- `header(t2)` is equal to `header(t1)`
 - `schema(t2)` is equal to `schema(t1)`
 - `ncols(t2)` is equal to `ncols(t1)`
 - `nrows(t2)` is not greater than `nrowsr(t1)`
@@ -966,7 +964,6 @@ __Ensures:__
 
 - `nrows(t2)` is equal to `nrows(t1)`
 - `ncols(t2)` is equal to `ncols(t1)`
-- `header(t2)` is equal to `header(t1)`
 - `schema(t2)` is equal to `schema(t1)`
 - If `b` is equal to `true` then `getColumn(t2, c)` is in ascending order
 - If `b` is equal to `false` then `getColumn(t2, c)` is in descending order
@@ -1004,7 +1001,6 @@ __Ensures:__
 
 - `nrows(t2)` is equal to `nrows(t1)`
 - `ncols(t2)` is equal to `ncols(t1)`
-- `header(t2)` is equal to `header(t1)`
 - `schema(t2)` is equal to `schema(t1)`
 
 #### Description
