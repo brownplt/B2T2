@@ -377,9 +377,7 @@ __Ensures:__
 
 #### Description
 
-Compute the cartesian product of two tables.
-
-[TODO: need one more example]
+Computes the cartesian product of two tables.
 
 ```lua
 > petiteJelly = subTable(jellyAnon, [0, 1], [0, 1, 2])
@@ -397,6 +395,9 @@ Compute the cartesian product of two tables.
 | "Alice" | 17  | "green"        | true     | false | true  |
 | "Eve"   | 13  | "red"          | true     | false | false |
 | "Eve"   | 13  | "red"          | true     | false | true  |
+> crossJoin(emptyTable, petiteJelly)
+| get acne | red   | black |
+| -------- | ----- | ----- |
 ```
 
 ### `leftJoin :: t1:Table * t2:Table * cs:Table -> t3:Table`
@@ -414,10 +415,14 @@ __Requires:__
 __Ensures:__
 
 - `header(t3)` is equal to `concat(header(t1), removeAll(header(t2), cs))`
+- for all `c` in `header(t3)`
+  - if `c` in `header(t1)` then `schema(t3)[c]` is equal to `schema(t1)[c]`
+  - if `c` in `header(t2)` then `schema(t3)[c]` is equal to `schema(t2)[c]`
+- `nrows(t3)` is equal to `nrows(t1)`
 
 #### Description
 
-Look up more information on rows of the first table and add those information to create a new table. The named columns define the keys for looking up. If there is no corresponding row in `t2`, the extra column will be filled with empty cells.
+Looks up more information on rows of the first table and add those information to create a new table. The named columns define the keys for looking up. If there is no corresponding row in `t2`, the extra column will be filled with empty cells.
 
 ```lua
 > leftJoin(students, gradebook, ["name", "age"])
@@ -454,8 +459,8 @@ __Ensures:__
 Returns a `Number` representing the number of rows in the `Table`.
 
 ```lua
-> nrows(students)
-3
+> nrows(emptyTable)
+0
 > nrows(studentsMissing)
 3
 ```
