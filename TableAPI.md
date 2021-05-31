@@ -608,22 +608,22 @@ Returns a `Seq` of the values in the named column in `t`.
 
 ## Subtable
 
-### (overload 1/2) `selectRows :: t1:Table * selector:Seq<Number> -> t2:Table`
+### (overload 1/2) `selectRows :: t1:Table * ns:Seq<Number> -> t2:Table`
 
 #### Constraints
 
 ##### Requires:
 
-- for all `n` in `selector`, `n` is in `range(nrows(t1))`
+- for all `n` in `ns`, `n` is in `range(nrows(t1))`
 
 ##### Ensures:
 
 - `schema(t2)` is equal to `schema(t1)`
-- `nrows(t2)` is equal to `length(selector)`
+- `nrows(t2)` is equal to `length(ns)`
 
 #### Description
 
-Given a `Table` and a `Seq<Number>` containing row indices, and produces a new `Table` containing only those rows.
+Given a `Table` and a `Seq<Number>` containing row indices, produces a new `Table` containing only those rows.
 
 ```lua
 > selectRows(students, [2, 0, 2, 1])
@@ -640,18 +640,17 @@ Given a `Table` and a `Seq<Number>` containing row indices, and produces a new `
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
 ```
 
-### (overload 2/2) `selectRows :: t1:Table * selector:Seq<Boolean> -> t2:Table`
+### (overload 2/2) `selectRows :: t1:Table * bs:Seq<Boolean> -> t2:Table`
 
 #### Constraints
 
 ##### Requires:
 
-- `length(selector)` is equal to `nrows(t1)`
+- `length(bs)` is equal to `nrows(t1)`
 
 ##### Ensures:
 
 - `schema(t2)` is equal to `schema(t1)`
-- `nrows(t2)` is not greater than `nrows(t1)`
 
 #### Description
 
