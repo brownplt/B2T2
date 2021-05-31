@@ -169,7 +169,7 @@ The schema specifies that there are four columns. But the rows specifices that t
 | "Eve"   | 13     | "red"          |
 ```
 
-## typo
+## midFinal
 
 ### Context
 
@@ -197,7 +197,7 @@ contains a `"midterm"` column.
 > scatterPlot(gradebook, "midterm", "final")
 ```
 
-## distributiveLaws
+## blackAndWhite
 
 ### Context
 
@@ -234,7 +234,7 @@ invalid column `"black and white"` instead.
 > buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
 ```
 
-## scopeError
+## brownJellybeans
 
 ### Context
 
@@ -293,7 +293,7 @@ jelly bean of a given color.
 > countParticipants(jellyAnon, "brown")
 ```
 
-## computedTable
+## pieCount
 
 ### Context
 
@@ -327,7 +327,7 @@ The program supplies a table produced by `count` to `pieChart`, which also expec
 > showAcneProportions(jellyAnon)
 ```
 
-## manyBugs
+## employeeToDepartment
 
 ### Context
 
@@ -390,7 +390,7 @@ There are several problems in this program. First, `employeeToDepartment` is exp
     end
 ```
 
-## inconsistentNaming
+## brownGetAcne
 
 ### Context
 
@@ -428,7 +428,7 @@ The built column was named inconsistently. In `buildColumn(...)`, the column was
 > count(brownAndGetAcneTable, "brown and get acne")
 ```
 
-## invalidRowIndex
+## getOnlyRow
 
 ### Context
 
@@ -468,7 +468,7 @@ There is only one row that matches the filtering criteria. So the only valid ind
     "favorite color")
 ```
 
-## accessValues
+## favoriteColor
 
 ### Context
 
