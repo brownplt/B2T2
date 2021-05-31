@@ -55,7 +55,7 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 - `x` is (not) included in `y`
 - `x` is (not) in `y`
 - `x` is a subsequence of `y` (not changing order)
-- `x` is a `y`
+- `x` is of sort `y`
 - `x` is `y`
 - `x` is categorical
 - `x` is non-negative
@@ -545,7 +545,7 @@ Extracts a row out of a table by a numeric index.
 
 ##### Ensures:
 
-- `v` is a `schema(r)[c]`
+- `v` is of sort `schema(r)[c]`
 
 #### Description
 
@@ -569,7 +569,7 @@ Retrieves the value for the column `c` in the row `r`.
 ##### Ensures:
 
 - `length(vs)` is equal to `nrows(t)`
-- for all `v` in `vs`, `v` is a `schema(t)[header(t)[n]]`
+- for all `v` in `vs`, `v` is of sort `schema(t)[header(t)[n]]`
 
 #### Description
 
@@ -592,7 +592,8 @@ Returns a `Seq` of the values in the indexed column in `t`.
 
 ##### Ensures:
 
-- for all `v` in `vs`, `v` is a `schema(t)[c]`
+- for all `v` in `vs`, `v` is of sort `schema(t)[c]`
+- `length(vs)` is equal to `nrows(t)`
 
 #### Description
 
@@ -1554,7 +1555,7 @@ Remove rows that have some values missing
 ##### Requires:
 
 - `c` is in `header(t1)`
-- `v` is a `schema(t1)[c]`
+- `v` is of sort `schema(t1)[c]`
 
 ##### Ensures:
 
@@ -1777,10 +1778,10 @@ When columns `cs` of table `t` have sequences, return a `Table` where each eleme
 
 ##### Ensures:
 
-- `v1` is a `schema(t1)[c]`
+- `v1` is of sort `schema(t1)[c]`
 - `header(t2)` is equal to `header(t1)`
 - for all `c'` in `header(t1)`, if `c'` is not equal to `c` then `schema(t2)[c]` is equal to `schema(t1)[c]`
-- `v2` is a `schema(t2)[c]`
+- `v2` is of sort `schema(t2)[c]`
 
 #### Description
 
