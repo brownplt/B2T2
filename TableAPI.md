@@ -57,7 +57,7 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 - `x` is a subsequence of `y` (not changing order)
 - `x` is of sort `y`
 - `x` is `y`
-- `x` is categorical
+- `x` is a categorical sort
 - `x` is non-negative
 - `x` is negative
 
@@ -1080,8 +1080,7 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
 ##### Requires:
 
 - `c` is in `header(t1)`
-- Either 
-  - `schema(t1)[c]` is categorical
+- `schema(t1)[c]` is a categorical sort
 
 ##### Ensures:
 
@@ -1125,7 +1124,7 @@ Takes a `Table` and a `ColName` representing the name of a column in that `Table
 
 #### Description
 
-Group the values of a numeric column into bins. The parameter `n` specifies the bin width. This function is useful in creating histograms and converting continuous random variables to categorical ones.
+Groups the values of a numeric column into bins. The parameter `n` specifies the bin width. This function is useful in creating histograms and converting continuous random variables to categorical ones.
 
 ```lua
 > bin(students, "age", 5)
@@ -1141,32 +1140,33 @@ Group the values of a numeric column into bins. The parameter `n` specifies the 
 | "85 <= age < 90" | 2     |
 ```
 
-### `pivotTable :: t1:Table * cs:Seq<ColName> * agg:Seq<ColName * ColName * Function> -> t2:Table`
+### `pivotTable :: t1:Table * cs:Seq<ColName> * aggs:Seq<ColName * ColName * Function> -> t2:Table`
 
 #### Constraints
 
-Let's name each component of each element of `aggs` as `c_i1` and `c_i2` and `f_i` respectively. Let `n` be `length(agg)`
+Let `c_i1` and `c_i2` and `f_i` be the components of `aggs[i]` for all `i` in `range(length(aggs))`
 
 ##### Requires:
 
 - for all `c` in `cs`, `c` is in `header(t1)`
-- for all `c` in `cs`, `schema(t1)[c]` is categorical
+- for all `c` in `cs`, `schema(t1)[c]` is a categorical sort
 - `c_i2` is in `header(t1)`
 - `concat(cs, [c_11, ... , c_n1])` has no duplicates
 
 ##### Ensures:
 
-- `f_i` will receive a `Seq<T_i>`, where `T_i` is equal to `schema(t1)[c_i2]`
+- `f_i` consumes `Seq<schema(t1)[c_i2]>`
 - `header(t2)` is equal to `concat(cs, [c_11, ... , c_n1])`
-- for all `c` in `cs`, `schema(t2)[c]` is equal to `schema(t1)[c]`
-- `schema(t2)[c_i]` is equal to the output type of `f_i`
+- for all `c` in `header(t2)`,
+  - if `c` is in `cs` then `schema(t2)[c]` is equal to `schema(t1)[c]`
+  - if `c` is equal to `c_i1` then `schema(t2)[c]` is equal to the sort of outputs of `f_i`
 
 #### Description
 
-Partition rows into groups and summarize each group with the functions in `agg`. Each element of `agg` specifies the output column, the input column, and the function that compute the summarizing value (e.g. average, sum, and count).
+Partitions rows into groups and summarize each group with the functions in `agg`. Each element of `agg` specifies the output column, the input column, and the function that compute the summarizing value (e.g. average, sum, and count).
 
 ```lua
-> pivotTable(students, ["favorite color"], [("age", "age-average", average)])
+> pivotTable(students, ["favorite color"], [("age-average", "age", average)])
 | favorite color | age-average |
 | -------------- | ----------- |
 | "blue"         | 12          |
@@ -1181,8 +1181,8 @@ Partition rows into groups and summarize each group with the functions in `agg`.
     jellyNamed,
     ["brown", "get acne"],
     [
-      ("red", "red proportion", proportion),
-      ("red", "red proportion", proportion)
+      ("red proportion", "red", proportion),
+      ("red proportion", "red", proportion)
     ])
 | get acne | brown | red | pink |
 | -------- | ----- | --- | ---- |
@@ -1875,7 +1875,7 @@ error("not found")
 requires:
 
 - `c` is in `header(t1)`
-- `schema(t1)[c]` is categorical
+- `schema(t1)[c]` is a categorical sort
 
 ensures:
 
@@ -1928,7 +1928,7 @@ Categorize rows of the input table into groups by the key of each row. The key i
 requires:
 
 - `c` is in `header(t1)`
-- `schema(t1)[c]` is categorical
+- `schema(t1)[c]` is a categorical sort
 
 ensures:
 
