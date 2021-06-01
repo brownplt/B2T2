@@ -1238,7 +1238,7 @@ Consumes an existing `Table` and produces a new `Table` with the named columns u
 | "Eve"   | 13  | 7     | 9     | false   | 8     | 8     | false |
 ```
 
-### `select :: t1:Table * f:(r1:Row * n:Number -> r2:Row) -> t2:Table``
+### `select :: t1:Table * f:(r1:Row * n:Number -> r2:Row) -> t2:Table`
 
 #### Constraints
 
