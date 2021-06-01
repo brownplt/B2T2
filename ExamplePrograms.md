@@ -157,7 +157,7 @@ Ideally, this user-defined function should achieve the same type constraints as 
               getValue(r, c) == k
             end)
         end
-      buildColumn(keys, makeGroup)
+      buildColumn(keys, "groups", makeGroup)
     end
 ```
 
@@ -186,7 +186,7 @@ Ideally, this user-defined function should achieve the same type constraints as 
               end)
           dropColumn(g, c)
         end
-      buildColumn(keys, makeGroup)
+      buildColumn(keys, "groups", makeGroup)
     end
 ```
 

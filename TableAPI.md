@@ -1784,12 +1784,12 @@ Let `n` be the length of `ccs` Let `c11 ... c1n` be the first components of the 
 Updates column names. Each element of `ccs` specifies the old name and the new name.
 
 ```lua
-> renameColumns(students, [("favorite color", "preferred color"), ("name", "firstname")])
-| firstname | age | preferred color |
-| --------- | --- | --------------- |
-| "Bob"     | 12  | "blue"          |
-| "Alice"   | 17  | "green"         |
-| "Eve"     | 13  | "red"           |
+> renameColumns(students, [("favorite color", "preferred color"), ("name", "first name")])
+| first name | age | preferred color |
+| ---------- | --- | --------------- |
+| "Bob"      | 12  | "blue"          |
+| "Alice"    | 17  | "green"         |
+| "Eve"      | 13  | "red"           |
 > renameColumns(gradebook, [("midterm", "final"), ("final", "midterm")])
 | name    | age | quiz1 | quiz2 | final | quiz3 | quiz4 | midterm |
 | ------- | --- | ----- | ----- | ----- | ----- | ----- | ------- |
@@ -1833,19 +1833,19 @@ requires:
 
 ensures:
 
-- `header(t2)` is equal to `["key", "members"]`
+- `header(t2)` is equal to `["key", "groups"]`
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
-- `schema(t2)["members"]` is `Table`
+- `schema(t2)["groups"]` is `Table`
 - `getColumn(t2, "key")` has no duplicates
-- for all `t` in `getColumn(t2, "members")`, `schema(t)` is equal to `schema(t1)`
+- for all `t` in `getColumn(t2, "groups")`, `schema(t)` is equal to `schema(t1)`
 
 #### Description
 
-Categorize rows of the input table into groups by the key of each row. The key is computed by accessing the named column. 
+Categorizes rows of the input table into groups by the key of each row. The key is computed by accessing the named column. 
 
 ```lua
 > groupByRetentive(students, "favorite color")
-| key     | members                            |
+| key     | groups                             |
 | ------- | ---------------------------------- |
 | "blue"  | | name    | age | favorite color | |
 |         | | ------- | --- | -------------- | |
@@ -1857,7 +1857,7 @@ Categorize rows of the input table into groups by the key of each row. The key i
 |         | | ------- | --- | -------------- | |
 |         | | "Eve"   | 13  | "red"          | |
 > groupByRetentive(jellyAnon, "brown")
-| key   | members                                                                                 |
+| key   | groups                                                                                  |
 | ----- | --------------------------------------------------------------------------------------- |
 | true  | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ | |
@@ -1886,12 +1886,12 @@ requires:
 
 ensures:
 
-- `header(t2)` is equal to `["key", "members"]`
+- `header(t2)` is equal to `["key", "groups"]`
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
-- `schema(t2)["members"]` is `Table`
+- `schema(t2)["groups"]` is `Table`
 - `getColumn(t2, "key")` has no duplicates
-- for all `t` in `getColumn(t2, "members")`, `header(t)` is equal to `removeAll(header(t1), [c])`
-- for all `t` in `getColumn(t2, "members")`, `schema(t)` is included in `schema(t1)`
+- for all `t` in `getColumn(t2, "groups")`, `header(t)` is equal to `removeAll(header(t1), [c])`
+- for all `t` in `getColumn(t2, "groups")`, `schema(t)` is a subsequence of `schema(t1)`
 
 #### Description
 
@@ -1899,7 +1899,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 
 ```lua
 > groupBySubtractive(students, "favorite color")
-| key     | members           |
+| key     | groups            |
 | ------- | ----------------- |
 | "blue"  | | name    | age | |
 |         | | ------- | --- | |
@@ -1911,7 +1911,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 |         | | ------- | --- | |
 |         | | "Eve"   | 13  | |
 > groupBySubtractive(jellyAnon, "brown")
-| key   | members                                                                         |
+| key   | groups                                                                          |
 | ----- | ------------------------------------------------------------------------------- |
 | true  | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ | |
