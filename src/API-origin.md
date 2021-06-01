@@ -134,12 +134,6 @@ In R, `colnames(t)`
 - In R, `mutate`. The updated column names are given as argument names so they are taken literally. If a column name is not in `t1`, a new column will be added.
 - In SQL, `UPDATE`
 
-## `addRow :: t1:Table * r:Row -> t2:Table`
-
-### Origins
-
-* In CS111 Pyret, `add-row(t1,r)`
-
 ## `addRows :: t1:Table * r:Row -> t2:Table`
 
 ### Origins

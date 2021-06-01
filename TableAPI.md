@@ -78,49 +78,6 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 
 Create an empty table.
 
-### `addRow :: t1:Table * r:Row -> t2:Table` [TODO: maybe delete? See `addRows`]
-
-#### Constraints
-
-##### Requires:
-
-- `schema(r)` is equal to `schema(t1)`
-
-##### Ensures:
-
-- `schema(t2)` is equal to `schema(t1)`
-- `nrows(t2)` is equal to `nrows(t1) + 1`
-
-#### Description
-
-Consumes a `Table` and a `Row` to add, and produces a new `Table` with the rows from the original table followed by the given `Row`.
-
-```lua
-> addRow(
-    students,
-    [row: 
-      ("name", "Colton"), ("age", 19),
-      ("favorite color", "blue")])
-| name     | age | favorite color |
-| -------- | --- | -------------- |
-| "Bob"    | 12  | "blue"         |
-| "Alice"  | 17  | "green"        |
-| "Eve"    | 13  | "red"          |
-| "Colton" | 19  | "blue"         |
-> addRow(
-    gradebook,
-    [row:
-      ("name", "Colton"), ("age", 19),
-      ("quiz1", 8), ("quiz2", 9), ("midterm", 73),
-      ("quiz3", 7), ("quiz4", 9), ("final", 64)])
-| name     | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-| -------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-| "Bob"    | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
-| "Alice"  | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
-| "Eve"    | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
-| "Colton" | 19  | 8     | 9     | 73      | 7     | 9     | 64    |
-```
-
 ### `addRows :: t1:Table * rs:Seq<Row> -> t2:Table`
 
 #### Constraints
@@ -799,30 +756,6 @@ Returns the first `n` rows of the table based on position. For negative values o
 | "Bob"   | 12  | "blue"         |
 ```
 
-### `empty :: t1:Table -> t2:Table` [TODO: maybe delete? See `head`]
-
-#### Constraints:
-
-##### Requires:
-
-##### Ensures:
-
-- `schema(t2)` is equal to `schema(t1)`
-- `nrows(t2)` is equal to `0`
-
-#### Description
-
-Remove all rows but keep the schema.
-
-```lua
-> empty(students)
-| name | age | favorite color |
-| ---- | --- | -------------- |
-> empty(gradebook)
-| name | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-| ---- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-```
-
 ### `distinct :: t1:Table -> t2:Table`
 
 #### Constraints
@@ -1374,7 +1307,7 @@ Projects each row of a table to a new table, flattens the resulting tables into 
       if even(n):
         r
       else:
-        empty(r)
+        head(r, 0)
       end
     end,
     function(r1, r2):
@@ -1389,7 +1322,7 @@ Projects each row of a table to a new table, flattens the resulting tables into 
       if n == 0:
         r
       else:
-        addRow(repeatRow(r, n - 1), r)
+        addRows(repeatRow(r, n - 1), [r])
       end
     end
 > selectMany(
