@@ -1186,259 +1186,6 @@ Groups the rows of a table according to a specified key selector function and cr
 | "teenager" | 81      |
 ```
 
-## Higher-order operators
-
-### `update :: t1:Table * f:(r1:Row -> r2:Value) -> t2:Table`
-
-#### Constraints
-
-##### Requires:
-
-- for all `c` in `header(r2)`, `c` is in `header(t1)`
-- for all `c` in `header(r2)`, `schema(r2)[c]` is equal to `schema(t1)[c]`
-
-##### Ensures:
-
-- `schema(r1)` is equal to `schema(t1)`
-- `schema(t2)` is equal to `schema(t1)`
-- `nrows(t2)` is equal to `nrows(t1)`
-
-#### Description
-
-Consumes an existing `Table` and produces a new `Table` with the named columns updated, using `f` to produce the values for those columns, once for each row.
-
-```lua
-> abstractAge =
-    function(r):
-      if (getValue(r, "age") <= 12):
-        [row: ("age", "kid")]
-      else if (getValue(r, "age") <= 19):
-        [row: ("age", "teenager")]
-      else:
-        [row: ("age", "adult")]
-      end
-    end
-> update(students, abstractAge)
-| name    | age        | favorite color |
-| ------- | ---------- | -------------- |
-| "Bob"   | "kid"      | "blue"         |
-| "Alice" | "teenager" | "green"        |
-| "Eve"   | "teenager" | "red"          |
-> abstractFinal =
-    function(r):
-      [row:
-        ("midterm", 85 <= getValue(r, "midterm"))
-        ("final", 85 <= getValue(r, "final"))]
-    end
-> update(gradebook, didWellInFinal)
-| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
-| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-| "Bob"   | 12  | 8     | 9     | false   | 7     | 9     | true  |
-| "Alice" | 17  | 6     | 8     | true    | 8     | 7     | true  |
-| "Eve"   | 13  | 7     | 9     | false   | 8     | 8     | false |
-```
-
-### `select :: t1:Table * f:(r1:Row * n:Number -> r2:Row) -> t2:Table``
-
-#### Constraints
-
-##### Requires:
-
-##### Ensures:
-
-- `schema(r1)` is equal to `schema(t1)`
-- `n` is in `range(nrows(t1))`
-- `schema(t2)` is equal to `schema(r2)`
-- `nrows(t2)` is equal to `nrows(t1)`
-
-#### Description
-
-Projects each `Row` of a `Table` into a new `Table`.
-
-```lua
-> select(
-    students,
-    function(r, n):
-      [row: 
-        ("ID", n),
-        ("COLOR", getValue(r, "favorite color")),
-        ("AGE", getValue(r, "age"))]
-    end)
-| ID | COLOR   | AGE |
-| -- | ------- | --- |
-| 0  | "blue"  | 12  |
-| 1  | "green" | 17  |
-| 2  | "red"   | 13  |
-> select(
-    gradebook,
-    function(r, n):
-      [row: 
-        ("full name", concat(getValue(r, "name"), "Smith")),
-        ("(midterm + final) / 2", (getValue(r, "midterm") + getValue(r, "final")) / 2]
-    end)
-| full name     | (miderm + final) / 2 |
-| ------------- | -------------------- |
-| "Bob Smith"   | 82                   |
-| "Alice Smith" | 86.5                 |
-| "Eve Smith"   | 80.5                 |
-```
-
-### `selectMany :: t1:Table * project:(r1:Row * n:Number -> t2:Table) * result:(r2:Row * r3:Row -> r4:Row) -> t2:Table`
-
-#### Constraints
-
-##### Requires:
-
-##### Ensures:
-
-- `schema(r1)` is equal to `schema(t1)`
-- `n` is in `range(nrows(t1))`
-- `schema(r2)` is equal to `schema(t1)`
-- `schema(r3)` is equal to `schema(t2)`
-- `schema(t2)` is equal to `schema(r4)`
-
-#### Description
-
-Projects each row of a table to a new table, flattens the resulting tables into one table, and invokes a result selector function on each row therein. The index of each source row is used in the intermediate projected form of that row.
-
-```lua
-> selectMany(
-    students,
-    function(r, n):
-      if even(n):
-        r
-      else:
-        head(r, 0)
-      end
-    end,
-    function(r1, r2):
-      r2
-    end)
-| name  | age | favorite color |
-| ----- | --- | -------------- |
-| "Bob" | 12  | "blue"         |
-| "Eve" | 13  | "red"          |
-> repeatRow =
-    function(r, n):
-      if n == 0:
-        r
-      else:
-        addRows(repeatRow(r, n - 1), [r])
-      end
-    end
-> selectMany(
-    gradebook,
-    repeatRow,
-    function(r1, r2):
-      selectColumns(r2, ["midterm"])
-    end)
-| midterm |
-| ------- |
-| 77      |
-| 88      |
-| 88      |
-| 84      |
-| 84      |
-| 84      |
-```
-
-### `groupJoin<K> :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:K) * getKey2:(r2:Row -> k2:K) * aggregate:(r3:Row * t3:Table -> r4:Row) -> t4:Table`
-
-#### Constraints
-
-##### Requires:
-
-##### Ensures:
-
-- `schema(r1)` is equal to `schema(t1)`
-- `schema(r2)` is equal to `schema(t2)`
-- `schema(r3)` is equal to `schema(t1)`
-- `schema(t3)` is equal to `schema(t2)`
-- `schema(t4)` is equal to `schema(r4)`
-- `nrows(t4)` is equal to `nrows(t1)`
-
-#### Description
-
-Correlates the rows of two tables based on equality of keys and groups the results.
-
-```lua
-> getName =
-    function(r):
-      getValue(r, "name")
-    end
-> averageFinal =
-    function(r, t):
-      addColumn(r, "final", [average(getColumn(t, "final"))])
-    end
-> groupJoin(students, gradebook, getName, getName, averageFinal)
-| name    | age | favorite color | final |
-| ------- | --- | -------------- | ----- |
-| "Bob"   | 12  | "blue"         | 87    |
-| "Alice" | 17  | "green"        | 85    |
-| "Eve"   | 13  | "red"          | 77    |
-> nameLength =
-    function(r):
-      length(getValue(r, "name"))
-    end
-> tableNRows =
-    function(r, t):
-      addColumn(r, "nrows", [nrows(t)])
-    end
-> groupJoin(students, gradebook, nameLength, nameLength, tableNRows)
-| name    | age | favorite color | nrows |
-| ------- | --- | -------------- | ----- |
-| "Bob"   | 12  | "blue"         | 2     |
-| "Alice" | 17  | "green"        | 1     |
-| "Eve"   | 13  | "red"          | 2     |
-```
-
-### `join<K> :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:K) * getKey2:(r2:Row -> k2:K) * combine:(r3:Row * r4:Row -> r5:Row) -> t3:Table`
-
-#### Constraints
-
-##### Requires:
-
-##### Ensures:
-
-- `schema(r1)` is equal to `schema(t1)`
-- `schema(r2)` is equal to `schema(t2)`
-- `schema(r3)` is equal to `schema(t1)`
-- `schema(r4)` is equal to `schema(t2)`
-- `schema(t3)` is equal to `schema(r5)`
-
-#### Description
-
-Correlates the rows of two tables based on matching keys.
-
-```lua
-> getName =
-    function(r):
-      getValue(r, "name")
-    end
-> addGradeColumn =
-    function(r1, r2):
-      addColumn(r1, "grade", getValue(r2, "final"))
-    end
-> join(students, gradebook, getName, getName, addGradeColumn)
-| name    | age | favorite color | grade |
-| ------- | --- | -------------- | ----- |
-| "Bob"   | 12  | "blue"         | 87    |
-| "Alice" | 17  | "green"        | 85    |
-| "Eve"   | 13  | "red"          | 77    |
-> nameLength =
-    function(r):
-      length(getValue(r, "name"))
-    end
-> join(students, gradebook, nameLength, nameLength, addGradeColumn)
-| name    | age | favorite color | grade |
-| ------- | --- | -------------- | ----- |
-| "Bob"   | 12  | "blue"         | 87    |
-| "Bob"   | 12  | "blue"         | 77    |
-| "Alice" | 17  | "green"        | 85    |
-| "Eve"   | 13  | "red"          | 87    |
-| "Eve"   | 13  | "red"          | 77    |
-```
-
 ## Missing values
 
 ### `completeCases :: t:Table * c:ColName -> bs:Seq<Boolean>`
@@ -1934,3 +1681,253 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 |       | | false    | true  | false | false | false | true   | false  | true  | false  | |
 ```
 
+### `update :: t1:Table * f:(r1:Row -> r2:Value) -> t2:Table`
+
+#### Constraints
+
+##### Requires:
+
+- for all `c` in `header(r2)`, `c` is in `header(t1)`
+- for all `c` in `header(r2)`, `schema(r2)[c]` is equal to `schema(t1)[c]`
+
+##### Ensures:
+
+- `schema(r1)` is equal to `schema(t1)`
+- `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `nrows(t1)`
+
+#### Description
+
+Consumes an existing `Table` and produces a new `Table` with the named columns updated, using `f` to produce the values for those columns, once for each row.
+
+```lua
+> abstractAge =
+    function(r):
+      if (getValue(r, "age") <= 12):
+        [row: ("age", "kid")]
+      else if (getValue(r, "age") <= 19):
+        [row: ("age", "teenager")]
+      else:
+        [row: ("age", "adult")]
+      end
+    end
+> update(students, abstractAge)
+| name    | age        | favorite color |
+| ------- | ---------- | -------------- |
+| "Bob"   | "kid"      | "blue"         |
+| "Alice" | "teenager" | "green"        |
+| "Eve"   | "teenager" | "red"          |
+> abstractFinal =
+    function(r):
+      [row:
+        ("midterm", 85 <= getValue(r, "midterm"))
+        ("final", 85 <= getValue(r, "final"))]
+    end
+> update(gradebook, didWellInFinal)
+| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
+| ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
+| "Bob"   | 12  | 8     | 9     | false   | 7     | 9     | true  |
+| "Alice" | 17  | 6     | 8     | true    | 8     | 7     | true  |
+| "Eve"   | 13  | 7     | 9     | false   | 8     | 8     | false |
+```
+
+### `select :: t1:Table * f:(r1:Row * n:Number -> r2:Row) -> t2:Table``
+
+#### Constraints
+
+##### Requires:
+
+##### Ensures:
+
+- `schema(r1)` is equal to `schema(t1)`
+- `n` is in `range(nrows(t1))`
+- `schema(t2)` is equal to `schema(r2)`
+- `nrows(t2)` is equal to `nrows(t1)`
+
+#### Description
+
+Projects each `Row` of a `Table` into a new `Table`.
+
+```lua
+> select(
+    students,
+    function(r, n):
+      [row: 
+        ("ID", n),
+        ("COLOR", getValue(r, "favorite color")),
+        ("AGE", getValue(r, "age"))]
+    end)
+| ID | COLOR   | AGE |
+| -- | ------- | --- |
+| 0  | "blue"  | 12  |
+| 1  | "green" | 17  |
+| 2  | "red"   | 13  |
+> select(
+    gradebook,
+    function(r, n):
+      [row: 
+        ("full name", concat(getValue(r, "name"), "Smith")),
+        ("(midterm + final) / 2", (getValue(r, "midterm") + getValue(r, "final")) / 2]
+    end)
+| full name     | (miderm + final) / 2 |
+| ------------- | -------------------- |
+| "Bob Smith"   | 82                   |
+| "Alice Smith" | 86.5                 |
+| "Eve Smith"   | 80.5                 |
+```
+
+### `selectMany :: t1:Table * project:(r1:Row * n:Number -> t2:Table) * result:(r2:Row * r3:Row -> r4:Row) -> t2:Table`
+
+#### Constraints
+
+##### Requires:
+
+##### Ensures:
+
+- `schema(r1)` is equal to `schema(t1)`
+- `n` is in `range(nrows(t1))`
+- `schema(r2)` is equal to `schema(t1)`
+- `schema(r3)` is equal to `schema(t2)`
+- `schema(t2)` is equal to `schema(r4)`
+
+#### Description
+
+Projects each row of a table to a new table, flattens the resulting tables into one table, and invokes a result selector function on each row therein. The index of each source row is used in the intermediate projected form of that row.
+
+```lua
+> selectMany(
+    students,
+    function(r, n):
+      if even(n):
+        r
+      else:
+        head(r, 0)
+      end
+    end,
+    function(r1, r2):
+      r2
+    end)
+| name  | age | favorite color |
+| ----- | --- | -------------- |
+| "Bob" | 12  | "blue"         |
+| "Eve" | 13  | "red"          |
+> repeatRow =
+    function(r, n):
+      if n == 0:
+        r
+      else:
+        addRows(repeatRow(r, n - 1), [r])
+      end
+    end
+> selectMany(
+    gradebook,
+    repeatRow,
+    function(r1, r2):
+      selectColumns(r2, ["midterm"])
+    end)
+| midterm |
+| ------- |
+| 77      |
+| 88      |
+| 88      |
+| 84      |
+| 84      |
+| 84      |
+```
+
+### `groupJoin<K> :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:K) * getKey2:(r2:Row -> k2:K) * aggregate:(r3:Row * t3:Table -> r4:Row) -> t4:Table`
+
+#### Constraints
+
+##### Requires:
+
+##### Ensures:
+
+- `schema(r1)` is equal to `schema(t1)`
+- `schema(r2)` is equal to `schema(t2)`
+- `schema(r3)` is equal to `schema(t1)`
+- `schema(t3)` is equal to `schema(t2)`
+- `schema(t4)` is equal to `schema(r4)`
+- `nrows(t4)` is equal to `nrows(t1)`
+
+#### Description
+
+Correlates the rows of two tables based on equality of keys and groups the results.
+
+```lua
+> getName =
+    function(r):
+      getValue(r, "name")
+    end
+> averageFinal =
+    function(r, t):
+      addColumn(r, "final", [average(getColumn(t, "final"))])
+    end
+> groupJoin(students, gradebook, getName, getName, averageFinal)
+| name    | age | favorite color | final |
+| ------- | --- | -------------- | ----- |
+| "Bob"   | 12  | "blue"         | 87    |
+| "Alice" | 17  | "green"        | 85    |
+| "Eve"   | 13  | "red"          | 77    |
+> nameLength =
+    function(r):
+      length(getValue(r, "name"))
+    end
+> tableNRows =
+    function(r, t):
+      addColumn(r, "nrows", [nrows(t)])
+    end
+> groupJoin(students, gradebook, nameLength, nameLength, tableNRows)
+| name    | age | favorite color | nrows |
+| ------- | --- | -------------- | ----- |
+| "Bob"   | 12  | "blue"         | 2     |
+| "Alice" | 17  | "green"        | 1     |
+| "Eve"   | 13  | "red"          | 2     |
+```
+
+### `join<K> :: t1:Table * t2:Table * getKey1:(r1:Row -> k1:K) * getKey2:(r2:Row -> k2:K) * combine:(r3:Row * r4:Row -> r5:Row) -> t3:Table`
+
+#### Constraints
+
+##### Requires:
+
+##### Ensures:
+
+- `schema(r1)` is equal to `schema(t1)`
+- `schema(r2)` is equal to `schema(t2)`
+- `schema(r3)` is equal to `schema(t1)`
+- `schema(r4)` is equal to `schema(t2)`
+- `schema(t3)` is equal to `schema(r5)`
+
+#### Description
+
+Correlates the rows of two tables based on matching keys.
+
+```lua
+> getName =
+    function(r):
+      getValue(r, "name")
+    end
+> addGradeColumn =
+    function(r1, r2):
+      addColumn(r1, "grade", getValue(r2, "final"))
+    end
+> join(students, gradebook, getName, getName, addGradeColumn)
+| name    | age | favorite color | grade |
+| ------- | --- | -------------- | ----- |
+| "Bob"   | 12  | "blue"         | 87    |
+| "Alice" | 17  | "green"        | 85    |
+| "Eve"   | 13  | "red"          | 77    |
+> nameLength =
+    function(r):
+      length(getValue(r, "name"))
+    end
+> join(students, gradebook, nameLength, nameLength, addGradeColumn)
+| name    | age | favorite color | grade |
+| ------- | --- | -------------- | ----- |
+| "Bob"   | 12  | "blue"         | 87    |
+| "Bob"   | 12  | "blue"         | 77    |
+| "Alice" | 17  | "green"        | 85    |
+| "Eve"   | 13  | "red"          | 87    |
+| "Eve"   | 13  | "red"          | 77    |
+```
