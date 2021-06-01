@@ -166,9 +166,8 @@ Consumes a column name and a `Seq` of values and produces a new `Table` with the
 
 - `schema(r)` is equal to `schema(t1)`
 - `header(t2)` is equal to `concat(header(t1), [c])`
-- for all `c'` in `header(t2)`
-  - if `c'` is equal to `c` then `schema(t2)[c']` is equal to the sort of `v`
-  - otherwise, `schema(t2)[c']` is equal to `schema(t1)[c']`
+- for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
+- `schema(t2)[c]` is equal to the sort of `v`
 - `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
@@ -289,12 +288,12 @@ Combines two tables horizontally. The output table starts with columns from the 
 
 ##### Requires:
 
-- for all `r1` and `r2` in `rs`, `schema(r1)` is equal to `schema(r2)`
 - `length(rs)` is positive
+- for all `r` in `rs`, `schema(r)` is equal to `schema(rs[0])`
 
 ##### Ensures:
 
-- for all `r` in `rs`, `schema(t)` is equal to `schema(r)`
+- `schema(t)` is equal to `schema(rs[0])`
 - `nrows(t)` is equal to `length(rs)`
 
 #### Description
@@ -371,9 +370,8 @@ Computes the cartesian product of two tables.
 ##### Ensures:
 
 - `header(t3)` is equal to `concat(header(t1), removeAll(header(t2), cs))`
-- for all `c` in `header(t3)`
-  - if `c` in `header(t1)` then `schema(t3)[c]` is equal to `schema(t1)[c]`
-  - if `c` in `header(t2)` then `schema(t3)[c]` is equal to `schema(t2)[c]`
+- for all `c` in `header(t1)`, `schema(t3)[c]` is equal to `schema(t1)[c]`
+- for all `c` in `removeAll(header(t2), cs))`, `schema(t3)[c]` is equal to `schema(t2)[c]`
 - `nrows(t3)` is equal to `nrows(t1)`
 
 #### Description
@@ -636,7 +634,7 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 
 - `header(t2)` is a subsequence of `header(t1)`
 - for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs[i]` is equal to `true`
-- for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `schema(t2)` is a subsequence of `schema(t1)`
 
 #### Description
 
@@ -794,8 +792,8 @@ Retains only unique/distinct rows from an input `Table`.
 ##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
-- `schema(t2)` is a subsequence of `schema(t1)`
 - `header(t2)` is equal to `removeAll(header(t1), [c])`
+- `schema(t2)` is a subsequence of `schema(t1)`
 
 #### Description
 
@@ -828,8 +826,8 @@ Returns a `Table` that is the same as `t`, except without the named column.
 ##### Ensures:
 
 - `nrows(t2)` is equal to `nrows(t1)`
-- `schema(t2)` is a subsequence of `schema(t1)`
 - `header(t2)` is equal to `removeAll(header(t1), cs)`
+- `schema(t2)` is a subsequence of `schema(t1)`
 
 #### Description
 
@@ -1076,22 +1074,21 @@ Groups the values of a numeric column into bins. The parameter `n` specifies the
 
 #### Constraints
 
-Let `c_i1` and `c_i2` and `f_i` be the components of `aggs[i]` for all `i` in `range(length(aggs))`
+Let `ci1` and `ci2` and `fi` be the components of `aggs[i]` for all `i` in `range(length(aggs))`
 
 ##### Requires:
 
 - for all `c` in `cs`, `c` is in `header(t1)`
 - for all `c` in `cs`, `schema(t1)[c]` is a categorical sort
-- `c_i2` is in `header(t1)`
-- `concat(cs, [c_11, ... , c_n1])` has no duplicates
+- `ci2` is in `header(t1)`
+- `concat(cs, [c11, ... , cn1])` has no duplicates
 
 ##### Ensures:
 
-- `f_i` consumes `Seq<schema(t1)[c_i2]>`
-- `header(t2)` is equal to `concat(cs, [c_11, ... , c_n1])`
-- for all `c` in `header(t2)`,
-  - if `c` is in `cs` then `schema(t2)[c]` is equal to `schema(t1)[c]`
-  - if `c` is equal to `c_i1` then `schema(t2)[c]` is equal to the sort of outputs of `f_i`
+- `fi` consumes `Seq<schema(t1)[ci2]>`
+- `header(t2)` is equal to `concat(cs, [c11, ... , cn1])`
+- for all `c` in `cs`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `schema(t2)[ci1]` is equal to the sort of outputs of `fi` for all `i`
 
 #### Description
 
@@ -1537,9 +1534,9 @@ Scans the named column and fills in `v` when a cell is missing value.
 ##### Ensures:
 
 - `header(t2)` is equal to `concat(removeAll(header(t1), cs), [c1, c2])`
+- for all `c` in `removeAll(header(t1), cs)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 - `schema(t2)[c1]` is equal to `ColName`
 - `schema(t2)[c2]` is equal to `schema(t1)[cs[0]]`
-- for all `c` in `header(t1)`, if `c` is not in `[c1, c2]` then `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
 
@@ -1761,9 +1758,9 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
 
 ### `renameColumns : t1:Table * ccs:Seq<ColName * ColName> -> t2:Table`
 
-Let `n` be the length of `ccs` Let `c11 ... c1n` be the first components of the elements of `ccs` and `c21 ... c2n` be the second components.
-
 #### Constraints
+
+Let `n` be the length of `ccs` Let `c11 ... c1n` be the first components of the elements of `ccs` and `c21 ... c2n` be the second components.
 
 ##### Requires:
 
@@ -1775,7 +1772,7 @@ Let `n` be the length of `ccs` Let `c11 ... c1n` be the first components of the 
 
 - `header(t2)` is equal to `header(t1)` with all `c1i` replaced with `c2i`
 - for all `c` in `header(t2)`,
-  - if `c` is equal to `c2i` then `schema(t2)[c2i]` is equal to `schema(t1)[c1i]`
+  - if `c` is equal to `c2i` for some `i` then `schema(t2)[c2i]` is equal to `schema(t1)[c1i]`
   - otherwise, `schema(t2)[c]` is equal to `schema(t2)[c]`
 - `nrows(t2)` is equal to `nrows(t1)`
 
