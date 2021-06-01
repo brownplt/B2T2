@@ -49,8 +49,6 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 
 #### Relations
 
-The most frequently used relations are listed below. This list helps to keep our vocabulary simple. New entries are recommended to use these relations whenever appropriate.
-
 - `x` has no duplicates
 - `x` is equal to `y`
 - `x` is (not) in `y`
