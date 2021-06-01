@@ -49,17 +49,16 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 
 #### Relations
 
+The most frequently used relations are listed below. This list helps to keep our vocabulary simple. New entries are recommended to use these relations whenever appropriate.
+
 - `x` has no duplicates
 - `x` is equal to `y`
-- `x` is not greater than `y`
-- `x` is (not) included in `y`
 - `x` is (not) in `y`
-- `x` is a subsequence of `y` (not changing order)
+- `x` is a subsequence of `y`
 - `x` is of sort `y`
 - `x` is `y`
 - `x` is a categorical sort
-- `x` is non-negative
-- `x` is negative
+- `x` is (non-)negative
 
 ## Constructors
 
@@ -323,7 +322,7 @@ Returns a sequence of one or more rows as a table.
 
 ##### Requires:
 
-- `concat(header(t1), header(t2))` has no duplicate
+- `concat(header(t1), header(t2))` has no duplicates
 
 ##### Ensures:
 
@@ -733,8 +732,8 @@ Consumes a `Table` and a `Seq<ColName>` containing column names, and produces a 
 
 ##### Requires:
 
-- if `n` is non-negative then `n` is not greater than `nrows(t1)`
-- if `n` is negative then `- n` is not greater than `nrows(t1)`
+- if `n` is non-negative then `n` is in `range(nrows(t1))`
+- if `n` is negative then `- n` is in `range(nrows(t1))`
 
 ##### Ensures:
 
@@ -1771,7 +1770,7 @@ Let `n` be the length of `ccs` Let `c11 ... c1n` be the first components of the 
 ##### Requires:
 
 - `c1i` is in `header(t1)` for all `i`
-- `[c11 ... c1n]` has no duplicate
+- `[c11 ... c1n]` has no duplicates
 - `concat(removeAll(header(t1), [c11 ... c1n]), [c21 ... c2n])` has no duplicates
 
 ##### Ensures:
