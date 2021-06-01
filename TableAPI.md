@@ -129,9 +129,8 @@ Consumes a `Table` and a sequence of `Row` to add, and produces a new `Table` wi
 ##### Ensures:
 
 - `header(t2)` is equal to `concat(header(t1), [c])`
-- for all `c'` in `header(t2)`
-  - if `c'` is equal to `c` then `schema(t2)[c']` is the sort of elements of `vs`
-  - otherwise, `schema(t2)[c']` is equal to `schema(t1)[c']`
+- for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
+- `schema(t2)[c]` is the sort of elements of `vs`
 - `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
