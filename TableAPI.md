@@ -867,8 +867,8 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 
 ```lua
 > ageUnderFifteen =
-    lam(r):
-      getValue(r, “age”) < 15
+    function(r):
+      getValue(r, "age") < 15
     end
 > tfilter(students, ageUnderFifteen)
 | name  | age | favorite color |
@@ -876,8 +876,8 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 | "Bob" | 12  | "blue"         |
 | "Eve" | 13  | "red"          |
 > nameLongerThan3Letters =
-    lam(r):
-      length(getValue(r, “name)) > 3
+    function(r):
+      length(getValue(r, "name)) > 3
     end
 > tfilter(gradebook, nameLongerThan3Letters)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
@@ -1651,20 +1651,19 @@ The inverse of `pivotLonger`.
 
 - `cs` has no duplicates
 - for all `c` in `cs`, `c` is in `header(t1)`
-- for all `c` in `cs`, for some type `T`, `schema(t1)[c]` is equal to `Seq<T>`
-- for all `i` in `range(nrows(t1))`, for all `c1` and `c2` in `cs`, `length(getValue(getRow(t1, i), c1))` is equal to `length(getValue(getRow(t1, i), c1))`
+- for all `c` in `cs`, `schema(t1)[c]` is `Seq<X>` for some sort `X`
+- for all `i` in `range(nrows(t1))`, for all `c1` and `c2` in `cs`, `length(getValue(getRow(t1, i), c1))` is equal to `length(getValue(getRow(t1, i), c2))`
 
 ##### Ensures:
 
-[TODO: elementTypeOf]
-
 - `header(t2)` is equal to `header(t1)`
-- for all `c` in `header(t2)`, if `c` is in `cs` then `schema(t2)[c]` is equal to `elementTypeOf(schema(t1)[c])`
-- for all `c` in `header(t2)`, if `c` is not in `cs` then `schema(t2)[c]` is equal to `schema(t1)[c]`
+- for all `c` in `header(t2)`
+  - if `c` is in `cs` then `schema(t2)[c]` is equal to the element sort of `schema(t1)[c]`
+  - otherwise, `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
 
-When columns `cs` of table `t` have sequences, return a `Table` where each element of each `c` in `cs` is flattened, meaning the column corresponding to `c` becomes a longer column where the original entries are concatenated. Elements of row `i` of `t` in columns other than `cs` will be repeated according to the length of `getValue(getRow(t1, i), c1)`. These lengths must therefore be the same for each `c` in `cs`.
+When columns `cs` of table `t` have sequences, returns a `Table` where each element of each `c` in `cs` is flattened, meaning the column corresponding to `c` becomes a longer column where the original entries are concatenated. Elements of row `i` of `t` in columns other than `cs` will be repeated according to the length of `getValue(getRow(t1, i), c1)`. These lengths must therefore be the same for each `c` in `cs`.
 
 ```lua
 > flatten(gradebookSeq, ["quizzes"])
@@ -1725,8 +1724,9 @@ When columns `cs` of table `t` have sequences, return a `Table` where each eleme
 
 - `v1` is of sort `schema(t1)[c]`
 - `header(t2)` is equal to `header(t1)`
-- for all `c'` in `header(t1)`, if `c'` is not equal to `c` then `schema(t2)[c]` is equal to `schema(t1)[c]`
-- `v2` is of sort `schema(t2)[c]`
+- for all `c'` in `header(t2)`,
+  - if `c'` is equal to `c` then `schema(t2)[c']` is equal to the sort of `v2`
+  - otherwise, then `schema(t2)[c']` is equal to `schema(t1)[c']`
 
 #### Description
 
@@ -1734,17 +1734,17 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
 
 ```lua
 > addLastName =
-    lam(name):
-      Strings.concat(name, “ Smith”)
+    function(name):
+      concat(name, "Smith")
     end
-> transformColumn(students, “name”, addLastName)
+> transformColumn(students, "name", addLastName)
 | name          | age | favorite color |
 | ------------- | --- | -------------- |
 | "Bob Smith"   | 12  | "blue"         |
 | "Alice Smith" | 17  | "green"        |
 | "Eve Smith"   | 13  | "red"          |
 > quizScoreToPassFail =
-    lam(score):
+    function(score):
       if score <= 6:
         "fail"
       else:
@@ -1768,20 +1768,20 @@ Let `n` be the length of `ccs` Let `c11 ... c1n` be the first components of the 
 ##### Requires:
 
 - `c1i` is in `header(t1)` for all `i`
-- `[c1i ... c1n]` has no duplicate
-- `header(t1)` with all `c1i` replaced with the `c2i` has no duplicate
+- `[c11 ... c1n]` has no duplicate
+- `concat(removeAll(header(t1), [c11 ... c1n]), [c21 ... c2n])` has no duplicates
 
 ##### Ensures:
 
 - `header(t2)` is equal to `header(t1)` with all `c1i` replaced with `c2i`
 - for all `c` in `header(t2)`,
-  - if `c` is equal to `c2i` then `schema(t2)[c2i]` is equal to `schema(t2)[c1i]`
+  - if `c` is equal to `c2i` then `schema(t2)[c2i]` is equal to `schema(t1)[c1i]`
   - otherwise, `schema(t2)[c]` is equal to `schema(t2)[c]`
 - `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
 
-Update column names. Each element of `ccs` specifies the old name and the new name.
+Updates column names. Each element of `ccs` specifies the old name and the new name.
 
 ```lua
 > renameColumns(students, [("favorite color", "preferred color"), ("name", "firstname")])
