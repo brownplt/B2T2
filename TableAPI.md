@@ -1537,10 +1537,9 @@ Scans the named column and fills in `v` when a cell is missing value.
 ##### Ensures:
 
 - `header(t2)` is equal to `concat(removeAll(header(t1), cs), [c1, c2])`
-- for all `c` in `header(t2)`
-  - if `c` is equal to `c1` then `schema(t2)[c]` is equal to `ColName`
-  - if `c` is equal to `c2` then `schema(t2)[c]` is equal to `schema(t1)[cs[0]]`
-  - otherwise, `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `schema(t2)[c1]` is equal to `ColName`
+- `schema(t2)[c2]` is equal to `schema(t1)[cs[0]]`
+- for all `c` in `header(t1)`, if `c` is not in `[c1, c2]` then `schema(t2)[c]` is equal to `schema(t1)[c]`
 
 #### Description
 
@@ -1588,21 +1587,25 @@ Reshapes the input table and make it longer. The data kept in the named columns 
 - `c1` is in `header(t1)`
 - `c2` is in `header(t1)`
 - `schema(t1)[c1]` is `ColName`
-- for all `c` in `removeDuplicates(getColumn(t1, c1))`, `c` is not in `header(t1)`
+- `concat(removeAll(header(t1), [c1, c2]), removeDuplicates(getColumn(t1, c1)))` has no duplicates
 
 ##### Ensures:
 
-- `header(t2)` is equal to `header(t1)` with `c1` and `c2` removed then concatenated with `removeDuplicates(getColumn(t1, c1))`
-- for all `c` in `header(t2)`, if `c` in `header(t1)` then `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `header(t2)` is equal to `concat(removeAll(header(t1), [c1, c2]), removeDuplicates(getColumn(t1, c1)))`
+- for all `c` in `removeAll(header(t1), [c1, c2])`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 - for all `c` in `removeDuplicates(getColumn(t1, c1))`, `schema(t2)[c]` is equal to `schema(t1)[c2]`
 
 #### Description
 
 The inverse of `pivotLonger`.
 
-[TODO: one more example]
-
 ```lua
+> pivotWider(students, "name", "age")
+| favorite color | Bob | Alice | Eve |
+| -------------- | --- | ----- | --- |
+| "blue"         | 12  |       |     |
+| "green"        |     | 17    |     |
+| "red"          |     |       | 13  |
 > longerTable = 
     pivotLonger(
       gradebook,
