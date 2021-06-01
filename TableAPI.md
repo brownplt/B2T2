@@ -605,6 +605,7 @@ Given a `Table` and a `Seq<Number>` containing row indices, produces a new `Tabl
 ##### Ensures:
 
 - `schema(t2)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `length(removeAll(bs, [false]))`
 
 #### Description
 
@@ -635,6 +636,7 @@ Given a `Table` and a `Seq<Boolean>` that represents a predicate on rows, return
 - `header(t2)` is a subsequence of `header(t1)`
 - for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs[i]` is equal to `true`
 - `schema(t2)` is a subsequence of `schema(t1)`
+- `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
 
@@ -669,6 +671,7 @@ Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be k
 - `length(header(t2))` is equal to `length(ns)`
 - for all `i` in `range(length(ns))`, `header(t2)[i]` is equal to `header(t1)[ns[i]]`
 - for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
 
@@ -703,6 +706,7 @@ Consumes a `Table` and a `Seq<Number>` containing column indices, and produces a
 
 - `header(t2)` is equal to `cs` 
 - for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+- `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
 
@@ -1017,6 +1021,7 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
 - `header(t2)` is equal to `["value", "count"]`
 - `schema(t2)["value"]` is equal to `schema(t1)[c]`
 - `schema(t2)["count"]` is equal to `Number`
+- `nrows(t2)` is equal to `length(removeDuplicates(getColumn(t1, c)))`
 
 #### Description
 
@@ -1132,7 +1137,7 @@ Partitions rows into groups and summarize each group with the functions in `agg`
 - `schema(r1)` is equal to `schema(t1)`
 - `schema(r2)` is equal to `schema(t1)`
 - `schema(t2)` is equal to `schema(r3)`
-- `nrows(t2)` is equal to `length(removeDuplicates(ks)`, where `ks` is the results of applying `key` to each row of `t1`.
+- `nrows(t2)` is equal to `length(removeDuplicates(ks))`, where `ks` is the results of applying `key` to each row of `t1`.
 
 #### Description
 
@@ -1724,6 +1729,7 @@ When columns `cs` of table `t` have sequences, returns a `Table` where each elem
 - for all `c'` in `header(t2)`,
   - if `c'` is equal to `c` then `schema(t2)[c']` is equal to the sort of `v2`
   - otherwise, then `schema(t2)[c']` is equal to `schema(t1)[c']`
+- `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
 
@@ -1823,18 +1829,19 @@ error("not found")
 
 #### Constraints
 
-requires:
+##### Requires:
 
 - `c` is in `header(t1)`
 - `schema(t1)[c]` is a categorical sort
 
-ensures:
+##### Ensures:
 
 - `header(t2)` is equal to `["key", "groups"]`
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
 - `schema(t2)["groups"]` is `Table`
 - `getColumn(t2, "key")` has no duplicates
 - for all `t` in `getColumn(t2, "groups")`, `schema(t)` is equal to `schema(t1)`
+- `nrows(t2)` is equal to `length(removeDuplicates(getColumn(t1, c)))`
 
 #### Description
 
@@ -1876,12 +1883,12 @@ Categorizes rows of the input table into groups by the key of each row. The key 
 
 #### Constraints
 
-requires:
+##### Requires:
 
 - `c` is in `header(t1)`
 - `schema(t1)[c]` is a categorical sort
 
-ensures:
+##### Ensures:
 
 - `header(t2)` is equal to `["key", "groups"]`
 - `schema(t2)["key"]` is equal to `schema(t1)[c]`
@@ -1889,6 +1896,7 @@ ensures:
 - `getColumn(t2, "key")` has no duplicates
 - for all `t` in `getColumn(t2, "groups")`, `header(t)` is equal to `removeAll(header(t1), [c])`
 - for all `t` in `getColumn(t2, "groups")`, `schema(t)` is a subsequence of `schema(t1)`
+- `nrows(t2)` is equal to `length(removeDuplicates(getColumn(t1, c)))`
 
 #### Description
 
