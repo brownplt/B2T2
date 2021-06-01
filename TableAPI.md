@@ -49,8 +49,6 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 
 #### Relations
 
-The most frequently used relations are listed below. This list helps to keep our vocabulary simple. New entries are recommended to use these relations whenever appropriate.
-
 - `x` has no duplicates
 - `x` is equal to `y`
 - `x` is (not) in `y`
@@ -59,6 +57,9 @@ The most frequently used relations are listed below. This list helps to keep our
 - `x` is `y`
 - `x` is a categorical sort
 - `x` is (non-)negative
+- `x` is equal to the sort of `y`
+- `x` is the sort of elements of `y`
+- `x` is equal to `y` with all `a_i` replaced with `b_i`
 
 ## Constructors
 
@@ -1136,7 +1137,7 @@ Partitions rows into groups and summarize each group with the functions in `agg`
 - `schema(r1)` is equal to `schema(t1)`
 - `schema(r2)` is equal to `schema(t1)`
 - `schema(t2)` is equal to `schema(r3)`
-- `nrows(t2)` is equal to `length(removeDuplicates(ks))`, where `ks` is the results of applying `key` to each row of `t1`.
+- `nrows(t2)` is equal to `length(removeDuplicates(ks))`, where `ks` is the results of applying `key` to each row of `t1`. `ks` can be defined with `select` and `getColumn`.
 
 #### Description
 
