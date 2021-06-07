@@ -1688,12 +1688,14 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 ##### Requires:
 
 - for all `c` in `header(r2)`, `c` is in `header(t1)`
-- for all `c` in `header(r2)`, `schema(r2)[c]` is equal to `schema(t1)[c]`
 
 ##### Ensures:
 
 - `schema(r1)` is equal to `schema(t1)`
-- `schema(t2)` is equal to `schema(t1)`
+- `header(t2)` is equal to `header(t1)`
+- for all `c` in `header(t2)`
+  - if `c` in `header(r2)` then `schema(t2)[c]` is equal to `schema(r2)[c]`
+  - otherwise, `schema(t2)[c]` is equal to `schema(r2)[c]`
 - `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
