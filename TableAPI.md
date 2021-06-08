@@ -1681,7 +1681,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 |       | | false    | true  | false | false | false | true   | false  | true  | false  | |
 ```
 
-### `update :: t1:Table * f:(r1:Row -> r2:Value) -> t2:Table`
+### `update :: t1:Table * f:(r1:Row -> r2:Row) -> t2:Table`
 
 #### Constraints
 
