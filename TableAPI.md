@@ -1695,7 +1695,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 - `header(t2)` is equal to `header(t1)`
 - for all `c` in `header(t2)`
   - if `c` in `header(r2)` then `schema(t2)[c]` is equal to `schema(r2)[c]`
-  - otherwise, `schema(t2)[c]` is equal to `schema(r2)[c]`
+  - otherwise, `schema(t2)[c]` is equal to `schema(t1)[c]`
 - `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
