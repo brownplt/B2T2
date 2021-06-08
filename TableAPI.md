@@ -1681,19 +1681,21 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 |       | | false    | true  | false | false | false | true   | false  | true  | false  | |
 ```
 
-### `update :: t1:Table * f:(r1:Row -> r2:Value) -> t2:Table`
+### `update :: t1:Table * f:(r1:Row -> r2:Row) -> t2:Table`
 
 #### Constraints
 
 ##### Requires:
 
 - for all `c` in `header(r2)`, `c` is in `header(t1)`
-- for all `c` in `header(r2)`, `schema(r2)[c]` is equal to `schema(t1)[c]`
 
 ##### Ensures:
 
 - `schema(r1)` is equal to `schema(t1)`
-- `schema(t2)` is equal to `schema(t1)`
+- `header(t2)` is equal to `header(t1)`
+- for all `c` in `header(t2)`
+  - if `c` in `header(r2)` then `schema(t2)[c]` is equal to `schema(r2)[c]`
+  - otherwise, `schema(t2)[c]` is equal to `schema(t1)[c]`
 - `nrows(t2)` is equal to `nrows(t1)`
 
 #### Description
