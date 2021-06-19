@@ -1,166 +1,30 @@
-import { AddColumn, CTop, Vec, HeaderOf, HTop, IsIn, Lookup, NTop, Row, SchemaOf, STop, Table } from "./EncodeTables";
+import { AddColumn, CTop, HeaderOf, HTop, IsIn, Lookup, NTop, Row, SchemaOf, STop, Table } from "./EncodeTables";
 import { students, gradebook, studentsMissing } from "./ExampleTables";
-import { makeTester } from './unitTest'
-import * as VecLib from './Vec'
 
-const Test = makeTester()
-
-let emptyTable: Table<[], {}, 0> = { header: [], rows: [] as Vec<{}, 0> };
+let emptyTable: Table<[], {}, 0> = { header: [], rows: [] };
 // constraints
 () => {
 	// - [x] `schema(t)` is equal to `[]`
 	// - [x] `nrows(t)` is equal to `0`
 	const test1: 0 = nrows(emptyTable)
-}
-
-let addColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>(t1: Table<H, S, N>, c: C, vs: Vec<V, N>): Table<[...H, C], AddColumn<H, S, C, V>, N> => {
-	return {
-		header: [...t1.header, c],
-		rows: VecLib.map(t1.rows, (r, i) => {
-			const newR: Row<[...H, C], AddColumn<H, S, C, V>> = Object.assign({ [c as C]: vs[i] }, r) as Row<[...H, C], AddColumn<H, S, C, V>>
-			return newR
-		})
-	}
-}
-// constraints
-() => {
-	// - [ ] `c` is not in `header(t1)`
-	// It is unclear to me how to achieve this.
-
-	// - [x] `length(vs)` is equal to `nrows(t1)`
-	// rejected as expected
-	// const test1 = addColumn(students, 'new', [])
-
-	// - [x] `header(t2)` is equal to `concat(header(t1), [c])`
-	// accepted as expected
-	const h: ["name", "age", "favorite color", "id"] = header(addColumn(students, 'id', [1, 2, 3] as Vec<number, 3>))
-
-	// - [x] for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
-	// See the examples to verify.
-
-	// - [x] `schema(t2)[c]` is the sort of elements of `vs`
-	// See the examples to verify.
-
-	// - [x] `nrows(t2)` is equal to `nrows(t1)`
-	const n: 3 = nrows(addColumn(students, 'id', [1, 2, 3] as Vec<number, 3>))
-}
-// examples
-{
-	const hairColor: Vec<string, 3> = ["brown", "red", "blonde"]
-	Test.assertEqual(
-		'addColumn 1',
-		() => addColumn(students, "hair-color", hairColor),
-		{
-			header: ['name', 'age', 'favorite color', 'hair-color'],
-			rows: [
-				{
-					'name': 'Bob',
-					'age': 12,
-					'favorite color': 'blue',
-					'hair-color': 'brown'
-				},
-				{
-					'name': 'Alice',
-					'age': 17,
-					'favorite color': 'green',
-					'hair-color': 'red'
-				},
-				{
-					'name': 'Eve',
-					'age': 13,
-					'favorite color': 'red',
-					'hair-color': 'blonde'
-				}
-			]
-		}
-	)
-	const presentation: Vec<number, 3> = [9, 9, 6]
-	Test.assertEqual(
-		'addColumn 2',
-		() => addColumn(gradebook, "presentation", presentation),
-		{
-			'header': [
-				'name',
-				'age',
-				'quiz1',
-				'quiz2',
-				'midterm',
-				'quiz3',
-				'quiz4',
-				'final',
-				'presentation'
-			],
-			'rows': [
-
-				{
-					'name': "Bob",
-					'age': 12,
-					'quiz1': 8,
-					'quiz2': 9,
-					'midterm': 77,
-					'quiz3': 7,
-					'quiz4': 9,
-					'final': 87,
-					'presentation': 9
-				},
-				{
-					'name': "Alice",
-					'age': 17,
-					'quiz1': 6,
-					'quiz2': 8,
-					'midterm': 88,
-					'quiz3': 8,
-					'quiz4': 7,
-					'final': 85,
-					'presentation': 9
-				},
-				{
-					'name': "Eve",
-					'age': 13,
-					'quiz1': 7,
-					'quiz2': 9,
-					'midterm': 84,
-					'quiz3': 8,
-					'quiz4': 8,
-					'final': 77,
-					'presentation': 6
-				}
-			]
-		}
-	)
+	return
 }
 
 let header: <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>) => H
-header = (t) => {
-	return t.header;
-}
 // constraints
 () => {
 	// - [x] `cs` is equal to `header(t)`
-
-	// accepted as expected
-	const test1: ['name', 'age', 'favorite color'] = header(students)
-
-	// rejected as expected
-	// const test2: ['age', 'name', 'favorite color'] = header(students)
-
-	// rejected as expected
-	// const test3: ['Name', 'Age', 'Favorite Color'] = header(students)
+	const test1: ['name', 'age', 'favorite color'] = header(students)  // accepted as expected
+	const test2: ['age', 'name', 'favorite color'] = header(students)  // rejected as expected
+	const test3: ['Name', 'Age', 'Favorite Color'] = header(students)  // rejected as expected
 }
 // examples
-Test.assertEqual(
-	'header 1',
-	() => header(students),
-	["name", "age", "favorite color"]);
-Test.assertEqual(
-	'header 2',
-	() => header(gradebook),
-	["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]);
-
-let nrows = <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>): N => {
-	return t.rows.length;
+{
+	const o1 = header(students)
+	const o2 = header(gradebook)
 }
 
+let nrows: <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>) => N
 // constraints
 () => {
 	// - [x] `n` is equal to `nrows(t)`
@@ -168,33 +32,19 @@ let nrows = <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N
 }
 // examples
 {
-	Test.assertEqual('nrows 1', () => nrows(emptyTable), 0)
-	Test.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
+	const o1: 0 = nrows(emptyTable)
+	const o2: 3 = nrows(studentsMissing)
 }
 
 let getValue: <H extends HTop, S extends STop<H>, C extends IsIn<H>>(r: Row<H, S>, c: C) => Lookup<H, S, C>
-getValue = (r, c) => {
-	return r[c]
-}
 // constraints
 () => {
 	// - [ ] `c` is in header(r)
-
-	// accepted, but should be rejected. I am not sure why IsIn<H> didn't work.
-	const test1 = getValue({ 'name': 'Bob', 'age': 12 }, 'Name')
-
-	// rejected as expected
-	// const test2 = getValue<['name', 'age'], { 'name': string, 'age': number }, 'Name'>({ 'name': 'Bob', 'age': 12 }, 'Name')  
-
-
-
+	const test1 = getValue({ 'name': 'Bob', 'age': 12 }, 'Name')  // accepted, but should be rejected. I am not sure why IsIn<H> didn't work.
+	const test2 = getValue<['name', 'age'], { 'name': string, 'age': number }, 'Name'>({ 'name': 'Bob', 'age': 12 }, 'Name')  // rejected as expected
 	// - [x] `v` is of sort `schema(r)[c]`
-
-	// accepted as expected
-	const test3 = getValue({ 'name': 'Bob', 'age': 12 }, 'name').charAt
-
-	// rejected as expected
-	// const test4 = getValue({ 'name': 'Bob', 'age': 12 }, 'age').charAt
+	const test3 = getValue({ 'name': 'Bob', 'age': 12 }, 'name').charAt  // accepted as expected
+	const test4 = getValue({ 'name': 'Bob', 'age': 12 }, 'age').charAt   // rejected as expected
 }
 // examples
 {
@@ -202,55 +52,25 @@ getValue = (r, c) => {
 	Test.assertEqual('getValue 2', () => getValue({ 'name': 'Bob', 'age': 12 }, "age"), 12)
 }
 
-let buildColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>(t1: Table<H, S, N>, c: C, f: (r: Row<H, S>) => V): Table<[...H, C], AddColumn<H, S, C, V>, N> => {
-	return addColumn(t1, c, VecLib.map(t1.rows, f))
-}
+let buildColumn: <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>
+	(t1: Table<H, S, N>, c: C, f: (r: Row<H, S>) => V)
+	=> Table<[...H, C], AddColumn<H, S, C, V>, N>
 // constraints
 () => {
 	// - [ ] `c` is not in `header(t1)`
-
 	// It is unclear to me how to specify that C is *not* in H.
 	// Note: hopefully TS will integrate negation type in the near future. https://github.com/microsoft/TypeScript/pull/29317
-
-
-
-	// - [x] `schema(r)` is equal to `schema(t1)`
-	// accepted as expected
-	const test2 = buildColumn(students, 'full name', (r) => r['name'] + ' Smith')
-
-	// rejected as expected
-	// const test3 = buildColumn(students, 'full name', (r) => r['Name'] + ' Smith')
-
-
-
+	// - [ ] `schema(r)` is equal to `schema(t1)`
+	const test2 = buildColumn(students, 'full name', (r) => r['name'] + ' Smith')  // accepted as expected
+	const test3 = buildColumn(students, 'full name', (r) => r['Name'] + ' Smith')  // accepted but should be rejected.
 	// - [x] `header(t2)` is equal to `concat(header(t1), [c])`
-
-	// accepted as expected
-	const test4 = header(buildColumn(students, 'full name', (r) => r['name'] + ' Smith'))
-
-
-
+	const test4 = header(buildColumn(students, 'full name', (r) => r['name'] + ' Smith'))  // accepted as expected
 	// - [x] for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
+	const test5 = buildColumn(students, 'full name', (r) => r['name'] + ' Smith')  // accepted as expected. Read the inferred type of test5 to confirm.
 	// - [x] `schema(t2)[c]` is equal to the sort of `v`
-	// accepted as expected
-	const test5
-		: Table<
-			["name", "age", "favorite color", "full name"],
-			{
-				name: string;
-				age: number;
-				'favorite color': string;
-				'full name': string
-			},
-			3>
-		= buildColumn(students, 'full name', (r) => r['name'] + ' Smith')
-
-
-
+	const test6 = buildColumn(students, 'name length', (r) => r['name'].length)  // accepted as expected. Read the inferred type of test5 to confirm.
 	// - [x] `nrows(t2)` is equal to `nrows(t1)`
-
-	// accepted as expected
-	const test6 = nrows(buildColumn(students, 'full name', (r) => r['name'] + ' Smith'))
+	const test7 = nrows(buildColumn(students, 'full name', (r) => r['name'] + ' Smith'))  // accepted as expected
 }
 // examples
 {

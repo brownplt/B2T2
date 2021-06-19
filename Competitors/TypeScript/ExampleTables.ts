@@ -1,6 +1,9 @@
 import { Table } from "./EncodeTables"
 
-export const students: Table<{ 'name': string, 'age': number, 'favorite color': string }> = {
+export const students: Table<
+	['name', 'age', 'favorite color'],
+	{ 'name': string, 'age': number, 'favorite color': string },
+	3> = {
 	header: ['name', 'age', 'favorite color'],
 	rows: [
 		{
@@ -23,7 +26,10 @@ export const students: Table<{ 'name': string, 'age': number, 'favorite color': 
 
 // Missing values can be represented with a special value, `undefined`
 
-export const studentsMissing: Table<{ 'name': string, 'age': number, 'favorite color': string }> = {
+export const studentsMissing: Table<
+	['name', 'age', 'favorite color'],
+	{ 'name': string, 'age': number, 'favorite color': string },
+	3> = {
 	header: ['name', 'age', 'favorite color'],
 	rows: [
 		{
@@ -44,7 +50,10 @@ export const studentsMissing: Table<{ 'name': string, 'age': number, 'favorite c
 	]
 }
 
-export const employees: Table<{ 'Last Name': string, 'Department ID': number }> = {
+export const employees: Table<
+	['Last Name', 'Department ID'],
+	{ 'Last Name': string, 'Department ID': number },
+	6> = {
 	header: ['Last Name', 'Department ID'],
 	rows: [
 		{
@@ -70,11 +79,15 @@ export const employees: Table<{ 'Last Name': string, 'Department ID': number }> 
 		{
 			'Last Name': 'Williams',
 			'Department ID': undefined
-		},
+		}
 	]
 }
 
-export const departments: Table<{ 'Department ID': number, 'Department Name' }> = {
+export const departments: Table<
+	['Department ID', 'Department Name'],
+	{ 'Department ID': number, 'Department Name' },
+	4
+> = {
 	header: ['Department ID', 'Department Name'],
 	rows: [
 		{
@@ -96,18 +109,24 @@ export const departments: Table<{ 'Department ID': number, 'Department Name' }> 
 	]
 }
 
-export const jellyAnon: Table<{
-	'get acne': boolean,
-	'red': boolean,
-	'black': boolean,
-	'white': boolean,
-	'green': boolean,
-	'yellow': boolean,
-	'brown': boolean,
-	'orange': boolean,
-	'pink': boolean,
-	'purple': boolean
-}> = {
+export const jellyAnon: Table<
+	[
+		'get acne',
+		'red', 'black', 'white', 'green', 'yellow', 'brown', 'orange', 'pink', 'purple'
+	],
+	{
+		'get acne': boolean,
+		'red': boolean,
+		'black': boolean,
+		'white': boolean,
+		'green': boolean,
+		'yellow': boolean,
+		'brown': boolean,
+		'orange': boolean,
+		'pink': boolean,
+		'purple': boolean
+	},
+	10> = {
 	'header':
 		[
 			'get acne',
@@ -239,19 +258,26 @@ export const jellyAnon: Table<{
 }
 
 
-export const jellyNamed: Table<{
-	'name': string,
-	'get acne': boolean,
-	'red': boolean,
-	'black': boolean,
-	'white': boolean,
-	'green': boolean,
-	'yellow': boolean,
-	'brown': boolean,
-	'orange': boolean,
-	'pink': boolean,
-	'purple': boolean
-}> = {
+export const jellyNamed: Table<
+	[
+		'name',
+		'get acne',
+		'red', 'black', 'white', 'green', 'yellow', 'brown', 'orange', 'pink', 'purple'
+	],
+	{
+		'name': string,
+		'get acne': boolean,
+		'red': boolean,
+		'black': boolean,
+		'white': boolean,
+		'green': boolean,
+		'yellow': boolean,
+		'brown': boolean,
+		'orange': boolean,
+		'pink': boolean,
+		'purple': boolean
+	},
+	10> = {
 	'header':
 		[
 			'name',
@@ -393,16 +419,28 @@ export const jellyNamed: Table<{
 }
 
 
-export const gradebook: Table<{
-	'name': string,
-	'age': number,
-	'quiz1': number,
-	'quiz2': number,
-	'midterm': number,
-	'quiz3': number,
-	'quiz4': number,
-	'final': number,
-}> = {
+export const gradebook: Table<
+	[
+		'name',
+		'age',
+		'quiz1',
+		'quiz2',
+		'midterm',
+		'quiz3',
+		'quiz4',
+		'final'
+	],
+	{
+		'name': string,
+		'age': number,
+		'quiz1': number,
+		'quiz2': number,
+		'midterm': number,
+		'quiz3': number,
+		'quiz4': number,
+		'final': number,
+	},
+	3> = {
 	'header': [
 		'name',
 		'age',
@@ -449,16 +487,29 @@ export const gradebook: Table<{
 
 
 
-export const gradebookMissing: Table<{
-	'name': string,
-	'age': number,
-	'quiz1': number,
-	'quiz2': number,
-	'midterm': number,
-	'quiz3': number,
-	'quiz4': number,
-	'final': number,
-}> = {
+export const gradebookMissing: Table<
+	[
+		'name',
+		'age',
+		'quiz1',
+		'quiz2',
+		'midterm',
+		'quiz3',
+		'quiz4',
+		'final'
+	],
+	{
+		'name': string,
+		'age': number,
+		'quiz1': number,
+		'quiz2': number,
+		'midterm': number,
+		'quiz3': number,
+		'quiz4': number,
+		'final': number,
+	},
+	3
+> = {
 	'header': [
 		'name',
 		'age',
@@ -506,13 +557,22 @@ export const gradebookMissing: Table<{
 
 
 
-export const gradebookSeq: Table<{
-	'name': string,
-	'age': number,
-	'quizzes': [number, number, number, number],
-	'midterm': number,
-	'final': number,
-}> = {
+export const gradebookSeq: Table<
+	[
+		'name',
+		'age',
+		'quizzes',
+		'midterm',
+		'final'
+	],
+	{
+		'name': string,
+		'age': number,
+		'quizzes': [number, number, number, number],
+		'midterm': number,
+		'final': number,
+	},
+	3> = {
 	'header': [
 		'name',
 		'age',
@@ -548,13 +608,26 @@ export const gradebookSeq: Table<{
 
 
 
-export const gradebookTable: Table<{
-	'name': string,
-	'age': number,
-	'quizzes': Table<{ 'quiz#': 1 | 2 | 3 | 4, 'grade': number }>,
-	'midterm': number,
-	'final': number,
-}> = {
+export const gradebookTable: Table<
+	[
+		'name',
+		'age',
+		'quizzes',
+		'midterm',
+		'final'
+	],
+	{
+		'name': string,
+		'age': number,
+		'quizzes': Table<
+			['quiz#', 'grade'],
+			{ 'quiz#': 1 | 2 | 3 | 4, 'grade': number },
+			4
+		>,
+		'midterm': number,
+		'final': number,
+	},
+	3> = {
 	'header': [
 		'name',
 		'age',
