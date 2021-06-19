@@ -2,4 +2,8 @@
 
 ### Limitations
 
-- this implementation cannot specify the order of column names.
+- this implementation cannot specify that a table must not contain duplicated column names.
+
+### Credits
+
+Thanks Thomas and Max for their annotated `pivotLonger`, `pivotWider`, and other operators.
