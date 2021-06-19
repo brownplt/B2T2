@@ -1,17 +1,38 @@
-export type ColNameTop = string
-export type ValueTop = any
-export type SchemaTop = Record<ColNameTop, ValueTop>
+// BEGIN FixedArray [cite https://stackoverflow.com/questions/41139763/how-to-declare-a-fixed-length-array-in-typescript]
+type Grow<T, A extends Array<T>> = ((x: T, ...xs: A) => void) extends ((...a: infer X) => void) ? X : never;
+type GrowToSize<T, A extends Array<T>, N extends number> = { 0: A, 1: GrowToSize<T, Grow<T, A>, N> }[A['length'] extends N ? 0 : 1];
+export type FixedArray<T, N extends number> = GrowToSize<T, [], N>;
+// END FixedArray
 
-export type Concat<S1 extends SchemaTop, S2 extends SchemaTop> = S1 & S2
-export type AddColumn<S extends SchemaTop, C extends ColNameTop, V extends ValueTop> = Concat<S, Singleton<C, V>>
-export type DropColumn<S extends SchemaTop, C extends ColNameTop> = Omit<S, C>
+export type CTop = string
+export type NTop = number
+export type HTop = Array<string>
+export type STop<H extends HTop> = Record<string & H[keyof H], unknown>
 
-type Singleton<C extends ColNameTop, V extends ValueTop> = Record<C, V>
+export type IsIn<H extends HTop> = H[keyof H & number]
 
+export type Concat<
+	H1 extends HTop,
+	H2 extends HTop,
+	S1 extends STop<H1>,
+	S2 extends STop<H2>
+	> = S1 & S2 & STop<[...H1, ...H2]>
+export type AddColumn<
+	H extends HTop,
+	S extends STop<H>,
+	C extends CTop,
+	V
+	> = S & Record<C, V> & STop<[...H, C]>
+export type DropColumn<H extends HTop, S extends STop<H>, C extends IsIn<H>> = Omit<S, C>
 
-export type Row<S extends SchemaTop> = S
-export type Table<S extends SchemaTop> = {
-	header: Array<keyof S>,
-	rows: Array<Row<S>>
+export type Row<H extends HTop, S extends STop<H>> = S
+export type Table<H extends HTop, S extends STop<H>, N extends NTop> = {
+	header: H,
+	rows: FixedArray<Row<H, S>, N>
 }
 
+
+export type Lookup<H extends HTop, S extends STop<H>, C extends IsIn<H>> = S[C]
+export type HeaderOf<A extends { header: Array<string> }> = A['header']
+export type SchemaOf<A extends { rows: Array<unknown> }> = A['rows'][number & keyof A['rows']]
+export type NRows<A extends { rows: Array<unknown> }> = A['rows']['length']
