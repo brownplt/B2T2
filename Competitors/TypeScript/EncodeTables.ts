@@ -26,6 +26,7 @@ export type AddColumn<
 export type DropColumn<H extends HTop, S extends STop<H>, C extends IsIn<H>> = Omit<S, C>
 
 export type Row<H extends HTop, S extends STop<H>> = S
+
 export type Table<H extends HTop, S extends STop<H>, N extends NTop> = {
 	header: H,
 	rows: FixedArray<Row<H, S>, N>
