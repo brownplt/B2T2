@@ -24,17 +24,17 @@ export const students: Table<
 	]
 }
 
-// Missing values can be represented with a special value, `undefined`
+// Missing values can be represented with a special value, `null`
 
 export const studentsMissing: Table<
 	['name', 'age', 'favorite color'],
-	{ 'name': string, 'age': number, 'favorite color': string },
+	{ 'name': string, 'age': number | null, 'favorite color': string | null },
 	3> = {
 	header: ['name', 'age', 'favorite color'],
 	rows: [
 		{
 			'name': 'Bob',
-			'age': undefined,
+			'age': null,
 			'favorite color': 'blue'
 		},
 		{
@@ -45,14 +45,14 @@ export const studentsMissing: Table<
 		{
 			'name': 'Eve',
 			'age': 13,
-			'favorite color': undefined
+			'favorite color': null
 		}
 	]
 }
 
 export const employees: Table<
 	['Last Name', 'Department ID'],
-	{ 'Last Name': string, 'Department ID': number },
+	{ 'Last Name': string, 'Department ID': number | null },
 	6> = {
 	header: ['Last Name', 'Department ID'],
 	rows: [
@@ -78,14 +78,14 @@ export const employees: Table<
 		},
 		{
 			'Last Name': 'Williams',
-			'Department ID': undefined
+			'Department ID': null
 		}
 	]
 }
 
 export const departments: Table<
 	['Department ID', 'Department Name'],
-	{ 'Department ID': number, 'Department Name' },
+	{ 'Department ID': number, 'Department Name': string },
 	4
 > = {
 	header: ['Department ID', 'Department Name'],
@@ -501,10 +501,10 @@ export const gradebookMissing: Table<
 	{
 		'name': string,
 		'age': number,
-		'quiz1': number,
+		'quiz1': number | null,
 		'quiz2': number,
 		'midterm': number,
-		'quiz3': number,
+		'quiz3': number | null,
 		'quiz4': number,
 		'final': number,
 	},
@@ -538,14 +538,14 @@ export const gradebookMissing: Table<
 			'quiz1': 6,
 			'quiz2': 8,
 			'midterm': 88,
-			'quiz3': undefined,
+			'quiz3': null,
 			'quiz4': 7,
 			'final': 85
 		},
 		{
 			'name': "Eve",
 			'age': 13,
-			'quiz1': undefined,
+			'quiz1': null,
 			'quiz2': 9,
 			'midterm': 84,
 			'quiz3': 8,
