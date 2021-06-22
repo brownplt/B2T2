@@ -452,7 +452,6 @@ export const gradebook: Table<
 		'final'
 	],
 	'rows': [
-
 		{
 			'name': "Bob",
 			'age': 12,
