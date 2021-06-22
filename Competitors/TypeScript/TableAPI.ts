@@ -1,10 +1,11 @@
-import { AddColumn, CTop, FixedArray, HeaderOf, HTop, IsIn, Lookup, NTop, Row, SchemaOf, STop, Table } from "./EncodeTables";
+import { AddColumn, CTop, Vec, HeaderOf, HTop, IsIn, Lookup, NTop, Row, SchemaOf, STop, Table } from "./EncodeTables";
 import { students, gradebook, studentsMissing } from "./ExampleTables";
 import { makeTester } from './unitTest'
+import * as VecLib from './Vec'
 
 const Test = makeTester()
 
-let emptyTable: Table<[], {}, 0> = { header: [], rows: [] };
+let emptyTable: Table<[], {}, 0> = { header: [], rows: [] as Vec<{}, 0> };
 // constraints
 () => {
 	// - [x] `schema(t)` is equal to `[]`
@@ -12,31 +13,40 @@ let emptyTable: Table<[], {}, 0> = { header: [], rows: [] };
 	const test1: 0 = nrows(emptyTable)
 }
 
-// Inexpressible because integer addition is not availabe at type level.
-// let addRows: <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>) => Table<H, S, N + 1>
-
-let addColumn: <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>
-	(t1: Table<H, S, N>, c: C, vs: FixedArray<V, N>)
-	=> Table<[...H, C], AddColumn<H, S, C, V>, N>
-addColumn = (t1, c, vs) => {
-	// TypeScript doesn't understand that t1.rows is an array.
-
-	// return {
-	// 	header: [...t1.header, c],
-	// 	rows: t1.rows.map((r, i) => Object.assign({ [c]: vs[i] }, r))
-	// }
-	throw 'addColumn cannot be defined.'
+let addColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>(t1: Table<H, S, N>, c: C, vs: Vec<V, N>): Table<[...H, C], AddColumn<H, S, C, V>, N> => {
+	return {
+		header: [...t1.header, c],
+		rows: VecLib.map(t1.rows, (r, i) => {
+			const newR: Row<[...H, C], AddColumn<H, S, C, V>> = Object.assign({ [c as C]: vs[i] }, r) as Row<[...H, C], AddColumn<H, S, C, V>>
+			return newR
+		})
+	}
 }
 // constraints
-// - [x] `c` is not in `header(t1)`
-// - [x] `length(vs)` is equal to `nrows(t1)`
-// - [x] `header(t2)` is equal to `concat(header(t1), [c])`
-// - [x] for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
-// - [x] `schema(t2)[c]` is the sort of elements of `vs`
-// - [x] `nrows(t2)` is equal to `nrows(t1)`
+() => {
+	// - [ ] `c` is not in `header(t1)`
+	// It is unclear to me how to achieve this.
+
+	// - [x] `length(vs)` is equal to `nrows(t1)`
+	// rejected as expected
+	// const test1 = addColumn(students, 'new', [])
+
+	// - [x] `header(t2)` is equal to `concat(header(t1), [c])`
+	// accepted as expected
+	const h: ["name", "age", "favorite color", "id"] = header(addColumn(students, 'id', [1, 2, 3] as Vec<number, 3>))
+
+	// - [x] for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
+	// See the examples to verify.
+
+	// - [x] `schema(t2)[c]` is the sort of elements of `vs`
+	// See the examples to verify.
+
+	// - [x] `nrows(t2)` is equal to `nrows(t1)`
+	const n: 3 = nrows(addColumn(students, 'id', [1, 2, 3] as Vec<number, 3>))
+}
 // examples
 {
-	const hairColor: FixedArray<string, 3> = ["brown", "red", "blonde"]
+	const hairColor: Vec<string, 3> = ["brown", "red", "blonde"]
 	Test.assertEqual(
 		'addColumn 1',
 		() => addColumn(students, "hair-color", hairColor),
@@ -64,7 +74,7 @@ addColumn = (t1, c, vs) => {
 			]
 		}
 	)
-	const presentation: FixedArray<number, 3> = [9, 9, 6]
+	const presentation: Vec<number, 3> = [9, 9, 6]
 	Test.assertEqual(
 		'addColumn 2',
 		() => addColumn(gradebook, "presentation", presentation),
@@ -147,12 +157,8 @@ Test.assertEqual(
 	() => header(gradebook),
 	["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]);
 
-let nrows: <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>) => N
-nrows = (t) => {
-	// rejected unexpectedly. 
-	// return t.rows.length;
-
-	throw 'nrows cannot be defined.'
+let nrows = <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>): N => {
+	return t.rows.length;
 }
 
 // constraints
@@ -161,12 +167,10 @@ nrows = (t) => {
 	const test1: 3 = nrows(students)
 }
 // examples
-Test.assertEqual('nrows 1', () => nrows(emptyTable), 0)
-Test.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
-
-
-
-
+{
+	Test.assertEqual('nrows 1', () => nrows(emptyTable), 0)
+	Test.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
+}
 
 let getValue: <H extends HTop, S extends STop<H>, C extends IsIn<H>>(r: Row<H, S>, c: C) => Lookup<H, S, C>
 getValue = (r, c) => {
@@ -198,19 +202,9 @@ getValue = (r, c) => {
 	Test.assertEqual('getValue 2', () => getValue({ 'name': 'Bob', 'age': 12 }, "age"), 12)
 }
 
-let buildColumn: <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>
-	(t1: Table<H, S, N>, c: C, f: (r: Row<H, S>) => V)
-	=> Table<[...H, C], AddColumn<H, S, C, V>, N>
-buildColumn = (t1, c, f) => {
-	// TypeScript doesn't understand that t1.rows is an array.
-
-	// return {
-	// 	header: [...header(t1), c],
-	// 	rows: t1.rows.map((r) => f(r))
-	// }
-	throw 'buildColumn cannot be defined.'
+let buildColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>(t1: Table<H, S, N>, c: C, f: (r: Row<H, S>) => V): Table<[...H, C], AddColumn<H, S, C, V>, N> => {
+	return addColumn(t1, c, VecLib.map(t1.rows, f))
 }
-
 // constraints
 () => {
 	// - [ ] `c` is not in `header(t1)`

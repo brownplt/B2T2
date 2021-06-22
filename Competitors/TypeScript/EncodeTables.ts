@@ -1,13 +1,5 @@
-<<<<<<< HEAD
 import { Vec } from "./Vec"
 export { Vec } from "./Vec"
-=======
-// BEGIN FixedArray [cite https://stackoverflow.com/questions/41139763/how-to-declare-a-fixed-length-array-in-typescript]
-type Grow<T, A extends Array<T>> = ((x: T, ...xs: A) => void) extends ((...a: infer X) => void) ? X : never;
-type GrowToSize<T, A extends Array<T>, N extends number> = { 0: A, 1: GrowToSize<T, Grow<T, A>, N> }[A['length'] extends N ? 0 : 1];
-export type FixedArray<T, N extends number> = GrowToSize<T, [], N>;
-// END FixedArray
->>>>>>> c47a430... new entries and many fixes
 
 export type CTop = string
 export type NTop = number
