@@ -30,7 +30,7 @@ export const makeTester = () => {
 		todos.push(() => {
 			try {
 				const apple = makeApple();
-				assertBoolean(myEqual(apple, orange), `${name}: ${JSON.stringify(apple)} is not equal ${JSON.stringify(orange)}.`)
+				assertBoolean(myEqual(apple, orange), `${name}: ${JSON.stringify(apple)} is not equal to ${JSON.stringify(orange)}.`)
 			} catch (e) {
 				errors.push(`${name}: error ${JSON.stringify(e)}`)
 			}
