@@ -1,10 +1,11 @@
-import { AddColumn, CTop, FixedArray, HeaderOf, HTop, IsIn, Lookup, NTop, Row, SchemaOf, STop, Table } from "./EncodeTables";
+import { AddColumn, CTop, Vec, HeaderOf, HTop, IsIn, Lookup, NTop, Row, SchemaOf, STop, Table } from "./EncodeTables";
 import { students, gradebook, studentsMissing } from "./ExampleTables";
 import { makeTester } from './unitTest'
+import * as VecLib from './Vec'
 
 const Test = makeTester()
 
-let emptyTable: Table<[], {}, 0> = { header: [], rows: [] };
+let emptyTable: Table<[], {}, 0> = { header: [], rows: [] as Vec<{}, 0> };
 // constraints
 () => {
 	// - [x] `schema(t)` is equal to `[]`
@@ -12,31 +13,40 @@ let emptyTable: Table<[], {}, 0> = { header: [], rows: [] };
 	const test1: 0 = nrows(emptyTable)
 }
 
-// Inexpressible because integer addition is not availabe at type level.
-// let addRows: <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>) => Table<H, S, N + 1>
-
-let addColumn: <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>
-	(t1: Table<H, S, N>, c: C, vs: FixedArray<V, N>)
-	=> Table<[...H, C], AddColumn<H, S, C, V>, N>
-addColumn = (t1, c, vs) => {
-	// TypeScript doesn't understand that t1.rows is an array.
-
-	// return {
-	// 	header: [...t1.header, c],
-	// 	rows: t1.rows.map((r, i) => Object.assign({ [c]: vs[i] }, r))
-	// }
-	throw 'addColumn cannot be defined.'
+let addColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>(t1: Table<H, S, N>, c: C, vs: Vec<V, N>): Table<[...H, C], AddColumn<H, S, C, V>, N> => {
+	return {
+		header: [...t1.header, c],
+		rows: VecLib.map(t1.rows, (r, i) => {
+			const newR: Row<[...H, C], AddColumn<H, S, C, V>> = Object.assign({ [c as C]: vs[i] }, r) as Row<[...H, C], AddColumn<H, S, C, V>>
+			return newR
+		})
+	}
 }
 // constraints
-// - [x] `c` is not in `header(t1)`
-// - [x] `length(vs)` is equal to `nrows(t1)`
-// - [x] `header(t2)` is equal to `concat(header(t1), [c])`
-// - [x] for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
-// - [x] `schema(t2)[c]` is the sort of elements of `vs`
-// - [x] `nrows(t2)` is equal to `nrows(t1)`
+() => {
+	// - [ ] `c` is not in `header(t1)`
+	// It is unclear to me how to achieve this.
+
+	// - [x] `length(vs)` is equal to `nrows(t1)`
+	// rejected as expected
+	// const test1 = addColumn(students, 'new', [])
+
+	// - [x] `header(t2)` is equal to `concat(header(t1), [c])`
+	// accepted as expected
+	const h: ["name", "age", "favorite color", "id"] = header(addColumn(students, 'id', [1, 2, 3] as Vec<number, 3>))
+
+	// - [x] for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
+	// See the examples to verify.
+
+	// - [x] `schema(t2)[c]` is the sort of elements of `vs`
+	// See the examples to verify.
+
+	// - [x] `nrows(t2)` is equal to `nrows(t1)`
+	const n: 3 = nrows(addColumn(students, 'id', [1, 2, 3] as Vec<number, 3>))
+}
 // examples
 {
-	const hairColor: FixedArray<string, 3> = ["brown", "red", "blonde"]
+	const hairColor: Vec<string, 3> = ["brown", "red", "blonde"]
 	Test.assertEqual(
 		'addColumn 1',
 		() => addColumn(students, "hair-color", hairColor),
@@ -64,7 +74,7 @@ addColumn = (t1, c, vs) => {
 			]
 		}
 	)
-	const presentation: FixedArray<number, 3> = [9, 9, 6]
+	const presentation: Vec<number, 3> = [9, 9, 6]
 	Test.assertEqual(
 		'addColumn 2',
 		() => addColumn(gradebook, "presentation", presentation),
@@ -147,12 +157,8 @@ Test.assertEqual(
 	() => header(gradebook),
 	["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]);
 
-let nrows: <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>) => N
-nrows = (t) => {
-	// rejected unexpectedly. 
-	// return t.rows.length;
-
-	throw 'nrows cannot be defined.'
+let nrows = <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>): N => {
+	return t.rows.length;
 }
 
 // constraints
@@ -161,12 +167,10 @@ nrows = (t) => {
 	const test1: 3 = nrows(students)
 }
 // examples
-Test.assertEqual('nrows 1', () => nrows(emptyTable), 0)
-Test.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
-
-
-
-
+{
+	Test.assertEqual('nrows 1', () => nrows(emptyTable), 0)
+	Test.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
+}
 
 let getValue: <H extends HTop, S extends STop<H>, C extends IsIn<H>>(r: Row<H, S>, c: C) => Lookup<H, S, C>
 getValue = (r, c) => {
@@ -193,22 +197,14 @@ getValue = (r, c) => {
 	// const test4 = getValue({ 'name': 'Bob', 'age': 12 }, 'age').charAt
 }
 // examples
-Test.assertEqual('getValue 1', () => getValue({ 'name': 'Bob', 'age': 12 }, 'name'), "Bob")
-Test.assertEqual('getValue 2', () => getValue({ 'name': 'Bob', 'age': 12 }, "age"), 12)
-
-let buildColumn: <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>
-	(t1: Table<H, S, N>, c: C, f: (r: Row<H, S>) => V)
-	=> Table<[...H, C], AddColumn<H, S, C, V>, N>
-buildColumn = (t1, c, f) => {
-	// TypeScript doesn't understand that t1.rows is an array.
-
-	// return {
-	// 	header: [...header(t1), c],
-	// 	rows: t1.rows.map((r) => f(r))
-	// }
-	throw 'buildColumn cannot be defined.'
+{
+	Test.assertEqual('getValue 1', () => getValue({ 'name': 'Bob', 'age': 12 }, 'name'), "Bob")
+	Test.assertEqual('getValue 2', () => getValue({ 'name': 'Bob', 'age': 12 }, "age"), 12)
 }
 
+let buildColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>(t1: Table<H, S, N>, c: C, f: (r: Row<H, S>) => V): Table<[...H, C], AddColumn<H, S, C, V>, N> => {
+	return addColumn(t1, c, VecLib.map(t1.rows, f))
+}
 // constraints
 () => {
 	// - [ ] `c` is not in `header(t1)`
@@ -294,7 +290,7 @@ buildColumn = (t1, c, f) => {
 		'buildColumn 2',
 		() => buildColumn(gradebook, 'did-well-in-final', didWellInFinal),
 		{
-			'header': ['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			'header': ['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final', 'did-well-in-final'],
 			'rows': [
 
 				{
@@ -334,5 +330,161 @@ buildColumn = (t1, c, f) => {
 		}
 	)
 }
+
+
+const vcat = <H extends HTop, S extends STop<H>, N1 extends NTop, N2 extends NTop>(t1: Table<H, S, N1>, t2: Table<H, S, N2>): Table<H, S, number> => {
+	return {
+		header: t1.header,
+		rows: VecLib.concat(t1.rows, t2.rows)
+	}
+}
+// constraints
+() => {
+	// - [x] `schema(t1)` is equal to `schema(t2)`
+	// - [x] `schema(t3)` is equal to `schema(t1)`
+	// See the examples to confirm
+
+	// - [ ] `nrows(t3)` is equal to `nrows(t1) + nrows(t2)`
+	// It is difficult to specify the sum of two numbers at type-level. See Vec.ts concat for a failed attempt.
+}
+// examples
+{
+	// TODO Fixed the type of update, otherwise these examples won't typecheck.
+	const increaseAge = (r: Row<HeaderOf<typeof students>, SchemaOf<typeof students>>) => {
+		return { 'age': getValue(r, 'age') + 1 }
+	}
+	Test.assertEqual(
+		'vcat 1',
+		() => vcat(students, update(students, increaseAge)),
+		{
+			header: ['name', 'age', 'favorite color'],
+			rows: [
+				{
+					'name': 'Bob',
+					'age': 12,
+					'favorite color': 'blue'
+				},
+				{
+					'name': 'Alice',
+					'age': 17,
+					'favorite color': 'green'
+				},
+				{
+					'name': 'Eve',
+					'age': 13,
+					'favorite color': 'red'
+				},
+				{
+					'name': 'Bob',
+					'age': 13,
+					'favorite color': 'blue'
+				},
+				{
+					'name': 'Alice',
+					'age': 18,
+					'favorite color': 'green'
+				},
+				{
+					'name': 'Eve',
+					'age': 14,
+					'favorite color': 'red'
+				}
+			]
+		}
+	)
+	const curveMidtermAndFinal = (r: Row<HeaderOf<typeof gradebook>, SchemaOf<typeof gradebook>>) => {
+		const curve = (n: number) => n + 5
+		return {
+			'midterm': curve(getValue(r, 'midterm')),
+			'final': curve(getValue(r, 'final'))
+		}
+	}
+	Test.assertEqual(
+		'vcat 2',
+		() => vcat(gradebook, update(gradebook, curveMidtermAndFinal)),
+		{
+			'header': [
+				'name',
+				'age',
+				'quiz1',
+				'quiz2',
+				'midterm',
+				'quiz3',
+				'quiz4',
+				'final'
+			],
+			'rows': [
+				{
+					'name': "Bob",
+					'age': 12,
+					'quiz1': 8,
+					'quiz2': 9,
+					'midterm': 77,
+					'quiz3': 7,
+					'quiz4': 9,
+					'final': 87
+				},
+				{
+					'name': "Alice",
+					'age': 17,
+					'quiz1': 6,
+					'quiz2': 8,
+					'midterm': 88,
+					'quiz3': 8,
+					'quiz4': 7,
+					'final': 85
+				},
+				{
+					'name': "Eve",
+					'age': 13,
+					'quiz1': 7,
+					'quiz2': 9,
+					'midterm': 84,
+					'quiz3': 8,
+					'quiz4': 8,
+					'final': 77
+				},
+				{
+					'name': "Bob",
+					'age': 12,
+					'quiz1': 8,
+					'quiz2': 9,
+					'midterm': 77,
+					'quiz3': 7,
+					'quiz4': 9,
+					'final': 92
+				},
+				{
+					'name': "Alice",
+					'age': 17,
+					'quiz1': 6,
+					'quiz2': 8,
+					'midterm': 88,
+					'quiz3': 8,
+					'quiz4': 7,
+					'final': 90
+				},
+				{
+					'name': "Eve",
+					'age': 13,
+					'quiz1': 7,
+					'quiz2': 9,
+					'midterm': 84,
+					'quiz3': 8,
+					'quiz4': 8,
+					'final': 82
+				}
+			]
+		}
+	)
+}
+
+let update = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends STop<H2>, N extends NTop>(t1: Table<H1, S1, N>, f: (r: Row<H1, S1>) => Row<H2, S2>): Table<H2, S2, number> => {
+	throw '[TODO: update is not implemented yet]'
+}
+// constraints
+// TODO
+// examples
+// TODO
 
 Test.go()
