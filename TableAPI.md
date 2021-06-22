@@ -217,7 +217,7 @@ Combines two tables vertically. The output table starts with rows from the first
 ```lua
 > increaseAge =
     function(r):
-      [row: ("name", 1 + getValue(r, "age"))]
+      [row: ("age", 1 + getValue(r, "age"))]
     end
 > vcat(students, update(students, increaseAge))
 | name    | age | favorite color |
@@ -238,7 +238,7 @@ Combines two tables vertically. The output table starts with rows from the first
         ("midterm", curve(getValue("midterm"))),
         ("final", curve(getValue("final")))]
     end
-> vcat(gradebook, update(gradebook, curveFinal))
+> vcat(gradebook, update(gradebook, curveMidtermAndFinal))
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
