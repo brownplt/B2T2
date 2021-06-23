@@ -16,14 +16,14 @@ T.assertEqual(
 	() => map([2, 3, 4] as Vec<number, 3>, (n) => (n + 1)),
 	[3, 4, 5])
 
-export const concat = <X, N1 extends number, N2 extends number>(v1: Vec<X, N1>, v2: Vec<X, N2>): Vec<X, number> => {
+export const concat = <X, N1 extends number, N2 extends number>(v1: Vec<X, N1>, v2: Vec<X, N2>): [...typeof v1, ...typeof v2] => {
 	// I don't know why setting the output type to be Vec<X, [...Vec<X, N1>, ...Vec<X, N2>]['length']> doesn't work.
-	return [...v1, ...v2] as Vec<X, [...Vec<X, N1>,  Vec<X, N2>]['length']>
+	return [...v1, ...v2]
 }
 
 T.assertEqual(
 	'concat 1',
-	() => concat([1, 2] as Vec<number, 2>, [3, 4, 5] as Vec<number, 3>),
+	() => concat([1, 2] as [1, 2], [3, 4, 5] as [3, 4, 5]),
 	[1, 2, 3, 4, 5]
 )
 
