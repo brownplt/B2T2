@@ -37,6 +37,7 @@ export const makeTester = () => {
 		})
 	}
 	const go = () => {
+		console.log('BEGIN')
 		for (const thunk of todos) {
 			thunk()
 		}
@@ -44,8 +45,9 @@ export const makeTester = () => {
 			console.log(e)
 		}
 		console.log('--- SUMMARY ---')
-		console.log(`succeess: ${successCount}`)
-		console.log(`failure:  ${errors.length}`)
+		console.log(`passed: ${successCount}`)
+		console.log(`failed: ${errors.length}`)
+		console.log('END')
 	}
 	return {
 		assertEqual, go

@@ -4,9 +4,12 @@ export { Vec } from "./Vec"
 export type CTop = string
 export type NTop = number
 export type HTop = Array<string>
-export type STop<H extends HTop> = Record<string & H[keyof H], unknown>
 
-export type IsIn<H extends HTop> = H[keyof H & number]
+export type ElementsOf<H extends HTop> = H[number]
+
+export type STop<H extends HTop> = Record<ElementsOf<H>, unknown>
+
+export type IsIn<H extends HTop> = ElementsOf<H>
 
 export type Concat<
 	H1 extends HTop,
@@ -21,6 +24,7 @@ export type AddColumn<
 	V
 	> = S & Record<C, V> & STop<[...H, C]>
 export type DropColumn<H extends HTop, S extends STop<H>, C extends IsIn<H>> = Omit<S, C>
+export type UpdateColumns<S1, S2> = { [k in keyof S1]: k extends keyof S2 ? S2[k] : S1[k] }
 
 export type Row<H extends HTop, S extends STop<H>> = S
 
