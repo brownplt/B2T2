@@ -235,8 +235,8 @@ Combines two tables vertically. The output table starts with rows from the first
           n + 5
         end
       [row:
-        ("midterm", curve(getValue("midterm"))),
-        ("final", curve(getValue("final")))]
+        ("midterm", curve(getValue(r, "midterm"))),
+        ("final", curve(getValue(r, "final")))]
     end
 > vcat(gradebook, update(gradebook, curveMidtermAndFinal))
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
@@ -335,8 +335,7 @@ Returns a sequence of one or more rows as a table.
 Computes the cartesian product of two tables.
 
 ```lua
-> petiteJelly = subTable(jellyAnon, [0, 1], [0, 1, 2])
-> petiteJelly
+> petiteJelly =
 | get acne | red   | black |
 | -------- | ----- | ----- |
 | true     | false | false |
@@ -355,7 +354,7 @@ Computes the cartesian product of two tables.
 | -------- | ----- | ----- |
 ```
 
-### `leftJoin :: t1:Table * t2:Table * cs:Table -> t3:Table`
+### `leftJoin :: t1:Table * t2:Table * cs:Seq<ColName> -> t3:Table`
 
 #### Constraints
 
@@ -371,7 +370,7 @@ Computes the cartesian product of two tables.
 
 - `header(t3)` is equal to `concat(header(t1), removeAll(header(t2), cs))`
 - for all `c` in `header(t1)`, `schema(t3)[c]` is equal to `schema(t1)[c]`
-- for all `c` in `removeAll(header(t2), cs))`, `schema(t3)[c]` is equal to `schema(t2)[c]`
+- for all `c` in `removeAll(header(t2), cs)`, `schema(t3)[c]` is equal to `schema(t2)[c]`
 - `nrows(t3)` is equal to `nrows(t1)`
 
 #### Description
@@ -785,39 +784,6 @@ Retains only unique/distinct rows from an input `Table`.
 | 8     |
 ```
 
-### `dropColumn :: t1:Table * c:ColName -> t2:Table`
-
-#### Constraints
-
-##### Requires:
-
-- `c` is in `header(t1)`
-
-##### Ensures:
-
-- `nrows(t2)` is equal to `nrows(t1)`
-- `header(t2)` is equal to `removeAll(header(t1), [c])`
-- `schema(t2)` is a subsequence of `schema(t1)`
-
-#### Description
-
-Returns a `Table` that is the same as `t`, except without the named column.
-
-```lua
-> dropColumn(students, "age")
-| name    | favorite color |
-| ------- | -------------- |
-| "Bob"   | "blue"         |
-| "Alice" | "green"        |
-| "Eve"   | "red"          |
-> dropColumn(gradebook, "final")
-| name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 |
-| ------- | --- | ----- | ----- | ------- | ----- | ----- |
-| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     |
-| "Alice" | 17  | 6     | 8     | 88      | 8     | 7     |
-| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     |
-```
-
 ### `dropColumns :: t1:Table * cs:Seq<ColName> -> t2:Table`
 
 #### Constraints
@@ -884,14 +850,12 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 > tfilter(gradebook, nameLongerThan3Letters)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
-| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ## Ordering
 
-### `sort :: t1:Table * c:ColName * b:Boolean -> t2:Table`
+### `tsort :: t1:Table * c:ColName * b:Boolean -> t2:Table`
 
 #### Constraints
 
@@ -910,13 +874,13 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 Given a `Table` and one of its column names, returns a `Table` with the same rows ordered based on the named column. If `b` is `true`, the `Table` will be sorted in ascending order, otherwise it will be in descending order.
 
 ```lua
-> sort(students, "age", true)
+> tsort(students, "age", true)
 | name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
 | "Alice" | 17  | "green"        |
-> sort(gradebook)
+> tsort(gradebook, "final", false)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
@@ -950,12 +914,12 @@ Given a `Table` and a sequence of column names in that `Table`, return a `Table`
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
 | "Alice" | 17  | "green"        |
-> sortByColumns(gradebook, ["quiz2", "quiz1",])
+> sortByColumns(gradebook, ["quiz2", "quiz1"])
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
-| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
-| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
+| "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
 ```
 
 ### `orderBy :: t1:Table * Seq<Exists K . getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`
@@ -989,20 +953,24 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
 | "Alice" | 17  | "green"        |
+> ge =
+    function(n1, n2):
+      n1 >= n2
+    end
 > midtermAndFinal =
     function(r):
       [getValue(r, "midterm"), getValue(r, "final")]
     end
 > compareGrade =
     function(g1, g2):
-      le(average(g1), average(g2))
+      ge(average(g1), average(g2))
     end
 > orderBy(gradebook, [(nameLength, ge), (midtermAndFinal, compareGrade)])
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Alice" | 17  | 6     | 8     | 88      | 8     | 7     | 85    |
-| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
+| "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
 ## Aggregate
@@ -1070,9 +1038,9 @@ Groups the values of a numeric column into bins. The parameter `n` specifies the
 > bin(gradebook, "final", 5)
 | group            | count |
 | ---------------- | ----- |
-| "75 <= age < 80" | 1     |
-| "80 <= age < 85" | 0     |
-| "85 <= age < 90" | 2     |
+| "75 <= final < 80" | 1     |
+| "80 <= final < 85" | 0     |
+| "85 <= final < 90" | 2     |
 ```
 
 ### `pivotTable :: t1:Table * cs:Seq<ColName> * aggs:Seq<ColName * ColName * Function> -> t2:Table`
@@ -1116,14 +1084,14 @@ Partitions rows into groups and summarize each group with the functions in `agg`
     ["brown", "get acne"],
     [
       ("red proportion", "red", proportion),
-      ("red proportion", "red", proportion)
+      ("pink proportion", "pink", proportion)
     ])
-| get acne | brown | red | pink |
-| -------- | ----- | --- | ---- |
-| false    | false | 0   | 3/4  |
-| false    | true  | 1   | 1    |
-| true     | false | 0   | 1/4  |
-| true     | true  | 0   | 0    |
+| get acne | brown | red proportion | pink proportion |
+| -------- | ----- | -------------- | --------------- |
+| false    | true  | 0              | 1/4             |
+| false    | false | 0              | 3/4             |
+| true     | true  | 0              | 0               |
+| true     | false | 1              | 1               |
 ```
 
 ### `groupBy<K,V> :: t1:Table * key:(r1:Row -> k1:K) * project:(r2:Row -> v:V) * aggregate:(k2:K * vs:Seq<V> -> r3:Row) -> t2:Table`
@@ -1687,6 +1655,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 
 ##### Requires:
 
+- `schema(r1)` is equal to `schema(t1)`
 - for all `c` in `header(r2)`, `c` is in `header(t1)`
 
 ##### Ensures:
@@ -1725,7 +1694,7 @@ Consumes an existing `Table` and produces a new `Table` with the named columns u
         ("midterm", 85 <= getValue(r, "midterm"))
         ("final", 85 <= getValue(r, "final"))]
     end
-> update(gradebook, didWellInFinal)
+> update(gradebook, abstractFinal)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | 8     | 9     | false   | 7     | 9     | true  |
