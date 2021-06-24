@@ -1,52 +1,36 @@
-import { AddColumn, CTop, Vec, HeaderOf, HTop, IsIn, Lookup, NTop, Row, SchemaOf, STop, Table, UpdateColumns, ElementsOf } from "./EncodeTables";
+import { AddColumn, CTop, Lookup, parseRow, Row, SchemaOf, STop, Table, UpdateColumns, VTop } from "./EncodeTables";
 import { students, gradebook, studentsMissing } from "./ExampleTables";
 import { makeTester } from './unitTest'
-import * as VecLib from './Vec'
 
 const T = makeTester()
 
-let emptyTable: Table<[], {}, 0> = { header: [], rows: [] as Vec<{}, 0> };
+let emptyTable: Table<{}> = { header: [], rows: [] };
 // constraints
 () => {
-	// - [x] `schema(t)` is equal to `[]`
-	// - [x] `nrows(t)` is equal to `0`
-	const test1: 0 = nrows(emptyTable)
+	// - [x] `schema(t)` is equal to `{}`
+	// - [ ] `nrows(t)` is equal to `0`
 }
 
-let addColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>(t1: Table<H, S, N>, c: C, vs: Vec<V, N>): Table<[...H, C], AddColumn<H, S, C, V>, N> => {
+let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, vs: Array<V>): Table<AddColumn<S, C, V>> => {
 	return {
 		header: [...t1.header, c],
-		rows: VecLib.map(t1.rows, (r, i) => {
-			const newR: Row<[...H, C], AddColumn<H, S, C, V>> = Object.assign({ [c as C]: vs[i] }, r) as Row<[...H, C], AddColumn<H, S, C, V>>
-			return newR
+		rows: t1.rows.map((r, i) => {
+			return Object.assign({ [c as C]: vs[i] }, r) as AddColumn<S, C, V>;
 		})
 	}
 }
 // constraints
 () => {
 	// - [ ] `c` is not in `header(t1)`
-	// It is unclear to me how to achieve this.
-
-	// - [x] `length(vs)` is equal to `nrows(t1)`
-	// rejected as expected
-	// const test1 = addColumn(students, 'new', [])
-
+	// - [ ] `length(vs)` is equal to `nrows(t1)`
 	// - [x] `header(t2)` is equal to `concat(header(t1), [c])`
-	// accepted as expected
-	const h: ["name", "age", "favorite color", "id"] = header(addColumn(students, 'id', [1, 2, 3] as Vec<number, 3>))
-
 	// - [x] for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
-	// See the examples to verify.
-
 	// - [x] `schema(t2)[c]` is the sort of elements of `vs`
-	// See the examples to verify.
-
-	// - [x] `nrows(t2)` is equal to `nrows(t1)`
-	const n: 3 = nrows(addColumn(students, 'id', [1, 2, 3] as Vec<number, 3>))
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
 }
 // examples
 {
-	const hairColor: Vec<string, 3> = ["brown", "red", "blonde"]
+	const hairColor = ["brown", "red", "blonde"]
 	T.assertEqual(
 		'addColumn 1',
 		() => addColumn(students, "hair-color", hairColor),
@@ -74,7 +58,7 @@ let addColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CT
 			]
 		}
 	)
-	const presentation: Vec<number, 3> = [9, 9, 6]
+	const presentation: Array<number> = [9, 9, 6]
 	T.assertEqual(
 		'addColumn 2',
 		() => addColumn(gradebook, "presentation", presentation),
@@ -130,22 +114,12 @@ let addColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CT
 	)
 }
 
-let header: <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>) => H
-header = (t) => {
+let header = <S extends STop>(t: Table<S>): Array<keyof S> => {
 	return t.header;
 }
 // constraints
 () => {
-	// - [x] `cs` is equal to `header(t)`
-
-	// accepted as expected
-	const test1: ['name', 'age', 'favorite color'] = header(students)
-
-	// rejected as expected
-	// const test2: ['age', 'name', 'favorite color'] = header(students)
-
-	// rejected as expected
-	// const test3: ['Name', 'Age', 'Favorite Color'] = header(students)
+	// - [ ] `cs` is equal to `header(t)`
 }
 // examples
 T.assertEqual(
@@ -157,14 +131,12 @@ T.assertEqual(
 	() => header(gradebook),
 	["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]);
 
-let nrows = <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N>): N => {
+let nrows = <S extends STop>(t: Table<S>): number => {
 	return t.rows.length;
 }
-
 // constraints
 () => {
-	// - [x] `n` is equal to `nrows(t)`
-	const test1: 3 = nrows(students)
+	// - [ ] `n` is equal to `nrows(t)`
 }
 // examples
 {
@@ -172,88 +144,45 @@ let nrows = <H extends HTop, S extends STop<H>, N extends NTop>(t: Table<H, S, N
 	T.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
 }
 
-let getValue: <H extends HTop, S extends STop<H>, C extends CTop & IsIn<H>>(r: Row<H, S>, c: C & keyof typeof r) => Lookup<H, S, C>
-getValue = (r, c) => {
-	return r[c]
+let getValue = <S extends STop, C extends CTop & keyof S>(r: Row<S>, c: C): Lookup<S, C> => {
+	return r.content[c]
 }
 // constraints
 () => {
 	// - [x] `c` is in header(r)
-	// rejected as expected
-	// const test1 = getValue({ 'name': 'Bob', 'age': 12 }, 'Name')
-
-	// rejected as expected
-	// const test2 = getValue<['name', 'age'], { 'name': string, 'age': number }, 'Name'>({ 'name': 'Bob', 'age': 12 }, 'Name')  
-
-
-
 	// - [x] `v` is of sort `schema(r)[c]`
-
-	// accepted as expected
-	const test3 = getValue({ 'name': 'Bob', 'age': 12 }, 'name').charAt
-
-	// rejected as expected
-	// const test4 = getValue({ 'name': 'Bob', 'age': 12 }, 'age').charAt
 }
 // examples
 {
-	T.assertEqual('getValue 1', () => getValue({ 'name': 'Bob', 'age': 12 }, 'name'), "Bob")
-	T.assertEqual('getValue 2', () => getValue({ 'name': 'Bob', 'age': 12 }, "age"), 12)
+	T.assertEqual(
+		'getValue 1',
+		() => getValue(
+			parseRow([['name', 'Bob'], ['age', 12]]) as Row<{ 'name': string, 'age': 12 }>,
+			'name'),
+		'Bob')
+	T.assertEqual(
+		'getValue 2',
+		() => getValue(
+			parseRow([['name', 'Bob'], ['age', 12]]) as Row<{ 'name': string, 'age': 12 }>,
+			'age'),
+		12)
 }
 
-let buildColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends CTop, V>(t1: Table<H, S, N>, c: C, f: (r: Row<H, S>) => V): Table<[...H, C], AddColumn<H, S, C, V>, N> => {
-	return addColumn(t1, c, VecLib.map(t1.rows, f))
+let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, f: (r: Row<S>) => V): Table<AddColumn<S, C, V>> => {
+	return addColumn(t1, c, t1.rows.map((r) => f({ header: t1.header, content: r })))
 }
 // constraints
 () => {
 	// - [ ] `c` is not in `header(t1)`
-
-	// It is unclear to me how to specify that C is *not* in H.
-	// Note: hopefully TS will integrate negation type in the near future. https://github.com/microsoft/TypeScript/pull/29317
-
-
-
 	// - [x] `schema(r)` is equal to `schema(t1)`
-	// accepted as expected
-	const test2 = buildColumn(students, 'full name', (r) => r['name'] + ' Smith')
-
-	// rejected as expected
-	// const test3 = buildColumn(students, 'full name', (r) => r['Name'] + ' Smith')
-
-
-
-	// - [x] `header(t2)` is equal to `concat(header(t1), [c])`
-
-	// accepted as expected
-	const test4 = header(buildColumn(students, 'full name', (r) => r['name'] + ' Smith'))
-
-
-
+	// - [ ] `header(t2)` is equal to `concat(header(t1), [c])`
 	// - [x] for all `c'` in `header(t1)`, `schema(t2)[c']` is equal to `schema(t1)[c']`
 	// - [x] `schema(t2)[c]` is equal to the sort of `v`
-	// accepted as expected
-	const test5
-		: Table<
-			["name", "age", "favorite color", "full name"],
-			{
-				name: string;
-				age: number;
-				'favorite color': string;
-				'full name': string
-			},
-			3>
-		= buildColumn(students, 'full name', (r) => r['name'] + ' Smith')
-
-
-
 	// - [x] `nrows(t2)` is equal to `nrows(t1)`
-
-	// accepted as expected
-	const test6 = nrows(buildColumn(students, 'full name', (r) => r['name'] + ' Smith'))
 }
 // examples
 {
-	const isTeenagerBuilder = (r: Row<HeaderOf<typeof students>, SchemaOf<typeof students>>) => {
+	const isTeenagerBuilder = (r: Row<SchemaOf<typeof students>>) => {
 		return 12 < getValue(r, 'age') && getValue(r, 'age') < 20
 	}
 	T.assertEqual(
@@ -282,7 +211,7 @@ let buildColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends 
 				}
 			]
 		})
-	const didWellInFinal = (r: Row<HeaderOf<typeof gradebook>, SchemaOf<typeof gradebook>>) => {
+	const didWellInFinal = (r: Row<SchemaOf<typeof gradebook>>) => {
 		return 85 <= getValue(r, 'final')
 	}
 	T.assertEqual(
@@ -331,37 +260,36 @@ let buildColumn = <H extends HTop, S extends STop<H>, N extends NTop, C extends 
 }
 
 
-const vcat = <H extends HTop, S extends STop<H>, N1 extends NTop, N2 extends NTop>(t1: Table<H, S, N1>, t2: Table<H, S, N2>): Table<H, S, number> => {
+const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 	return {
 		header: t1.header,
-		rows: VecLib.concat(t1.rows, t2.rows) as Vec<S, number>
+		rows: t1.rows.concat(t2.rows.map((r) => {
+			return Object.fromEntries(t1.header.map((c) => {
+				return [c, r[c]]
+			})) as S
+		}))
 	}
 }
 // constraints
 () => {
-	// - [x] `schema(t1)` is equal to `schema(t2)`
+	// - [ ] `schema(t1)` is equal to `schema(t2)`
 	// - [x] `schema(t3)` is equal to `schema(t1)`
-	// See the examples to confirm
-
 	// - [ ] `nrows(t3)` is equal to `nrows(t1) + nrows(t2)`
-	// It is difficult to specify the sum of two numbers at type-level. See Vec.ts concat for a failed attempt.
 }
 // examples
 {
-	const increaseAge = (r: Row<HeaderOf<typeof students>, SchemaOf<typeof students>>) => {
-		return { 'age': getValue(r, 'age') + 1 }
+	const increaseAge = (r: Row<SchemaOf<typeof students>>) => {
+		return parseRow([['age', getValue(r, 'age') + 1]])
 	}
 	T.assertEqual(
 		'vcat 1',
 		() => {
 			const o: Table<
-				["name", "age", "favorite color"],
 				{
 					name: string,
 					age: number,
 					'favorite color': string,
-				},
-				number
+				}
 			> = vcat(students, update(students, increaseAge))
 			return o;
 		},
@@ -401,12 +329,12 @@ const vcat = <H extends HTop, S extends STop<H>, N1 extends NTop, N2 extends NTo
 			]
 		}
 	)
-	const curveMidtermAndFinal = (r: Row<HeaderOf<typeof gradebook>, SchemaOf<typeof gradebook>>) => {
+	const curveMidtermAndFinal = (r: Row<SchemaOf<typeof gradebook>>) => {
 		const curve = (n: number) => n + 5
-		return {
-			'midterm': curve(getValue(r, 'midterm')),
-			'final': curve(getValue(r, 'final'))
-		}
+		return parseRow([
+			['midterm', curve(getValue(r, 'midterm'))],
+			['final', curve(getValue(r, 'final'))],
+		])
 	}
 	T.assertEqual(
 		'vcat 2',
@@ -489,45 +417,33 @@ const vcat = <H extends HTop, S extends STop<H>, N1 extends NTop, N2 extends NTo
 	)
 }
 
-let update = <H1 extends HTop, S1 extends STop<H1>, S2 extends Partial<STop<H1>>, N extends NTop>(t1: Table<H1, S1, N>, f: (r1: Row<H1, S1>) => Row<Array<keyof S2 & string>, S2>): Table<H1, UpdateColumns<S1, S2>, N> => {
+let update = <S1 extends STop, S2 extends Partial<STop>>(t1: Table<S1>, f: (r1: Row<S1>) => Row<S2>): Table<UpdateColumns<S1, S2>> => {
 	return {
 		header: t1.header,
-		rows: VecLib.map(t1.rows, (r) => {
-			return Object.assign({}, r, f(r)) as Row<H1, UpdateColumns<S1, S2>>
+		rows: t1.rows.map((r) => {
+			return Object.assign({}, r, f({ header: t1.header, content: r }).content) as UpdateColumns<S1, S2>
 		})
 	}
 }
 // constraints
 () => {
 	// - [x] for all `c` in `header(r2)`, `c` is in `header(t1)`
-	// rejected as expected
-	// const test1 = update(students, (r) => {
-	// 	return { 'Name': getValue(r, 'name') }
-	// });
-
 	// - [x] `schema(r1)` is equal to `schema(t1)`
-	// See the types in the examples to confirm.
-
 	// - [x] `header(t2)` is equal to `header(t1)`
-	// See the types in the examples to confirm.
-
 	// - [x] for all `c` in `header(t2)`
 	//   - if `c` in `header(r2)` then `schema(t2)[c]` is equal to `schema(r2)[c]`
 	//   - otherwise, `schema(t2)[c]` is equal to `schema(t1)[c]`
-	// See the types in the examples to confirm.
-
 	// - [x] `nrows(t2)` is equal to `nrows(t1)`
-	// See the types in the examples to confirm.
 }
 // examples
 {
-	const abstractAge = (r: Row<HeaderOf<typeof students>, SchemaOf<typeof students>>) => {
+	const abstractAge = (r: Row<SchemaOf<typeof students>>) => {
 		if (getValue(r, 'age') <= 12) {
-			return { 'age': 'kid' }
+			return parseRow([['age', 'kid']])
 		} else if (getValue(r, 'age') <= 19) {
-			return { 'age': 'teenager' }
+			return parseRow([['age', 'teenager']])
 		} else {
-			return { 'age': 'adult' }
+			return parseRow([['age', 'adult']])
 		}
 	}
 	T.assertEqual(
@@ -554,11 +470,11 @@ let update = <H1 extends HTop, S1 extends STop<H1>, S2 extends Partial<STop<H1>>
 			]
 		}
 	)
-	const abstractFinal = (r: Row<HeaderOf<typeof gradebook>, SchemaOf<typeof gradebook>>) => {
-		return {
-			'midterm': 85 <= getValue(r, 'midterm'),
-			'final': 85 <= getValue(r, 'final')
-		}
+	const abstractFinal = (r: Row<SchemaOf<typeof gradebook>>) => {
+		return parseRow([
+			['midterm', 85 <= getValue(r, 'midterm')],
+			['final', 85 <= getValue(r, 'final')]
+		])
 	}
 	T.assertEqual(
 		'update 2',
@@ -611,11 +527,11 @@ let update = <H1 extends HTop, S1 extends STop<H1>, S2 extends Partial<STop<H1>>
 }
 
 
-let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends STop<H2>, N extends NTop>(t1: Table<H1, S1, N>, t2: Table<H2, S2, N>): Table<[...H1, ...H2], S1 & S2, N> => {
+let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Table<S1 & S2> => {
 	return {
 		header: [...t1.header, ...t2.header],
-		rows: VecLib.map(t1.rows, (r1, i) => {
-			return Object.assign({}, r1, t2.rows[i]) as Row<[...H1, ...H2], S1 & S2>
+		rows: t1.rows.map((r1, i) => {
+			return Object.assign({}, r1, t2.rows[i]) as S1 & S2
 		})
 	}
 }
@@ -637,7 +553,7 @@ let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends ST
 			'header': [
 				'name',
 				'age',
-				'favorite-color',
+				'favorite color',
 				'quiz1',
 				'quiz2',
 				'midterm',
@@ -649,7 +565,7 @@ let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends ST
 				{
 					'name': "Bob",
 					'age': 12,
-					'favorite-color': 'blue',
+					'favorite color': 'blue',
 					'quiz1': 8,
 					'quiz2': 9,
 					'midterm': 77,
@@ -660,7 +576,7 @@ let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends ST
 				{
 					'name': "Alice",
 					'age': 17,
-					'favorite-color': 'green',
+					'favorite color': 'green',
 					'quiz1': 6,
 					'quiz2': 8,
 					'midterm': 88,
@@ -671,7 +587,7 @@ let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends ST
 				{
 					'name': "Eve",
 					'age': 13,
-					'favorite-color': 'red',
+					'favorite color': 'red',
 					'quiz1': 7,
 					'quiz2': 9,
 					'midterm': 84,
@@ -684,10 +600,10 @@ let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends ST
 	)
 	T.assertEqual(
 		'hcat 1',
-		() => hcat(students, dropColumns(gradebook, ['name', 'age'])),
+		() => hcat(dropColumns(students, ['name', 'age']), gradebook),
 		{
 			'header': [
-				'favorite-color',
+				'favorite color',
 				'name',
 				'age',
 				'quiz1',
@@ -699,7 +615,7 @@ let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends ST
 			],
 			'rows': [
 				{
-					'favorite-color': 'blue',
+					'favorite color': 'blue',
 					'name': "Bob",
 					'age': 12,
 					'quiz1': 8,
@@ -710,9 +626,9 @@ let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends ST
 					'final': 87
 				},
 				{
-					'favorite-color': 'green',
+					'favorite color': 'green',
 					'name': "Alice",
-					'age': 17,	'quiz1': 6,
+					'age': 17, 'quiz1': 6,
 					'quiz2': 8,
 					'midterm': 88,
 					'quiz3': 8,
@@ -720,9 +636,9 @@ let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends ST
 					'final': 85
 				},
 				{
-					'favorite-color': 'red',
+					'favorite color': 'red',
 					'name': "Eve",
-					'age': 13,	'quiz1': 7,
+					'age': 13, 'quiz1': 7,
 					'quiz2': 9,
 					'midterm': 84,
 					'quiz3': 8,
@@ -734,14 +650,16 @@ let hcat = <H1 extends HTop, H2 extends HTop, S1 extends STop<H1>, S2 extends ST
 	)
 }
 
-// TODO For all "see the examples", make sure the examples are readable.
 
-// TODO fix this. The type is broken
-let dropColumns = <H extends HTop, S extends STop<H>, N extends NTop>(t1: Table<H, S, N>, cs: Array<ElementsOf<H>>): Table<H, S, N> => {
-	throw 'TODO'
+let dropColumns = <S extends STop>(t1: Table<S>, cs: Array<keyof S>): Table<Omit<S, (typeof cs)[number]>> => {
+	const header = t1.header.filter((c) => {
+		return cs.indexOf(c) === -1;
+	}) as Array<keyof Omit<S, (typeof cs)[number]>>
+	const rows = t1.rows.map((r) => {
+		return Object.fromEntries(header.map((c) => [c, r[c]])) as Omit<S, (typeof cs)[number]>
+	})
+	return { header, rows }
 }
-
-
 
 
 T.go()
