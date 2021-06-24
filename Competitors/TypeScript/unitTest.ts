@@ -16,6 +16,28 @@ export const makeTester = () => {
 		}
 		return true;
 	}
+	const myDiff = (apple: any, orange: any): string => {
+		if (typeof apple !== typeof orange) {
+			return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
+		}
+		if (typeof apple !== 'object') {
+			if (apple === orange) {
+				return '';
+			} else {
+				return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
+			}
+		}
+		if (Object.keys(apple).length !== Object.keys(orange).length) {
+			return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
+		}
+		for (const key of Object.keys(apple)) {
+			const diff = myDiff(apple[key], orange[key])
+			if (diff) {
+				return diff
+			}
+		}
+		return '';
+	}
 	const todos: Array<() => void> = [];
 	let successCount = 0;
 	const errors: string[] = [];
@@ -23,14 +45,21 @@ export const makeTester = () => {
 		if (!bool) {
 			errors.push(msg)
 		} else {
-			successCount ++;
+			successCount++;
 		}
 	}
 	const assertEqual = (name: string, makeApple: () => any, orange: any) => {
 		todos.push(() => {
+			// try {
+			// 	const apple = makeApple();
+			// 	assertBoolean(myEqual(apple, orange), `${name}: ${JSON.stringify(apple)} is not equal to ${JSON.stringify(orange)}.`)
+			// } catch (e) {
+			// 	errors.push(`${name}: error ${JSON.stringify(e)}`)
+			// }
 			try {
 				const apple = makeApple();
-				assertBoolean(myEqual(apple, orange), `${name}: ${JSON.stringify(apple)} is not equal to ${JSON.stringify(orange)}.`)
+				const diff = myDiff(apple, orange);
+				assertBoolean(!diff, `${name}: ${diff}.`)
 			} catch (e) {
 				errors.push(`${name}: error ${JSON.stringify(e)}`)
 			}
