@@ -355,7 +355,7 @@ Computes the cartesian product of two tables.
 | -------- | ----- | ----- |
 ```
 
-### `leftJoin :: t1:Table * t2:Table * cs:Table -> t3:Table`
+### `leftJoin :: t1:Table * t2:Table * cs:Seq<ColName> -> t3:Table`
 
 #### Constraints
 
@@ -472,8 +472,6 @@ Returns a `Seq` representing the column names in the `Table`.
 - `n` is in `range(nrows(t))`
 
 ##### Ensures:
-
-- `r` is equal to `getRow(t, n)`
 
 #### Description
 

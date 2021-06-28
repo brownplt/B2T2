@@ -1,10 +1,10 @@
-import { AddColumn, CTop, Lookup, parseRow, Row, SchemaOf, STop, Table, UpdateColumns, VTop } from "./EncodeTables";
-import { students, gradebook, studentsMissing } from "./ExampleTables";
+import { AddColumn, CTop, Lookup, parseRow, parseTable, Row, SchemaOf, STop, Table, UpdateColumns, VTop } from "./EncodeTables";
+import { students, gradebook, studentsMissing, jellyAnon, employees, departments } from "./ExampleTables";
 import { makeTester } from './unitTest'
 
 const T = makeTester()
 
-let emptyTable: Table<{}> = { header: [], rows: [] };
+let emptyTable: Table<{}> = { header: [] as Array<keyof {}>, content: [] };
 // constraints
 () => {
 	// - [x] `schema(t)` is equal to `{}`
@@ -14,7 +14,7 @@ let emptyTable: Table<{}> = { header: [], rows: [] };
 let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, vs: Array<V>): Table<AddColumn<S, C, V>> => {
 	return {
 		header: [...t1.header, c],
-		rows: t1.rows.map((r, i) => {
+		content: t1.content.map((r, i) => {
 			return Object.assign({ [c as C]: vs[i] }, r) as AddColumn<S, C, V>;
 		})
 	}
@@ -114,62 +114,8 @@ let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c
 	)
 }
 
-let header = <S extends STop>(t: Table<S>): Array<keyof S> => {
-	return t.header;
-}
-// constraints
-() => {
-	// - [ ] `cs` is equal to `header(t)`
-}
-// examples
-T.assertEqual(
-	'header 1',
-	() => header(students),
-	["name", "age", "favorite color"]);
-T.assertEqual(
-	'header 2',
-	() => header(gradebook),
-	["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]);
-
-let nrows = <S extends STop>(t: Table<S>): number => {
-	return t.rows.length;
-}
-// constraints
-() => {
-	// - [ ] `n` is equal to `nrows(t)`
-}
-// examples
-{
-	T.assertEqual('nrows 1', () => nrows(emptyTable), 0)
-	T.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
-}
-
-let getValue = <S extends STop, C extends CTop & keyof S>(r: Row<S>, c: C): Lookup<S, C> => {
-	return r.content[c]
-}
-// constraints
-() => {
-	// - [x] `c` is in header(r)
-	// - [x] `v` is of sort `schema(r)[c]`
-}
-// examples
-{
-	T.assertEqual(
-		'getValue 1',
-		() => getValue(
-			parseRow([['name', 'Bob'], ['age', 12]]) as Row<{ 'name': string, 'age': 12 }>,
-			'name'),
-		'Bob')
-	T.assertEqual(
-		'getValue 2',
-		() => getValue(
-			parseRow([['name', 'Bob'], ['age', 12]]) as Row<{ 'name': string, 'age': 12 }>,
-			'age'),
-		12)
-}
-
 let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, f: (r: Row<S>) => V): Table<AddColumn<S, C, V>> => {
-	return addColumn(t1, c, t1.rows.map((r) => f({ header: t1.header, content: r })))
+	return addColumn(t1, c, t1.content.map((r) => f({ header: t1.header, content: r })))
 }
 // constraints
 () => {
@@ -263,7 +209,7 @@ let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>,
 const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 	return {
 		header: t1.header,
-		rows: t1.rows.concat(t2.rows.map((r) => {
+		content: t1.content.concat(t2.content.map((r) => {
 			return Object.fromEntries(t1.header.map((c) => {
 				return [c, r[c]]
 			})) as S
@@ -420,7 +366,7 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 let update = <S1 extends STop, S2 extends Partial<STop>>(t1: Table<S1>, f: (r1: Row<S1>) => Row<S2>): Table<UpdateColumns<S1, S2>> => {
 	return {
 		header: t1.header,
-		rows: t1.rows.map((r) => {
+		content: t1.content.map((r) => {
 			return Object.assign({}, r, f({ header: t1.header, content: r }).content) as UpdateColumns<S1, S2>
 		})
 	}
@@ -530,8 +476,8 @@ let update = <S1 extends STop, S2 extends Partial<STop>>(t1: Table<S1>, f: (r1: 
 let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Table<S1 & S2> => {
 	return {
 		header: [...t1.header, ...t2.header],
-		rows: t1.rows.map((r1, i) => {
-			return Object.assign({}, r1, t2.rows[i]) as S1 & S2
+		content: t1.content.map((r1, i) => {
+			return Object.assign({}, r1, t2.content[i]) as S1 & S2
 		})
 	}
 }
@@ -651,14 +597,255 @@ let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Tab
 }
 
 
+let values = <S extends STop>(rs: Array<Row<S>>): Table<S> => {
+	return {
+		header: rs[0].header,
+		content: rs.map(({ content }) => content)
+	};
+}
+() => {
+	// - [ ] `length(rs)` is positive
+	// - [ ] for all `r` in `rs`, `schema(r)` is equal to `schema(rs[0])`
+	// - [ ] `schema(t)` is equal to `schema(rs[0])`
+	// - [ ] `nrows(t)` is equal to `length(rs)`
+}
+T.assertEqual(
+	'values 0',
+	() => values([
+		parseRow([['name', 'Alice']]),
+		parseRow([['name', 'Bob']])
+	]),
+	parseTable([
+		['name'],
+		['Alice'],
+		['Bob']
+	])
+)
+T.assertEqual(
+	'values 0',
+	() => values([
+		parseRow([['name', 'Alice'], ['age', 12]]),
+		parseRow([['name', 'Bob'], ['age', 13]])
+	]),
+	parseTable([
+		['name', 'age'],
+		['Alice', 12],
+		['Bob', 13]
+	])
+)
+
+
+let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Table<S1 & S2> => {
+	return {
+		header: [...t1.header, ...t2.header],
+		content: t1.content.flatMap((r1) => {
+			return t2.content.map((r2) => {
+				return Object.assign({}, r1, r2)
+			})
+		})
+	}
+}
+() => {
+	// - [ ] `concat(header(t1), header(t2))` has no duplicates
+	// - [ ] `schema(t3)` is equal to `concat(schema(t1), schema(t2))`
+	// - [ ] `nrows(t3)` is equal to `nrows(t1) * nrows(t2)`
+}
+{
+	const petiteJelly = subTable(jellyAnon, [0, 1], [0, 1, 2])
+	T.assertEqual(
+		'crossJoin 1',
+		() => crossJoin(students, petiteJelly),
+		parseTable([
+			['name', 'age', 'favorite color', 'get acne', 'red', 'black'],
+			["Bob", 12, "blue", true, false, false],
+			["Bob", 12, "blue", true, false, true],
+			["Alice", 17, "green", true, false, false],
+			["Alice", 17, "green", true, false, true],
+			["Eve", 13, "red", true, false, false],
+			["Eve", 13, "red", true, false, true]
+		])
+	)
+	T.assertEqual(
+		'crossJoin 2',
+		() => crossJoin(emptyTable, petiteJelly),
+		parseTable([
+			['get acne', 'red', 'black']
+		])
+	)
+}
+
+
+let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, cs: Array<keyof S1 & keyof S2>): Table<S1 & Omit<S2, keyof S1>> => {
+	const header = [...t1.header, ...t2.header.filter((c) => {
+		return cs.indexOf(c as (keyof S1 & keyof S2)) === -1
+	})] as Array<keyof (S1 & Omit<S2, keyof S1>)>
+	return {
+		header,
+		content: t1.content.flatMap((r1): Array<S1 & S2> => {
+			const rs2 = t2.content.filter((r2) => {
+				return cs.every((c) => { r1[c] === r2[c] })
+			})
+			if (rs2.length === 0) {
+				return [
+					Object.assign(
+						Object.fromEntries(header.map((c) => [c, null])) as S1 & S2,
+						r1)
+				]
+			} else {
+				return rs2.map((r2) => {
+					return Object.assign({}, r1, r2)
+				})
+			}
+		})
+	}
+}
+() => {
+	// - [ ] `header(t3)` is equal to `concat(header(t1), removeAll(header(t2), cs))`
+	// - [x] for all `c` in `header(t1)`, `schema(t3)[c]` is equal to `schema(t1)[c]`
+	// - [ ] for all `c` in `removeAll(header(t2), cs))`, `schema(t3)[c]` is equal to `schema(t2)[c]`
+	// - [ ] `nrows(t3)` is equal to `nrows(t1)`
+
+}
+{
+	T.assertEqual(
+		'leftJoin 1',
+		() => leftJoin(students, gradebook, ["name", "age"]),
+		parseTable(
+			[
+				["name", 'age', 'favorite color', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+				["Bob", 12, "blue", 8, 9, 77, 7, 9, 87],
+				["Alice", 17, "green", 6, 8, 88, 8, 7, 85],
+				["Eve", 13, "red", 7, 9, 84, 8, 8, 77]
+			]
+		)
+	)
+	T.assertEqual(
+		'leftJoin 2',
+		() => leftJoin(employees, departments, ["Department ID"]),
+		[
+			['Last Name', 'Department ID', 'Department Name'],
+			["Rafferty", 31, "Sales"],
+			["Jones", 32, null],
+			["Heisenberg", 33, "Engineering"],
+			["Robinson", 34, "Clerical"],
+			["Smith", 34, "Clerical"],
+			["Williams", null, null]
+		]
+	)
+}
+
+
+let nrows = <S extends STop>(t: Table<S>): number => {
+	return t.content.length;
+}
+// constraints
+() => {
+	// - [ ] `n` is equal to `nrows(t)`
+}
+// examples
+{
+	T.assertEqual('nrows 1', () => nrows(emptyTable), 0)
+	T.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
+}
+
+
+
+let ncols = <S extends STop>(t: Table<S>): number => {
+	return t.header.length;
+}
+// constraints
+() => {
+	// - [ ] `n` is equal to `ncols(t)`
+}
+// examples
+{
+	T.assertEqual('nrows 1', () => ncols(students), 3)
+	T.assertEqual('nrows 2', () => ncols(studentsMissing), 8)
+}
+
+
+
+
+let header = <S extends STop>(t: Table<S>): Array<keyof S> => {
+	return t.header;
+}
+// constraints
+() => {
+	// - [ ] `cs` is equal to `header(t)`
+}
+// examples
+{
+	T.assertEqual(
+		'header 1',
+		() => header(students),
+		["name", "age", "favorite color"]);
+	T.assertEqual(
+		'header 2',
+		() => header(gradebook),
+		["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]);
+}
+
+
+let getRow = <S extends STop>(t: Table<S>, n: number): Row<S> => {
+	return {
+		header: t.header,
+		content: t.content[n]
+	}
+}
+// constraints
+() => {
+	// - [ ] `n` is in `range(nrows(t))`
+}
+{
+	T.assertEqual(
+		'getRow 1',
+		() => getRow(students, 0),
+		parseRow([["name", "Bob"], ["age", 12], ["favorite color", "blue"]])
+	)
+	T.assertEqual(
+		'getRow 1',
+		() => getRow(gradebook, 1),
+		parseRow([
+			["name", "Alice"], ["age", 17],
+			["quiz1", 6], ["quiz2", 8], ["midterm", 88],
+			["quiz3", 8], ["quiz4", 7], ["final", 85]
+		]))
+}
+
+let getValue = <S extends STop, C extends CTop & keyof S>(r: Row<S>, c: C): Lookup<S, C> => {
+	return r.content[c]
+}
+// constraints
+() => {
+	// - [x] `c` is in header(r)
+	// - [x] `v` is of sort `schema(r)[c]`
+}
+// examples
+{
+	T.assertEqual(
+		'getValue 1',
+		() => getValue(
+			parseRow([['name', 'Bob'], ['age', 12]]) as Row<{ 'name': string, 'age': 12 }>,
+			'name'),
+		'Bob')
+	T.assertEqual(
+		'getValue 2',
+		() => getValue(
+			parseRow([['name', 'Bob'], ['age', 12]]) as Row<{ 'name': string, 'age': 12 }>,
+			'age'),
+		12)
+}
+
+
+
 let dropColumns = <S extends STop>(t1: Table<S>, cs: Array<keyof S>): Table<Omit<S, (typeof cs)[number]>> => {
 	const header = t1.header.filter((c) => {
 		return cs.indexOf(c) === -1;
 	}) as Array<keyof Omit<S, (typeof cs)[number]>>
-	const rows = t1.rows.map((r) => {
+	const rows = t1.content.map((r) => {
 		return Object.fromEntries(header.map((c) => [c, r[c]])) as Omit<S, (typeof cs)[number]>
 	})
-	return { header, rows }
+	return { header, content: rows }
 }
 
 
