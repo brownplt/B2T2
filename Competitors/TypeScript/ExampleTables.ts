@@ -7,7 +7,7 @@ export const students: Table<
 		'favorite color': string
 	}> = {
 	header: ['name', 'age', 'favorite color'],
-	rows: [
+	content: [
 		{
 			'name': 'Bob',
 			'age': 12,
@@ -31,11 +31,11 @@ export const students: Table<
 export const studentsMissing: Table<
 	{
 		'name': string,
-		'age': number | null,
-		'favorite color': string | null
+		'age': number,
+		'favorite color': String
 	}> = {
 	header: ['name', 'age', 'favorite color'],
-	rows: [
+	content: [
 		{
 			'name': 'Bob',
 			'age': null,
@@ -55,10 +55,10 @@ export const studentsMissing: Table<
 }
 
 export const employees: Table<
-	{ 'Last Name': string, 'Department ID': number | null }
+	{ 'Last Name': string, 'Department ID': number }
 > = {
 	header: ['Last Name', 'Department ID'],
-	rows: [
+	content: [
 		{
 			'Last Name': 'Rafferty',
 			'Department ID': 31
@@ -90,7 +90,7 @@ export const departments: Table<
 	{ 'Department ID': number, 'Department Name': string }
 > = {
 	header: ['Department ID', 'Department Name'],
-	rows: [
+	content: [
 		{
 			'Department ID': 31,
 			'Department Name': 'Sales'
@@ -128,7 +128,7 @@ export const jellyAnon: Table<
 			'get acne',
 			'red', 'black', 'white', 'green', 'yellow', 'brown', 'orange', 'pink', 'purple'
 		],
-	'rows': [
+	'content': [
 
 		{
 			'get acne': true,
@@ -274,7 +274,7 @@ export const jellyNamed: Table<
 			'get acne',
 			'red', 'black', 'white', 'green', 'yellow', 'brown', 'orange', 'pink', 'purple'
 		],
-	'rows': [
+	'content': [
 		{
 			'name': 'Emily',
 			'get acne': true,
@@ -430,7 +430,7 @@ export const gradebook: Table<
 		'quiz4',
 		'final'
 	],
-	'rows': [
+	'content': [
 		{
 			'name': "Bob",
 			'age': 12,
@@ -470,10 +470,10 @@ export const gradebookMissing: Table<
 	{
 		'name': string,
 		'age': number,
-		'quiz1': number | null,
+		'quiz1': number,
 		'quiz2': number,
 		'midterm': number,
-		'quiz3': number | null,
+		'quiz3': number,
 		'quiz4': number,
 		'final': number,
 	}> = {
@@ -487,7 +487,7 @@ export const gradebookMissing: Table<
 		'quiz4',
 		'final'
 	],
-	'rows': [
+	'content': [
 
 		{
 			'name': "Bob",
@@ -539,7 +539,7 @@ export const gradebookSeq: Table<
 		'midterm',
 		'final'
 	],
-	'rows': [
+	'content': [
 
 		{
 			'name': "Bob",
@@ -586,14 +586,14 @@ export const gradebookTable: Table<
 		'midterm',
 		'final'
 	],
-	'rows': [
+	'content': [
 
 		{
 			'name': "Bob",
 			'age': 12,
 			'quizzes': {
 				'header': ['quiz#', 'grade'],
-				rows: [
+				content: [
 					{
 						'quiz#': 1,
 						'grade': 8
@@ -619,7 +619,7 @@ export const gradebookTable: Table<
 			'age': 17,
 			'quizzes': {
 				'header': ['quiz#', 'grade'],
-				rows: [
+				content: [
 					{
 						'quiz#': 1,
 						'grade': 6
@@ -645,7 +645,7 @@ export const gradebookTable: Table<
 			'age': 13,
 			'quizzes': {
 				'header': ['quiz#', 'grade'],
-				rows: [
+				content: [
 					{
 						'quiz#': 1,
 						'grade': 7

@@ -10,19 +10,19 @@ export type DropColumn<S extends STop, C extends CTop & keyof S> = STop & Omit<S
 export type UpdateColumns<S1, S2> = STop & { [k in keyof S1]: k extends keyof S2 ? S2[k] : S1[k] }
 export type Lookup<S extends STop, C extends CTop & keyof S> = VTop & S[C]
 
-export type SchemaOf<A extends { rows: Array<unknown> }> = STop & A['rows'][number]
+export type SchemaOf<A extends { content: Array<unknown> }> = STop & A['content'][number]
 
 export type Row<S extends STop> = { header: Array<keyof S>, content: S }
-export type Table<S extends STop> = { header: Array<keyof S>, rows: Array<S> }
+export type Table<S extends STop> = { header: Array<keyof S>, content: Array<S> }
 
 export const parseTable = (xss: Array<Array<any>>): Table<any> => {
 	const header = xss[0];
 	const rows = xss.slice(1).map((r) => {
 		return Object.fromEntries(header.map((c, j) => {
-			return [[c, r[j]]]
+			return [c, r[j]]
 		}))
 	});
-	return { header, rows }
+	return { header, content: rows }
 }
 export const parseRow = (kvs: Array<[CTop, VTop]>): Row<any> => {
 	return {
