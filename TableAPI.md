@@ -472,8 +472,6 @@ Returns a `Seq` representing the column names in the `Table`.
 
 ##### Ensures:
 
-- `r` is equal to `getRow(t, n)`
-
 #### Description
 
 Extracts a row out of a table by a numeric index.
