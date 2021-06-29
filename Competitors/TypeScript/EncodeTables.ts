@@ -1,8 +1,11 @@
 export type CTop = string
 export type VTop = unknown
 // UNORDERRED schema
-export type STop = Record<CTop, VTop>
-
+export type STop = Record<string, unknown>
+export type TTop = {
+	'header': string[],
+	'content': STop[]
+}
 
 export type Concat<S1 extends STop, S2 extends STop> = STop & S1 & S2
 export type AddColumn<S extends STop, C extends CTop, V extends VTop> = S & Record<C, V>
