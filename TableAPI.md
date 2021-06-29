@@ -584,7 +584,7 @@ Given a `Table` and a `Seq<Number>` containing row indices, produces a new `Tabl
 | "Bob"   | 12  | "blue"         |
 | "Eve"   | 13  | "red"          |
 | "Alice" | 17  | "green"        |
-> selectRows(gradebooks, [2, 1])
+> selectRows(gradebook, [2, 1])
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
