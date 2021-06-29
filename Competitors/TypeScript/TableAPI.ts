@@ -2,7 +2,7 @@ import { AddColumn, CTop, Lookup, parseRow, parseTable, Row, SchemaOf, STop, Tab
 import { students, gradebook, studentsMissing, jellyAnon, employees, departments } from "./ExampleTables";
 import { makeTester } from './unitTest'
 
-const T = makeTester()
+const Tester = makeTester()
 
 let emptyTable: Table<{}> = { header: [] as Array<keyof {}>, content: [] };
 // constraints
@@ -31,7 +31,7 @@ let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c
 // examples
 {
 	const hairColor = ["brown", "red", "blonde"]
-	T.assertEqual(
+	Tester.assertEqual(
 		'addColumn 1',
 		() => addColumn(students, "hair-color", hairColor),
 		{
@@ -59,7 +59,7 @@ let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c
 		}
 	)
 	const presentation: Array<number> = [9, 9, 6]
-	T.assertEqual(
+	Tester.assertEqual(
 		'addColumn 2',
 		() => addColumn(gradebook, "presentation", presentation),
 		{
@@ -131,7 +131,7 @@ let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>,
 	const isTeenagerBuilder = (r: Row<SchemaOf<typeof students>>) => {
 		return 12 < getValue(r, 'age') && getValue(r, 'age') < 20
 	}
-	T.assertEqual(
+	Tester.assertEqual(
 		'buildColumn 1',
 		() => buildColumn(students, 'is-teenager', isTeenagerBuilder),
 		{
@@ -160,7 +160,7 @@ let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>,
 	const didWellInFinal = (r: Row<SchemaOf<typeof gradebook>>) => {
 		return 85 <= getValue(r, 'final')
 	}
-	T.assertEqual(
+	Tester.assertEqual(
 		'buildColumn 2',
 		() => buildColumn(gradebook, 'did-well-in-final', didWellInFinal),
 		{
@@ -227,7 +227,7 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 	const increaseAge = (r: Row<SchemaOf<typeof students>>) => {
 		return parseRow([['age', getValue(r, 'age') + 1]])
 	}
-	T.assertEqual(
+	Tester.assertEqual(
 		'vcat 1',
 		() => {
 			const o: Table<
@@ -282,7 +282,7 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 			['final', curve(getValue(r, 'final'))],
 		])
 	}
-	T.assertEqual(
+	Tester.assertEqual(
 		'vcat 2',
 		// The explicit type application is necessary
 		() => vcat(gradebook, update(gradebook, curveMidtermAndFinal)),
@@ -392,7 +392,7 @@ let update = <S1 extends STop, S2 extends Partial<STop>>(t1: Table<S1>, f: (r1: 
 			return parseRow([['age', 'adult']])
 		}
 	}
-	T.assertEqual(
+	Tester.assertEqual(
 		'update 1',
 		() => update(students, abstractAge),
 		{
@@ -422,7 +422,7 @@ let update = <S1 extends STop, S2 extends Partial<STop>>(t1: Table<S1>, f: (r1: 
 			['final', 85 <= getValue(r, 'final')]
 		])
 	}
-	T.assertEqual(
+	Tester.assertEqual(
 		'update 2',
 		() => update(gradebook, abstractFinal),
 		{
@@ -492,7 +492,7 @@ let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Tab
 }
 // examples
 {
-	T.assertEqual(
+	Tester.assertEqual(
 		'hcat 1',
 		() => hcat(students, dropColumns(gradebook, ['name', 'age'])),
 		{
@@ -544,7 +544,7 @@ let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Tab
 			]
 		}
 	)
-	T.assertEqual(
+	Tester.assertEqual(
 		'hcat 1',
 		() => hcat(dropColumns(students, ['name', 'age']), gradebook),
 		{
@@ -609,7 +609,7 @@ let values = <S extends STop>(rs: Array<Row<S>>): Table<S> => {
 	// - [ ] `schema(t)` is equal to `schema(rs[0])`
 	// - [ ] `nrows(t)` is equal to `length(rs)`
 }
-T.assertEqual(
+Tester.assertEqual(
 	'values 0',
 	() => values([
 		parseRow([['name', 'Alice']]),
@@ -621,7 +621,7 @@ T.assertEqual(
 		['Bob']
 	])
 )
-T.assertEqual(
+Tester.assertEqual(
 	'values 0',
 	() => values([
 		parseRow([['name', 'Alice'], ['age', 12]]),
@@ -652,7 +652,7 @@ let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>)
 }
 {
 	const petiteJelly = subTable(jellyAnon, [0, 1], [0, 1, 2])
-	T.assertEqual(
+	Tester.assertEqual(
 		'crossJoin 1',
 		() => crossJoin(students, petiteJelly),
 		parseTable([
@@ -665,7 +665,7 @@ let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>)
 			["Eve", 13, "red", true, false, true]
 		])
 	)
-	T.assertEqual(
+	Tester.assertEqual(
 		'crossJoin 2',
 		() => crossJoin(emptyTable, petiteJelly),
 		parseTable([
@@ -707,7 +707,7 @@ let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, 
 
 }
 {
-	T.assertEqual(
+	Tester.assertEqual(
 		'leftJoin 1',
 		() => leftJoin(students, gradebook, ["name", "age"]),
 		parseTable(
@@ -719,7 +719,7 @@ let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, 
 			]
 		)
 	)
-	T.assertEqual(
+	Tester.assertEqual(
 		'leftJoin 2',
 		() => leftJoin(employees, departments, ["Department ID"]),
 		[
@@ -744,8 +744,8 @@ let nrows = <S extends STop>(t: Table<S>): number => {
 }
 // examples
 {
-	T.assertEqual('nrows 1', () => nrows(emptyTable), 0)
-	T.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
+	Tester.assertEqual('nrows 1', () => nrows(emptyTable), 0)
+	Tester.assertEqual('nrows 2', () => nrows(studentsMissing), 3)
 }
 
 
@@ -759,8 +759,8 @@ let ncols = <S extends STop>(t: Table<S>): number => {
 }
 // examples
 {
-	T.assertEqual('nrows 1', () => ncols(students), 3)
-	T.assertEqual('nrows 2', () => ncols(studentsMissing), 8)
+	Tester.assertEqual('nrows 1', () => ncols(students), 3)
+	Tester.assertEqual('nrows 2', () => ncols(studentsMissing), 8)
 }
 
 
@@ -775,11 +775,11 @@ let header = <S extends STop>(t: Table<S>): Array<keyof S> => {
 }
 // examples
 {
-	T.assertEqual(
+	Tester.assertEqual(
 		'header 1',
 		() => header(students),
 		["name", "age", "favorite color"]);
-	T.assertEqual(
+	Tester.assertEqual(
 		'header 2',
 		() => header(gradebook),
 		["name", "age", "quiz1", "quiz2", "midterm", "quiz3", "quiz4", "final"]);
@@ -797,12 +797,12 @@ let getRow = <S extends STop>(t: Table<S>, n: number): Row<S> => {
 	// - [ ] `n` is in `range(nrows(t))`
 }
 {
-	T.assertEqual(
+	Tester.assertEqual(
 		'getRow 1',
 		() => getRow(students, 0),
 		parseRow([["name", "Bob"], ["age", 12], ["favorite color", "blue"]])
 	)
-	T.assertEqual(
+	Tester.assertEqual(
 		'getRow 1',
 		() => getRow(gradebook, 1),
 		parseRow([
@@ -822,13 +822,13 @@ let getValue = <S extends STop, C extends CTop & keyof S>(r: Row<S>, c: C): Look
 }
 // examples
 {
-	T.assertEqual(
+	Tester.assertEqual(
 		'getValue 1',
 		() => getValue(
 			parseRow([['name', 'Bob'], ['age', 12]]) as Row<{ 'name': string, 'age': 12 }>,
 			'name'),
 		'Bob')
-	T.assertEqual(
+	Tester.assertEqual(
 		'getValue 2',
 		() => getValue(
 			parseRow([['name', 'Bob'], ['age', 12]]) as Row<{ 'name': string, 'age': 12 }>,
@@ -836,6 +836,78 @@ let getValue = <S extends STop, C extends CTop & keyof S>(r: Row<S>, c: C): Look
 		12)
 }
 
+let getColumn1 = <S extends STop>(t: Table<S>, n: number): Array<VTop> => {
+	return t.content.map((r) => r[t.header[n]])
+}
+() => {
+	// - [ ] `n` is in `range(ncols(t))`
+	// - [ ] `length(vs)` is equal to `nrows(t)`
+	// - [ ] for all `v` in `vs`, `v` is of sort `schema(t)[header(t)[n]]`
+}
+{
+	Tester.assertEqual(
+		'getColumn1 1',
+		() => getColumn1(students, 1),
+		[12, 17, 13]
+	)
+	Tester.assertEqual(
+		'getColumn1 2',
+		() => getColumn1(gradebook, 0),
+		["Bob", "Alice", "Eve"]
+	)
+}
+
+let getColumn2 = <S extends STop, C extends keyof S>(t: Table<S>, c: C): Array<S[C]> => {
+	return t.content.map((r) => r[c])
+}
+() => {
+	// - [x] `c` is in `header(t)`
+	// - [x] for all `v` in `vs`, `v` is of sort `schema(t)[c]`
+	// - [ ] `length(vs)` is equal to `nrows(t)`
+}
+{
+	Tester.assertEqual(
+		'getColumn2 1',
+		() => getColumn2(students, "age"),
+		[12, 17, 13]
+	)
+	Tester.assertEqual(
+		'getColumn2 2',
+		() => getColumn2(gradebook, "name"),
+		["Bob", "Alice", "Eve"]
+	)
+}
+
+
+let selectRows1 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<S> => {
+	return values(ns.map((n) => getRow(t1, n)))
+}
+() => {
+	// - [ ] for all `n` in `ns`, `n` is in `range(nrows(t1))`
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+	// - [ ] `nrows(t2)` is equal to `length(ns)`
+}
+{
+	Tester.assertEqual(
+		'selectRows1 1',
+		() => selectRows1(students, [2, 0, 2, 1]),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Eve", 13, "red"],
+			["Bob", 12, "blue"],
+			["Eve", 13, "red"],
+			["Alice", 17, "green"]
+		]))
+	Tester.assertEqual(
+		'selectRows1 2',
+		() => selectRows1(gradebook, [2, 1]),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Eve", 13, 7, 9, 84, 8, 8, 77],
+			["Alice", 17, 6, 8, 88, 8, 7, 85]
+		])
+	)
+}
 
 
 let dropColumns = <S extends STop>(t1: Table<S>, cs: Array<keyof S>): Table<Omit<S, (typeof cs)[number]>> => {
@@ -849,4 +921,4 @@ let dropColumns = <S extends STop>(t1: Table<S>, cs: Array<keyof S>): Table<Omit
 }
 
 
-T.go()
+Tester.go()
