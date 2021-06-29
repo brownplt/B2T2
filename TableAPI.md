@@ -665,7 +665,7 @@ Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be k
 
 ##### Ensures:
 
-- `length(header(t2))` is equal to `length(ns)`
+- `ncols(t2)` is equal to `length(ns)`
 - for all `i` in `range(length(ns))`, `header(t2)[i]` is equal to `header(t1)[ns[i]]`
 - for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 - `nrows(t2)` is equal to `nrows(t1)`
