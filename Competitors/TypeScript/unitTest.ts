@@ -6,6 +6,9 @@ export const makeTester = () => {
 		if (typeof apple !== 'object') {
 			return apple === orange
 		}
+		if (apple === null) {
+			return orange === null;
+		}
 		if (Object.keys(apple).length !== Object.keys(orange).length) {
 			return false
 		}
@@ -26,6 +29,12 @@ export const makeTester = () => {
 			} else {
 				return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
 			}
+		}
+		if (apple === null && orange === null) {
+			return '';
+		}
+		if (apple === null || orange === null) {
+			return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
 		}
 		if (Object.keys(apple).length !== Object.keys(orange).length) {
 			return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
@@ -61,7 +70,7 @@ export const makeTester = () => {
 				const diff = myDiff(apple, orange);
 				assertBoolean(!diff, `${name}: ${diff}.`)
 			} catch (e) {
-				errors.push(`${name}: error ${JSON.stringify(e)}`)
+				errors.push(`${name}: error ${e.toString()}`)
 			}
 		})
 	}

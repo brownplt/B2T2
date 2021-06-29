@@ -1,4 +1,4 @@
-import { AddColumn, CTop, Lookup, parseRow, parseTable, Row, SchemaOf, STop, Table, UpdateColumns, VTop } from "./EncodeTables";
+import { AddColumn, CTop, Lookup, parseRow, parseTable, Row, SchemaOf, STop, Table, TTop, UpdateColumns, VTop } from "./EncodeTables";
 import { students, gradebook, studentsMissing, jellyAnon, employees, departments } from "./ExampleTables";
 import { makeTester } from './unitTest'
 
@@ -36,7 +36,7 @@ let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c
 		() => addColumn(students, "hair-color", hairColor),
 		{
 			header: ['name', 'age', 'favorite color', 'hair-color'],
-			rows: [
+			content: [
 				{
 					'name': 'Bob',
 					'age': 12,
@@ -74,7 +74,7 @@ let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c
 				'final',
 				'presentation'
 			],
-			'rows': [
+			'content': [
 
 				{
 					'name': "Bob",
@@ -136,7 +136,7 @@ let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>,
 		() => buildColumn(students, 'is-teenager', isTeenagerBuilder),
 		{
 			header: ['name', 'age', 'favorite color', 'is-teenager'],
-			rows: [
+			content: [
 				{
 					'name': 'Bob',
 					'age': 12,
@@ -165,7 +165,7 @@ let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>,
 		() => buildColumn(gradebook, 'did-well-in-final', didWellInFinal),
 		{
 			'header': ['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final', 'did-well-in-final'],
-			'rows': [
+			'content': [
 
 				{
 					'name': "Bob",
@@ -241,7 +241,7 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 		},
 		{
 			header: ['name', 'age', 'favorite color'],
-			rows: [
+			content: [
 				{
 					'name': 'Bob',
 					'age': 12,
@@ -297,7 +297,7 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 				'quiz4',
 				'final'
 			],
-			'rows': [
+			'content': [
 				{
 					'name': "Bob",
 					'age': 12,
@@ -397,7 +397,7 @@ let update = <S1 extends STop, S2 extends Partial<STop>>(t1: Table<S1>, f: (r1: 
 		() => update(students, abstractAge),
 		{
 			header: ['name', 'age', 'favorite color'],
-			rows: [
+			content: [
 				{
 					'name': 'Bob',
 					'age': 'kid',
@@ -436,7 +436,7 @@ let update = <S1 extends STop, S2 extends Partial<STop>>(t1: Table<S1>, f: (r1: 
 				'quiz4',
 				'final'
 			],
-			'rows': [
+			'content': [
 				{
 					'name': "Bob",
 					'age': 12,
@@ -507,7 +507,7 @@ let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Tab
 				'quiz4',
 				'final'
 			],
-			'rows': [
+			'content': [
 				{
 					'name': "Bob",
 					'age': 12,
@@ -559,7 +559,7 @@ let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Tab
 				'quiz4',
 				'final'
 			],
-			'rows': [
+			'content': [
 				{
 					'favorite color': 'blue',
 					'name': "Bob",
@@ -651,10 +651,12 @@ let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>)
 	// - [ ] `nrows(t3)` is equal to `nrows(t1) * nrows(t2)`
 }
 {
-	const petiteJelly = subTable(jellyAnon, [0, 1], [0, 1, 2])
 	Tester.assertEqual(
 		'crossJoin 1',
-		() => crossJoin(students, petiteJelly),
+		() => {
+			const petiteJelly = selectColumns2(selectRows1(jellyAnon, [0, 1]), [0, 1, 2])
+			return crossJoin(students, petiteJelly)
+		},
 		parseTable([
 			['name', 'age', 'favorite color', 'get acne', 'red', 'black'],
 			["Bob", 12, "blue", true, false, false],
@@ -667,7 +669,10 @@ let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>)
 	)
 	Tester.assertEqual(
 		'crossJoin 2',
-		() => crossJoin(emptyTable, petiteJelly),
+		() => {
+			const petiteJelly = selectColumns2(selectRows1(jellyAnon, [0, 1]), [0, 1, 2])
+			return crossJoin(emptyTable, petiteJelly)
+		},
 		parseTable([
 			['get acne', 'red', 'black']
 		])
@@ -677,13 +682,15 @@ let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>)
 
 let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, cs: Array<keyof S1 & keyof S2>): Table<S1 & Omit<S2, keyof S1>> => {
 	const header = [...t1.header, ...t2.header.filter((c) => {
-		return cs.indexOf(c as (keyof S1 & keyof S2)) === -1
+		return !cs.includes(c as (keyof S1 & keyof S2))
 	})] as Array<keyof (S1 & Omit<S2, keyof S1>)>
 	return {
 		header,
 		content: t1.content.flatMap((r1): Array<S1 & S2> => {
 			const rs2 = t2.content.filter((r2) => {
-				return cs.every((c) => { r1[c] === r2[c] })
+				return cs.every((c) => {
+					return r1[c] === r2[c]
+				})
 			})
 			if (rs2.length === 0) {
 				return [
@@ -722,7 +729,7 @@ let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, 
 	Tester.assertEqual(
 		'leftJoin 2',
 		() => leftJoin(employees, departments, ["Department ID"]),
-		[
+		parseTable([
 			['Last Name', 'Department ID', 'Department Name'],
 			["Rafferty", 31, "Sales"],
 			["Jones", 32, null],
@@ -730,7 +737,7 @@ let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, 
 			["Robinson", 34, "Clerical"],
 			["Smith", 34, "Clerical"],
 			["Williams", null, null]
-		]
+		])
 	)
 }
 
@@ -759,8 +766,8 @@ let ncols = <S extends STop>(t: Table<S>): number => {
 }
 // examples
 {
-	Tester.assertEqual('nrows 1', () => ncols(students), 3)
-	Tester.assertEqual('nrows 2', () => ncols(studentsMissing), 8)
+	Tester.assertEqual('ncols 1', () => ncols(students), 3)
+	Tester.assertEqual('ncols 2', () => ncols(studentsMissing), 3)
 }
 
 
@@ -909,6 +916,153 @@ let selectRows1 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<S> =>
 	)
 }
 
+
+let selectRows2 = <S extends STop>(t1: Table<S>, bs: Array<Boolean>): Table<S> => {
+	return {
+		header: t1.header,
+		content: t1.content.filter((_, i) => bs[i])
+	}
+}
+() => {
+	// - [ ] `length(bs)` is equal to `nrows(t1)`
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+	// - [ ] `nrows(t2)` is equal to `length(removeAll(bs, [false]))`
+}
+{
+	Tester.assertEqual(
+		'selectRow2 1',
+		() => selectRows2(students, [true, false, true]),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+			["Eve", 13, "red"]
+		])
+	)
+	Tester.assertEqual(
+		'selectRow2 1',
+		() => selectRows2(gradebook, [false, false, true]),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Eve", 13, 7, 9, 84, 8, 8, 77]
+		])
+	)
+}
+
+
+let selectColumns1 = <S extends STop>(t1: Table<S>, bs: Array<boolean>): TTop => {
+	const header = t1.header.filter((_, i) => bs[i])
+	return {
+		header: header as string[],
+		content: t1.content.map((r) => {
+			return Object.fromEntries(header.map((c) => [c, r[c]]))
+		})
+	}
+}
+() => {
+	// - [ ] `length(bs)` is equal to `ncols(t1)`
+	// - [ ] `header(t2)` is a subsequence of `header(t1)`
+	// - [ ] for all `i` in `range(ncols(t1))`, `header(t1)[i]` is in `header(t2)` if and only if `bs[i]` is equal to `true`
+	// - [ ] `schema(t2)` is a subsequence of `schema(t1)`
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
+}
+{
+	Tester.assertEqual(
+		'selectColumns1 1',
+		() => selectColumns1(students, [true, true, false]),
+		parseTable([
+			['name', 'age'],
+			["Bob", 12],
+			["Alice", 17],
+			["Eve", 13]
+		])
+	)
+	Tester.assertEqual(
+		'selectColumns1 2',
+		() => selectColumns1(gradebook, [true, false, false, false, true, false, false, true]),
+		parseTable([
+			['name', 'midterm', 'final'],
+			["Bob", 77, 87],
+			["Alice", 88, 85],
+			["Eve", 84, 77]
+		])
+	)
+}
+
+let selectColumns2 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<Partial<S>> => {
+	const header = ns.map((n) => t1.header[n])
+	const content = t1.content.map(
+		(r) => Object.fromEntries(header.map((c) => [c, r[c]])) as Partial<S>)
+	return { header, content }
+}
+() => {
+	// - [ ] `ns` has no duplicates
+	// - [ ] for all `n` in `ns`, `n` is in `range(ncols(t1))`
+	// - [ ] `ncols(t2)` is equal to `length(ns)`
+	// - [ ] for all `i` in `range(length(ns))`, `header(t2)[i]` is equal to `header(t1)[ns[i]]`
+	// - [ ] for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
+}
+{
+	Tester.assertEqual(
+		'selectColumn2 1',
+		() => selectColumns2(students, [2, 1]),
+		parseTable([
+			['favorite color', 'age'],
+			["blue", 12],
+			["green", 17],
+			["red", 13]
+		])
+	)
+	Tester.assertEqual(
+		'selectColumn2 2',
+		() => selectColumns2(gradebook, [7, 0, 4]),
+		parseTable([
+			['final', 'name', 'midterm'],
+			[87, "Bob", 77],
+			[85, "Alice", 88],
+			[77, "Eve", 84],
+		])
+	)
+}
+
+
+let selectColumns3 = <S extends STop, C extends keyof S>(t1: Table<S>, cs: Array<C>): Table<Pick<S, C>> => {
+	return {
+		header: cs,
+		content: t1.content.map((r) => {
+			return Object.fromEntries(cs.map((c) => [c, r[c]])) as Pick<S, C>
+		})
+	}
+}
+{
+	// - [ ] `cs` has no duplicates
+	// - [x] for all `c` in `cs`, `c` is in `header(t1)`
+	// - [ ] `header(t2)` is equal to `cs` 
+	// - [x] for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
+}
+{
+	Tester.assertEqual(
+		'selectColumns3 1',
+		() => selectColumns3(students, ["favorite color", "age"]),
+		parseTable([
+			['favorite color', 'age'],
+			["blue", 12],
+			["green", 17],
+			["red", 13]
+		])
+	)
+	Tester.assertEqual(
+		'selectColumns3 2',
+		() => selectColumns3(gradebook, ["final", "name", "midterm"]),
+		parseTable([
+			['final', 'name', 'midterm'],
+			[87, "Bob", 77],
+			[85, "Alice", 88],
+			[77, "Eve", 84]
+		])
+	)
+}
 
 let dropColumns = <S extends STop>(t1: Table<S>, cs: Array<keyof S>): Table<Omit<S, (typeof cs)[number]>> => {
 	const header = t1.header.filter((c) => {
