@@ -436,7 +436,7 @@ Returns a `Number` representing the number of columns in the `Table`.
 > ncols(students)
 3
 > ncols(studentsMissing)
-8
+3
 ```
 
 ### `header :: t:Table -> cs:Seq<ColName>`
