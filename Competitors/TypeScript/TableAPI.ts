@@ -115,7 +115,7 @@ let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c
 }
 
 let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, f: (r: Row<S>) => V): Table<AddColumn<S, C, V>> => {
-	return addColumn(t1, c, t1.content.map((r) => f({ header: t1.header, content: r })))
+	return addColumn(t1, c, t1.content.map((r) => f({ header: t1.header, content: [r] })))
 }
 // constraints
 () => {
@@ -209,11 +209,7 @@ let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>,
 const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 	return {
 		header: t1.header,
-		content: t1.content.concat(t2.content.map((r) => {
-			return Object.fromEntries(t1.header.map((c) => {
-				return [c, r[c]]
-			})) as S
-		}))
+		content: [...t1.content, ...t2.content]
 	}
 }
 // constraints
@@ -239,41 +235,15 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 			> = vcat(students, update(students, increaseAge))
 			return o;
 		},
-		{
-			header: ['name', 'age', 'favorite color'],
-			content: [
-				{
-					'name': 'Bob',
-					'age': 12,
-					'favorite color': 'blue'
-				},
-				{
-					'name': 'Alice',
-					'age': 17,
-					'favorite color': 'green'
-				},
-				{
-					'name': 'Eve',
-					'age': 13,
-					'favorite color': 'red'
-				},
-				{
-					'name': 'Bob',
-					'age': 13,
-					'favorite color': 'blue'
-				},
-				{
-					'name': 'Alice',
-					'age': 18,
-					'favorite color': 'green'
-				},
-				{
-					'name': 'Eve',
-					'age': 14,
-					'favorite color': 'red'
-				}
-			]
-		}
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+			["Alice", 17, "green"],
+			["Eve", 13, "red"],
+			["Bob", 13, "blue"],
+			["Alice", 18, "green"],
+			["Eve", 14, "red"],
+		])
 	)
 	const curveMidtermAndFinal = (r: Row<SchemaOf<typeof gradebook>>) => {
 		const curve = (n: number) => n + 5
@@ -286,80 +256,15 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 		'vcat 2',
 		// The explicit type application is necessary
 		() => vcat(gradebook, update(gradebook, curveMidtermAndFinal)),
-		{
-			'header': [
-				'name',
-				'age',
-				'quiz1',
-				'quiz2',
-				'midterm',
-				'quiz3',
-				'quiz4',
-				'final'
-			],
-			'content': [
-				{
-					'name': "Bob",
-					'age': 12,
-					'quiz1': 8,
-					'quiz2': 9,
-					'midterm': 77,
-					'quiz3': 7,
-					'quiz4': 9,
-					'final': 87
-				},
-				{
-					'name': "Alice",
-					'age': 17,
-					'quiz1': 6,
-					'quiz2': 8,
-					'midterm': 88,
-					'quiz3': 8,
-					'quiz4': 7,
-					'final': 85
-				},
-				{
-					'name': "Eve",
-					'age': 13,
-					'quiz1': 7,
-					'quiz2': 9,
-					'midterm': 84,
-					'quiz3': 8,
-					'quiz4': 8,
-					'final': 77
-				},
-				{
-					'name': "Bob",
-					'age': 12,
-					'quiz1': 8,
-					'quiz2': 9,
-					'midterm': 82,
-					'quiz3': 7,
-					'quiz4': 9,
-					'final': 92
-				},
-				{
-					'name': "Alice",
-					'age': 17,
-					'quiz1': 6,
-					'quiz2': 8,
-					'midterm': 93,
-					'quiz3': 8,
-					'quiz4': 7,
-					'final': 90
-				},
-				{
-					'name': "Eve",
-					'age': 13,
-					'quiz1': 7,
-					'quiz2': 9,
-					'midterm': 89,
-					'quiz3': 8,
-					'quiz4': 8,
-					'final': 82
-				}
-			]
-		}
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Bob", 12, 8, 9, 77, 7, 9, 87],
+			["Alice", 17, 6, 8, 88, 8, 7, 85],
+			["Eve", 13, 7, 9, 84, 8, 8, 77],
+			["Bob", 12, 8, 9, 82, 7, 9, 92],
+			["Alice", 17, 6, 8, 93, 8, 7, 90],
+			["Eve", 13, 7, 9, 89, 8, 8, 82],
+		])
 	)
 }
 
@@ -367,7 +272,7 @@ let update = <S1 extends STop, S2 extends Partial<STop>>(t1: Table<S1>, f: (r1: 
 	return {
 		header: t1.header,
 		content: t1.content.map((r) => {
-			return Object.assign({}, r, f({ header: t1.header, content: r }).content) as UpdateColumns<S1, S2>
+			return Object.assign({}, r, f({ header: t1.header, content: [r] }).content[0]) as UpdateColumns<S1, S2>
 		})
 	}
 }
@@ -600,7 +505,7 @@ let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Tab
 let values = <S extends STop>(rs: Array<Row<S>>): Table<S> => {
 	return {
 		header: rs[0].header,
-		content: rs.map(({ content }) => content)
+		content: rs.map(({ content: [r] }) => r)
 	};
 }
 () => {
@@ -796,7 +701,7 @@ let header = <S extends STop>(t: Table<S>): Array<keyof S> => {
 let getRow = <S extends STop>(t: Table<S>, n: number): Row<S> => {
 	return {
 		header: t.header,
-		content: t.content[n]
+		content: [t.content[n]]
 	}
 }
 // constraints
@@ -820,7 +725,7 @@ let getRow = <S extends STop>(t: Table<S>, n: number): Row<S> => {
 }
 
 let getValue = <S extends STop, C extends CTop & keyof S>(r: Row<S>, c: C): Lookup<S, C> => {
-	return r.content[c]
+	return r.content[0][c]
 }
 // constraints
 () => {
@@ -1064,14 +969,126 @@ let selectColumns3 = <S extends STop, C extends keyof S>(t1: Table<S>, cs: Array
 	)
 }
 
+let head = <S extends STop>(t1: Table<S>, n: number): Table<S> => {
+	let end: number;
+	if (n >= 0) {
+		end = n
+	} else {
+		end = t1.content.length + n;
+	}
+	return {
+		header: t1.header,
+		content: t1.content.slice(0, end)
+	}
+}
+() => {
+	// - [ ] if `n` is non-negative then `n` is in `range(nrows(t1))`
+	// - [ ] if `n` is negative then `- n` is in `range(nrows(t1))`
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+	// - [ ] if `n` is non-negative then `nrows(t2)` is equal to `n`
+	// - [ ] if `n` is negative then `nrows(t2)` is equal to `nrows(t1) + n`
+}
+{
+	Tester.assertEqual(
+		'head 1',
+		() => head(students, 1),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+		])
+	)
+	Tester.assertEqual(
+		'head 2',
+		() => head(students, -2),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+		])
+	)
+}
+
+let distinct = <S extends STop>(t1: Table<S>): Table<S> => {
+	const distinctRows = (rs: Array<S>): Array<S> => {
+		if (rs.length === 0) {
+			return []
+		} else {
+			return [
+				rs[0],
+				...distinctRows(rs.filter((r) => {
+					return !t1.header.every((c) => {
+						return r[c] === rs[0][c]
+					})
+				}))
+			]
+		}
+	}
+	return {
+		header: t1.header,
+		content: distinctRows(t1.content)
+	}
+}
+() => {
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+}
+{
+	Tester.assertEqual(
+		'distinct 1',
+		() => distinct(students),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+			["Alice", 17, "green"],
+			["Eve", 13, "red"],
+		])
+	)
+	Tester.assertEqual(
+		'distinct 2',
+		() => distinct(selectColumns3(gradebook, ["quiz3"])),
+		parseTable([
+			['quiz3'],
+			[7],
+			[8],
+		])
+	)
+}
+
 let dropColumns = <S extends STop>(t1: Table<S>, cs: Array<keyof S>): Table<Omit<S, (typeof cs)[number]>> => {
 	const header = t1.header.filter((c) => {
-		return cs.indexOf(c) === -1;
+		return !cs.includes(c);
 	}) as Array<keyof Omit<S, (typeof cs)[number]>>
 	const rows = t1.content.map((r) => {
 		return Object.fromEntries(header.map((c) => [c, r[c]])) as Omit<S, (typeof cs)[number]>
 	})
 	return { header, content: rows }
+}
+() => {
+	// - [x] for all `c` in `cs`, `c` is in `header(t1)`
+	// - [ ] `cs` has no duplicates
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
+	// - [ ] `header(t2)` is equal to `removeAll(header(t1), cs)`
+	// - [ ] `schema(t2)` is a subsequence of `schema(t1)`
+}
+{
+	Tester.assertEqual(
+		'dropColumns 1',
+		() => dropColumns(students, ["age"]),
+		parseTable([
+			['name', 'favorite color'],
+			["Bob", "blue"],
+			["Alice", "green"],
+			["Eve", "red"],
+		])
+	)
+	Tester.assertEqual(
+		'dropColumns 2',
+		() => dropColumns(gradebook, ["final", "midterm"]),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'quiz3', 'quiz4'],
+			["Bob", 12, 8, 9, 7, 9],
+			["Alice", 17, 6, 8, 8, 7],
+			["Eve", 13, 7, 9, 8, 8],
+		])
+	)
 }
 
 

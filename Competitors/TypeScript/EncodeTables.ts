@@ -15,7 +15,7 @@ export type Lookup<S extends STop, C extends CTop & keyof S> = VTop & S[C]
 
 export type SchemaOf<A extends { content: Array<unknown> }> = STop & A['content'][number]
 
-export type Row<S extends STop> = { header: Array<keyof S>, content: S }
+export type Row<S extends STop> = { header: Array<keyof S>, content: [S] }
 export type Table<S extends STop> = { header: Array<keyof S>, content: Array<S> }
 
 export const parseTable = (xss: Array<Array<any>>): Table<any> => {
@@ -30,6 +30,6 @@ export const parseTable = (xss: Array<Array<any>>): Table<any> => {
 export const parseRow = (kvs: Array<[CTop, VTop]>): Row<any> => {
 	return {
 		header: kvs.map(([k, _]) => k),
-		content: Object.fromEntries(kvs)
+		content: [Object.fromEntries(kvs)]
 	} as Row<any>
 }
