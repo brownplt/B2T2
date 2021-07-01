@@ -1091,5 +1091,129 @@ let dropColumns = <S extends STop>(t1: Table<S>, cs: Array<keyof S>): Table<Omit
 	)
 }
 
+let tfilter = <S extends STop>(t1: Table<S>, f: (r: Row<S>) => boolean): Table<S> => {
+	return {
+		header: t1.header,
+		content: t1.content.filter((r) => f({ header: t1.header, content: [r] }))
+	}
+}
+() => {
+	// - [ ] `schema(r)` is equal to `schema(t1)`
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+}
+{
+	const ageUnderFifteen = (r: Row<{ name: string; age: number; 'favorite color': string; }>) => {
+		return getValue(r, "age") < 15
+	}
+	Tester.assertEqual(
+		'tfilter 1',
+		() => tfilter(students, ageUnderFifteen),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+			["Eve", 13, "red"],
+		])
+	)
+	const nameLongerThan3Letters = (r: Row<SchemaOf<typeof gradebook>>) => {
+		return getValue(r, "name").length > 3
+	}
+	Tester.assertEqual(
+		'tfilter 2',
+		() => tfilter(gradebook, nameLongerThan3Letters),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Alice", 17, 6, 8, 88, 8, 7, 85],
+		])
+	)
+}
+
+let tsort = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, c: C, b: boolean): Table<S> => {
+	const content = t1.content.slice(0)
+	const sign = b ? 1 : -1;
+	content.sort((r1, r2) => {
+		const n1 = r1[c]
+		const n2 = r2[c]
+		if (n1 < n2) {
+			return sign * -1;
+		} else if (n1 > n2) {
+			return sign * 1;
+		} else {
+			return 0;
+		}
+	})
+	return {
+		header: t1.header,
+		content
+	}
+}
+() => {
+	// - [ ] `c` is in `header(t1)`
+	// - [x] `schema(t1)[c]` is `Number`
+	// rejected as expected
+	// tsort(gradebook, 'name', true)
+	// accepted as expected
+	tsort(gradebook, 'quiz1', true)
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+}
+{
+	Tester.assertEqual(
+		'tsort 1',
+		() => tsort(students, "age", true),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+			["Eve", 13, "red"],
+			["Alice", 17, "green"],
+
+		])
+	)
+	Tester.assertEqual(
+		'tsort 2',
+		() => tsort(gradebook, "final", false),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Bob", 12, 8, 9, 77, 7, 9, 87],
+			["Alice", 17, 6, 8, 88, 8, 7, 85],
+			["Eve", 13, 7, 9, 84, 8, 8, 77],
+		])
+	)
+}
+
+let sortByColumns = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, cs: Array<C>): Table<S> => {
+	for (const c of [...cs].reverse()) {
+		t1 = tsort(t1, c, true)
+	}
+	return t1
+}
+() => {
+	// - [ ] `cs` has no duplicates
+	// - [x] for all `c` in `cs`, `c` is in `header(t1)`
+	// - [x] for all `c` in `cs`, `schema(t1)[c]` is `Number`
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+}
+{
+	Tester.assertEqual(
+		'sortByColumns 1',
+		() => sortByColumns(students, ["age"]),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+			["Eve", 13, "red"],
+			["Alice", 17, "green"],
+		])
+	)
+	Tester.assertEqual(
+		'sortByColumns 2',
+		() => sortByColumns(gradebook, ["quiz2", "quiz1"]),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Alice", 17, 6, 8, 88, 8, 7, 85],
+			["Eve", 13, 7, 9, 84, 8, 8, 77],
+			["Bob", 12, 8, 9, 77, 7, 9, 87],
+		])
+	)
+}
 
 Tester.go()
