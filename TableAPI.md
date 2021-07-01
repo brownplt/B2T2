@@ -843,7 +843,7 @@ Given a `Table` and a predicate on rows, returns a `Table` with only the rows fo
 | "Eve" | 13  | "red"          |
 > nameLongerThan3Letters =
     function(r):
-      length(getValue(r, "name)) > 3
+      length(getValue(r, "name")) > 3
     end
 > tfilter(gradebook, nameLongerThan3Letters)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
