@@ -1,6 +1,7 @@
 import { AddColumn, CTop, Lookup, parseRow, parseTable, Row, SchemaOf, STop, Table, TTop, UpdateColumns, VTop } from "./EncodeTables";
 import { students, gradebook, studentsMissing, jellyAnon, employees, departments } from "./ExampleTables";
 import { makeTester } from './unitTest'
+import { average, ge, le } from './helpers'
 
 const Tester = makeTester()
 
@@ -1212,6 +1213,158 @@ let sortByColumns = <C extends CTop, S extends STop & Record<C, number>>(t1: Tab
 			["Alice", 17, 6, 8, 88, 8, 7, 85],
 			["Eve", 13, 7, 9, 84, 8, 8, 77],
 			["Bob", 12, 8, 9, 77, 7, 9, 87],
+		])
+	)
+}
+
+
+let orderBy = <S extends STop>(t1: Table<S>, cmps: Array<[(r: Row<S>) => any, (k1: any, k2: any) => boolean]>): Table<S> => {
+	const compare = (r1: S, r2: S) => {
+		for (const [getKey, compare] of cmps) {
+			const k1 = getKey({ header: t1.header, content: [r1] })
+			const k2 = getKey({ header: t1.header, content: [r2] })
+			const le = compare(k1, k2)
+			if (le) {
+				if (compare(k2, k1)) {
+					continue
+				} else {
+					return -1
+				}
+			} else {
+				return 1;
+			}
+		}
+		return 0
+	}
+	return {
+		header: t1.header,
+		content: [...t1.content].sort(compare)
+	}
+}
+() => {
+	// - [ ] `schema(r)` is equal to `schema(t1)`
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
+}
+{
+	const nameLength = <S extends STop & Record<'name', string>>(r: Row<S>) => {
+		return getValue(r, "name").length
+	}
+	Tester.assertEqual(
+		'orderBy 1',
+		() => orderBy(students, [[nameLength, le]]),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+			["Eve", 13, "red"],
+			["Alice", 17, "green"],
+		])
+	)
+	const midtermAndFinal = (r: Row<SchemaOf<typeof gradebook>>) => {
+		return [getValue(r, "midterm"), getValue(r, "final")]
+	}
+	const compareGrade = (g1: number[], g2: number[]) => {
+		return le(average(g1), average(g2))
+	}
+	Tester.assertEqual(
+		'orderBy 2',
+		() => orderBy(gradebook, [[nameLength, ge], [midtermAndFinal, compareGrade]]),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Alice", 17, 6, 8, 88, 8, 7, 85],
+			["Eve", 13, 7, 9, 84, 8, 8, 77],
+			["Bob", 12, 8, 9, 77, 7, 9, 87],
+		])
+	)
+}
+
+let count = <S extends STop, C extends keyof S>(t1: Table<S>, c: keyof S): Table<{ value: S[C], count: number }> => {
+	const vs = getColumn2(t1, c);
+	const map = new Map()
+	for (const v of vs) {
+		if (map.has(v)) {
+			map.set(v, map.get(v) + 1)
+		} else {
+			map.set(v, 1)
+		}
+	}
+	return values([...map.entries()].map(([v, c]) => {
+		return parseRow([
+			['value', v],
+			['count', c]
+		])
+	}))
+}
+() => {
+	// - [ ] `c` is in `header(t1)`
+	// - [ ] `schema(t1)[c]` is a categorical sort
+	// - [ ] `header(t2)` is equal to `["value", "count"]`
+	// - [x] `schema(t2)["value"]` is equal to `schema(t1)[c]`
+	// - [x] `schema(t2)["count"]` is equal to `Number`
+	// - [ ] `nrows(t2)` is equal to `length(removeDuplicates(getColumn(t1, c)))`
+}
+{
+	Tester.assertEqual(
+		'count 1',
+		() => count(students, "favorite color"),
+		parseTable([
+			['value', 'count'],
+			["blue", 1],
+			["green", 1],
+			["red", 1],
+		])
+	)
+	Tester.assertEqual(
+		'count 2',
+		() => count(gradebook, "age"),
+		parseTable([
+			['value', 'count'],
+			[12, 1],
+			[17, 1],
+			[13, 1],
+		])
+	)
+}
+
+let bin = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, c: C, n: number): Table<{ group: string, count: number }> => {
+	const vs = getColumn2(t1, c)
+	const min = Math.min(...vs)
+	const max = Math.max(...vs)
+	const lend = Math.floor(min / n) * n
+	const numberOfGroups = Math.floor((max - lend) / n) + 1
+	const map = new Map()
+	for (let i = 0; i < numberOfGroups; i++) {
+		map.set(i, 0)
+	}
+	for (const v of vs) {
+		const i = Math.floor((v - lend) / n)
+		map.set(i, map.get(i) + 1)
+	}
+	return values([...map.entries()].map(([gi, count]) => {
+		return parseRow([
+			['group', `${lend + gi * n} <= ${c} < ${lend + (gi + 1) * n}`],
+			['count', count]
+		])
+	}))
+}
+{
+	Tester.assertEqual(
+		'bin 1',
+		() => bin(students, "age", 5),
+		parseTable([
+			['group', 'count'],
+			["10 <= age < 15", 2],
+			["15 <= age < 20", 1],
+		])
+	)
+	Tester.assertEqual(
+		'bin 2',
+		() => bin(gradebook, "final", 5),
+		parseTable([
+			['group', 'count'],
+			["75 <= final < 80", 1],
+			["80 <= final < 85", 0],
+			["85 <= final < 90", 2],
 		])
 	)
 }
