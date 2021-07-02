@@ -21,3 +21,7 @@ export const filter = <X>(xs: Array<X>, f: (x: X) => boolean) => {
 export const length = <X>(xs: Array<X>) => {
 	return xs.length
 }
+
+export const concat = (xs1: string, xs2: string) => {
+	return xs1 + xs2
+}

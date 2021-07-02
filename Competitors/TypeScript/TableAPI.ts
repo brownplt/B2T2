@@ -1,7 +1,7 @@
 import { AddColumn, CTop, Lookup, parseRow, parseTable, Row, SchemaOf, STop, Table, TTop, UpdateColumns, VTop } from "./EncodeTables";
-import { students, gradebook, studentsMissing, jellyAnon, employees, departments, jellyNamed } from "./ExampleTables";
+import { students, gradebook, studentsMissing, jellyAnon, employees, departments, jellyNamed, gradebookMissing } from "./ExampleTables";
 import { makeTester } from './unitTest'
-import { average, filter, ge, le, length } from './helpers'
+import { average, concat, filter, ge, le, length } from './helpers'
 
 const Tester = makeTester()
 
@@ -269,115 +269,6 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 	)
 }
 
-let update = <S1 extends STop, S2 extends Partial<STop>>(t1: Table<S1>, f: (r1: Row<S1>) => Row<S2>): Table<UpdateColumns<S1, S2>> => {
-	return {
-		header: t1.header,
-		content: t1.content.map((r) => {
-			return Object.assign({}, r, f({ header: t1.header, content: [r] }).content[0]) as UpdateColumns<S1, S2>
-		})
-	}
-}
-// constraints
-() => {
-	// - [x] for all `c` in `header(r2)`, `c` is in `header(t1)`
-	// - [x] `schema(r1)` is equal to `schema(t1)`
-	// - [x] `header(t2)` is equal to `header(t1)`
-	// - [x] for all `c` in `header(t2)`
-	//   - if `c` in `header(r2)` then `schema(t2)[c]` is equal to `schema(r2)[c]`
-	//   - otherwise, `schema(t2)[c]` is equal to `schema(t1)[c]`
-	// - [x] `nrows(t2)` is equal to `nrows(t1)`
-}
-// examples
-{
-	const abstractAge = (r: Row<SchemaOf<typeof students>>) => {
-		if (getValue(r, 'age') <= 12) {
-			return parseRow([['age', 'kid']])
-		} else if (getValue(r, 'age') <= 19) {
-			return parseRow([['age', 'teenager']])
-		} else {
-			return parseRow([['age', 'adult']])
-		}
-	}
-	Tester.assertEqual(
-		'update 1',
-		() => update(students, abstractAge),
-		{
-			header: ['name', 'age', 'favorite color'],
-			content: [
-				{
-					'name': 'Bob',
-					'age': 'kid',
-					'favorite color': 'blue'
-				},
-				{
-					'name': 'Alice',
-					'age': 'teenager',
-					'favorite color': 'green'
-				},
-				{
-					'name': 'Eve',
-					'age': 'teenager',
-					'favorite color': 'red'
-				}
-			]
-		}
-	)
-	const abstractFinal = (r: Row<SchemaOf<typeof gradebook>>) => {
-		return parseRow([
-			['midterm', 85 <= getValue(r, 'midterm')],
-			['final', 85 <= getValue(r, 'final')]
-		])
-	}
-	Tester.assertEqual(
-		'update 2',
-		() => update(gradebook, abstractFinal),
-		{
-			'header': [
-				'name',
-				'age',
-				'quiz1',
-				'quiz2',
-				'midterm',
-				'quiz3',
-				'quiz4',
-				'final'
-			],
-			'content': [
-				{
-					'name': "Bob",
-					'age': 12,
-					'quiz1': 8,
-					'quiz2': 9,
-					'midterm': false,
-					'quiz3': 7,
-					'quiz4': 9,
-					'final': true
-				},
-				{
-					'name': "Alice",
-					'age': 17,
-					'quiz1': 6,
-					'quiz2': 8,
-					'midterm': true,
-					'quiz3': 8,
-					'quiz4': 7,
-					'final': true
-				},
-				{
-					'name': "Eve",
-					'age': 13,
-					'quiz1': 7,
-					'quiz2': 9,
-					'midterm': false,
-					'quiz3': 8,
-					'quiz4': 8,
-					'final': false
-				}
-			]
-		}
-	)
-}
-
 
 let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Table<S1 & S2> => {
 	return {
@@ -586,10 +477,10 @@ let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>)
 }
 
 
-let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, cs: Array<keyof S1 & keyof S2>): Table<S1 & Omit<S2, keyof S1>> => {
+let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, cs: Array<CTop & keyof S1 & keyof S2>): Table<S1 & Omit<S2, keyof S1>> => {
 	const header = [...t1.header, ...t2.header.filter((c) => {
-		return !cs.includes(c as (keyof S1 & keyof S2))
-	})] as Array<keyof (S1 & Omit<S2, keyof S1>)>
+		return !cs.includes(c as (CTop & keyof S1 & keyof S2))
+	})] as Array<CTop & keyof (S1 & Omit<S2, keyof S1>)>
 	return {
 		header,
 		content: t1.content.flatMap((r1): Array<S1 & S2> => {
@@ -932,7 +823,7 @@ let selectColumns2 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<Pa
 }
 
 
-let selectColumns3 = <S extends STop, C extends keyof S>(t1: Table<S>, cs: Array<C>): Table<Pick<S, C>> => {
+let selectColumns3 = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, cs: Array<C>): Table<Pick<S, C>> => {
 	return {
 		header: cs,
 		content: t1.content.map((r) => {
@@ -1424,7 +1315,7 @@ let pivotTable = <S extends STop>(t1: Table<S>, cs: Array<CTop & keyof S>, aggs:
 			['get acne', 'brown', 'red proportion', 'pink proportion'],
 			[false, false, 0, 3 / 4],
 			[false, true, 1, 1],
-			[true, false, 0, 1/4],
+			[true, false, 0, 1 / 4],
 			[true, true, 0, 0],
 		])
 	)
@@ -1504,5 +1395,251 @@ let groupBy = <S1 extends STop, S2 extends STop, K, V>(
 	)
 }
 
+
+let completeCases = <S extends STop>(t: Table<S>, c: CTop & keyof S): Array<boolean> => {
+	return getColumn2(t, c).map((v) => v !== null)
+}
+() => {
+	// - [x] `c` is in `header(t)`	
+	// - [ ] `length(bs)` is equal to `nrows(t)`
+}
+{
+	Tester.assertEqual(
+		'completeCases 1',
+		() => completeCases(students, "age"),
+		[true, true, true]
+	)
+	Tester.assertEqual(
+		'completeCases 2',
+		() => completeCases(studentsMissing, "age"),
+		[false, true, true]
+	)
+}
+
+let dropna = <S extends STop>(t1: Table<S>): Table<S> => {
+	for (const c of t1.header) {
+		t1 = selectRows2(t1, completeCases(t1, c))
+	}
+	return t1
+}
+() => {
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+}
+{
+	Tester.assertEqual(
+		'dropna 1',
+		() => dropna(studentsMissing),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Alice", 17, "green"],
+		])
+	)
+	Tester.assertEqual(
+		'dropna 2',
+		() => dropna(gradebookMissing),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Bob", 12, 8, 9, 77, 7, 9, 87],
+		])
+	)
+}
+
+let fillna = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, c: C, v: S[C]): Table<S> => {
+	return update(t1, (r) => {
+		const currentV = getValue(r, c);
+		if (currentV === null) {
+			return parseRow([[c, v]]);
+		} else {
+			return parseRow([[c, currentV]]);
+		}
+	}) as Table<S>
+}
+() => {
+	// - [x] `c` is in `header(t1)`
+	// - [x] `v` is of sort `schema(t1)[c]`
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
+}
+{
+	Tester.assertEqual(
+		'fillna 1',
+		() => fillna(studentsMissing, "favorite color", "white"),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", null, "blue"],
+			["Alice", 17, "green"],
+			["Eve", 13, "white"],
+		])
+	)
+	Tester.assertEqual(
+		'fillna 2',
+		() => fillna(gradebookMissing, "quiz1", 0),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Bob", 12, 8, 9, 77, 7, 9, 87],
+			["Alice", 17, 6, 8, 88, null, 7, 85],
+			["Eve", 13, 0, 9, 84, 8, 8, 77],
+		])
+	)
+}
+
+// TODO: the entries after fillna
+
+let select = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>, n: number) => Row<S2>): Table<S2> => {
+	return values(t1.content.map((r, i) => f({
+		header: t1.header,
+		content: [r]
+	}, i)))
+}
+() => {
+	// - [ ] `schema(r1)` is equal to `schema(t1)`
+	// - [ ] `n` is in `range(nrows(t1))`
+	// - [ ] `schema(t2)` is equal to `schema(r2)`
+	// - [ ] `nrows(t2)` is equal to `nrows(t1)`
+}
+{
+	Tester.assertEqual(
+		'select 1',
+		() => select(
+			students,
+			(r, n) => {
+				return parseRow([
+					["ID", n],
+					["COLOR", getValue(r, "favorite color")],
+					["AGE", getValue(r, "age")]])
+			}),
+		parseTable([
+			['ID', 'COLOR', 'AGE'],
+			[0, "blue", 12],
+			[1, "green", 17],
+			[2, "red", 13],
+		])
+	)
+	Tester.assertEqual(
+		'select 2',
+		() => select(
+			gradebook,
+			(r, n) => {
+				return parseRow([
+					["full name", concat(getValue(r, "name"), " Smith")],
+					["(midterm + final) / 2", (getValue(r, "midterm") + getValue(r, "final")) / 2]])
+			}),
+		parseTable([
+			['full name', '(midterm + final) / 2'],
+			["Bob Smith", 82],
+			["Alice Smith", 86.5],
+			["Eve Smith", 80.5],
+		])
+	)
+}
+
+let update = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>) => Row<S2>): Table<UpdateColumns<S1, S2>> => {
+	return {
+		header: t1.header,
+		content: t1.content.map((r) => {
+			return Object.assign({}, r, f({ header: t1.header, content: [r] }).content[0]) as UpdateColumns<S1, S2>
+		})
+	}
+}
+// constraints
+() => {
+	// - [x] for all `c` in `header(r2)`, `c` is in `header(t1)`
+	// - [x] `schema(r1)` is equal to `schema(t1)`
+	// - [x] `header(t2)` is equal to `header(t1)`
+	// - [x] for all `c` in `header(t2)`
+	//   - if `c` in `header(r2)` then `schema(t2)[c]` is equal to `schema(r2)[c]`
+	//   - otherwise, `schema(t2)[c]` is equal to `schema(t1)[c]`
+	// - [x] `nrows(t2)` is equal to `nrows(t1)`
+}
+// examples
+{
+	const abstractAge = (r: Row<SchemaOf<typeof students>>) => {
+		if (getValue(r, 'age') <= 12) {
+			return parseRow([['age', 'kid']])
+		} else if (getValue(r, 'age') <= 19) {
+			return parseRow([['age', 'teenager']])
+		} else {
+			return parseRow([['age', 'adult']])
+		}
+	}
+	Tester.assertEqual(
+		'update 1',
+		() => update(students, abstractAge),
+		{
+			header: ['name', 'age', 'favorite color'],
+			content: [
+				{
+					'name': 'Bob',
+					'age': 'kid',
+					'favorite color': 'blue'
+				},
+				{
+					'name': 'Alice',
+					'age': 'teenager',
+					'favorite color': 'green'
+				},
+				{
+					'name': 'Eve',
+					'age': 'teenager',
+					'favorite color': 'red'
+				}
+			]
+		}
+	)
+	const abstractFinal = (r: Row<SchemaOf<typeof gradebook>>) => {
+		return parseRow([
+			['midterm', 85 <= getValue(r, 'midterm')],
+			['final', 85 <= getValue(r, 'final')]
+		])
+	}
+	Tester.assertEqual(
+		'update 2',
+		() => update(gradebook, abstractFinal),
+		{
+			'header': [
+				'name',
+				'age',
+				'quiz1',
+				'quiz2',
+				'midterm',
+				'quiz3',
+				'quiz4',
+				'final'
+			],
+			'content': [
+				{
+					'name': "Bob",
+					'age': 12,
+					'quiz1': 8,
+					'quiz2': 9,
+					'midterm': false,
+					'quiz3': 7,
+					'quiz4': 9,
+					'final': true
+				},
+				{
+					'name': "Alice",
+					'age': 17,
+					'quiz1': 6,
+					'quiz2': 8,
+					'midterm': true,
+					'quiz3': 8,
+					'quiz4': 7,
+					'final': true
+				},
+				{
+					'name': "Eve",
+					'age': 13,
+					'quiz1': 7,
+					'quiz2': 9,
+					'midterm': false,
+					'quiz3': 8,
+					'quiz4': 8,
+					'final': false
+				}
+			]
+		}
+	)
+}
 
 Tester.go()

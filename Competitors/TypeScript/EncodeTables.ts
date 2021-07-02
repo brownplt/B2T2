@@ -15,8 +15,8 @@ export type Lookup<S extends STop, C extends CTop & keyof S> = VTop & S[C]
 
 export type SchemaOf<A extends { content: Array<unknown> }> = STop & A['content'][number]
 
-export type Row<S extends STop> = { header: Array<keyof S>, content: [S] }
-export type Table<S extends STop> = { header: Array<keyof S>, content: Array<S> }
+export type Row<S extends STop> = { header: Array<CTop & keyof S>, content: [S] }
+export type Table<S extends STop> = { header: Array<CTop & keyof S>, content: Array<S> }
 
 export const parseTable = (xss: Array<Array<any>>): Table<any> => {
 	const header = xss[0];

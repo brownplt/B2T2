@@ -1764,10 +1764,10 @@ Projects each `Row` of a `Table` into a new `Table`.
     gradebook,
     function(r, n):
       [row: 
-        ("full name", concat(getValue(r, "name"), "Smith")),
-        ("(midterm + final) / 2", (getValue(r, "midterm") + getValue(r, "final")) / 2]
+        ("full name", concat(getValue(r, "name"), " Smith")),
+        ("(midterm + final) / 2", (getValue(r, "midterm") + getValue(r, "final")) / 2)]
     end)
-| full name     | (miderm + final) / 2 |
+| full name     | (midterm + final) / 2 |
 | ------------- | -------------------- |
 | "Bob Smith"   | 82                   |
 | "Alice Smith" | 86.5                 |
