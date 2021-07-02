@@ -1202,7 +1202,7 @@ Removes rows that have some values missing
 | "Bob" | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
 ```
 
-### `fillna : t1:Table * c:ColName * v:Value -> t2:Table`
+### `fillna :: t1:Table * c:ColName * v:Value -> t2:Table`
 
 #### Constraints
 
