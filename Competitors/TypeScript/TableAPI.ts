@@ -1,7 +1,7 @@
 import { AddColumn, CTop, Lookup, parseRow, parseTable, Row, SchemaOf, STop, Table, TTop, UpdateColumns, VTop } from "./EncodeTables";
-import { students, gradebook, studentsMissing, jellyAnon, employees, departments } from "./ExampleTables";
+import { students, gradebook, studentsMissing, jellyAnon, employees, departments, jellyNamed } from "./ExampleTables";
 import { makeTester } from './unitTest'
-import { average, ge, le } from './helpers'
+import { average, filter, ge, le, length } from './helpers'
 
 const Tester = makeTester()
 
@@ -1368,5 +1368,141 @@ let bin = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, c: 
 		])
 	)
 }
+
+
+let pivotTable = <S extends STop>(t1: Table<S>, cs: Array<CTop & keyof S>, aggs: Array<[CTop, CTop & keyof S, (vs: Array<any>) => any]>): TTop => {
+	return groupBy(
+		t1,
+		(r) => JSON.stringify(cs.map((c) => [c, getValue(r, c)])),
+		(r) => r,
+		(k, rs) => {
+			const t = values(rs)
+			return parseRow([
+				...JSON.parse(k),
+				...aggs.map(([c1, c2, f]) => {
+					return [c1, f(getColumn2(t, c2))]
+				})
+			])
+		}) as TTop
+}
+() => {
+	// - [x] for all `c` in `cs`, `c` is in `header(t1)`
+	// - [ ] for all `c` in `cs`, `schema(t1)[c]` is a categorical sort
+	// - [x] `ci2` is in `header(t1)`
+	// - [ ] `concat(cs, [c11, ... , cn1])` has no duplicates
+	// - [ ] `fi` consumes `Seq<schema(t1)[ci2]>`
+	// - [ ] `header(t2)` is equal to `concat(cs, [c11, ... , cn1])`
+	// - [ ] for all `c` in `cs`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+	// - [ ] `schema(t2)[ci1]` is equal to the sort of outputs of `fi` for all `i`
+}
+{
+	Tester.assertEqual(
+		'pivotTable 1',
+		() => pivotTable(students, ["favorite color"], [["age-average", "age", average]]),
+		parseTable([
+			['favorite color', 'age-average'],
+			["blue", 12],
+			["green", 17],
+			["red", 13],
+		])
+	)
+	const proportion = (bs: Array<boolean>) => {
+		const n = length(filter(bs, (b) => b))
+		return n / length(bs)
+	}
+	// The order of rows is different, but it doesn't matter
+	Tester.assertEqual(
+		'pivotTable 2',
+		() => pivotTable(
+			jellyNamed,
+			["get acne", "brown"],
+			[
+				["red proportion", "red", proportion],
+				["pink proportion", "pink", proportion]
+			]),
+		parseTable([
+			['get acne', 'brown', 'red proportion', 'pink proportion'],
+			[false, false, 0, 3 / 4],
+			[false, true, 1, 1],
+			[true, false, 0, 1/4],
+			[true, true, 0, 0],
+		])
+	)
+}
+
+let groupBy = <S1 extends STop, S2 extends STop, K, V>(
+	t1: Table<S1>,
+	key: (r1: Row<S1>) => K,
+	project: (r2: Row<S1>) => V,
+	aggregate: (k2: K, vs: Array<V>) => Row<S2>
+): Table<S2> => {
+	const kvs = t1.content.map((r) => {
+		const k = key({ header: t1.header, content: [r] })
+		const v = project({ header: t1.header, content: [r] })
+		return [k, v]
+	})
+	const map = new Map()
+	for (const [k, v] of kvs) {
+		if (map.has(k)) {
+			map.get(k).push(v)
+		} else {
+			map.set(k, [v])
+		}
+	}
+	return values([...map.entries()].sort().map(([k, vs]) => aggregate(k, vs)))
+}
+() => {
+	// - [ ] `schema(r1)` is equal to `schema(t1)`
+	// - [ ] `schema(r2)` is equal to `schema(t1)`
+	// - [ ] `schema(t2)` is equal to `schema(r3)`
+	// - [ ] `nrows(t2)` is equal to `length(removeDuplicates(ks))`, where `ks` is the results of applying `key` to each row of `t1`. `ks` can be defined with `select` and `getColumn`.	
+}
+{
+	const colorTemp = <S extends STop & Record<'favorite color', string>>(r: Row<S>) => {
+		if (getValue(r, "favorite color") == "red") {
+			return "warm"
+		} else {
+			return "cool"
+		}
+	}
+	const nameLength = <S extends STop & Record<'name', string>>(r: Row<S>) => {
+		return getValue(r, "name").length
+	}
+	const aggregate = <K>(k: K, vs: Array<number>) => {
+		return parseRow([["key", k], ["average", average(vs)]])
+	}
+	// The order of rows is different. But it doesn't matter.
+	Tester.assertEqual(
+		'groupBy 1',
+		() => groupBy(students, colorTemp, nameLength, aggregate),
+		parseTable([
+			['key', 'average'],
+			["cool", 4],
+			["warm", 3],
+		])
+	)
+	const abstractAge = (r: Row<SchemaOf<typeof gradebook>>) => {
+		if (getValue(r, 'age') <= 12) {
+			return 'kid'
+		} else if (getValue(r, 'age') <= 19) {
+			return 'teenager'
+		} else {
+			return 'adult'
+		}
+	}
+	const finalGrade = (r: Row<SchemaOf<typeof gradebook>>) => {
+		return getValue(r, 'final')
+	}
+	Tester.assertEqual(
+		'groupBy 2',
+		() => groupBy(gradebook, abstractAge, finalGrade, aggregate),
+		parseTable([
+			['key', 'average'],
+			["kid", 87],
+			["teenager", 81],
+		])
+	)
+}
+
 
 Tester.go()

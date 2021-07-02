@@ -13,3 +13,11 @@ export const average = (ns: Array<number>) => {
 	}
 	return sum / ns.length;
 }
+
+export const filter = <X>(xs: Array<X>, f: (x: X) => boolean) => {
+	return xs.filter(f)
+}
+
+export const length = <X>(xs: Array<X>) => {
+	return xs.length
+}
