@@ -1192,7 +1192,7 @@ Return a `Seq<Boolean>` with `true` entries indicating rows without missing valu
 Removes rows that have some values missing
 
 ```lua
-> dropna(studentMissing)
+> dropna(studentsMissing)
 | name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Alice" | 17  | "green"        |
