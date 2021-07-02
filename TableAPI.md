@@ -1086,10 +1086,10 @@ Partitions rows into groups and summarize each group with the functions in `agg`
     ])
 | get acne | brown | red proportion | pink proportion |
 | -------- | ----- | -------------- | --------------- |
-| true     | true  | 0              | 0               |
-| true     | false | 0              | 1/4             |
-| false    | true  | 1              | 1               |
 | false    | false | 0              | 3/4             |
+| false    | true  | 1              | 1               |
+| true     | false | 0              | 1/4             |
+| true     | true  | 0              | 0               |
 ```
 
 ### `groupBy<K,V> :: t1:Table * key:(r1:Row -> k1:K) * project:(r2:Row -> v:V) * aggregate:(k2:K * vs:Seq<V> -> r3:Row) -> t2:Table`
