@@ -1237,7 +1237,7 @@ Scans the named column and fills in `v` when a cell is missing value.
 
 ## Data Cleaning
 
-### `pivotLonger : t1:Table * cs:Seq<ColName> * c1:ColName * c2:ColName -> t2:Table`
+### `pivotLonger :: t1:Table * cs:Seq<ColName> * c1:ColName * c2:ColName -> t2:Table`
 
 #### Constraints
 
@@ -1271,26 +1271,26 @@ Reshapes the input table and make it longer. The data kept in the named columns 
 | "Eve"   | 13  | 7     | 9     | 8     | 8     | "midterm" | 84    |
 | "Eve"   | 13  | 7     | 9     | 8     | 8     | "final"   | 77    |
 > pivotLonger(gradebook, ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"], "test", "score")
-| name    | age | test    | score |
-| ------- | --- | ------- | ----- |
-| "Bob"   | 12  | quiz1   | 8     |
-| "Bob"   | 12  | quiz2   | 9     |
-| "Bob"   | 12  | quiz3   | 7     |
-| "Bob"   | 12  | quiz4   | 9     |
-| "Bob"   | 12  | midterm | 77    |
-| "Bob"   | 12  | final   | 87    |
-| "Alice" | 17  | quiz1   | 6     |
-| "Alice" | 17  | quiz2   | 8     |
-| "Alice" | 17  | quiz3   | 8     |
-| "Alice" | 17  | quiz4   | 7     |
-| "Alice" | 17  | midterm | 88    |
-| "Alice" | 17  | final   | 85    |
-| "Eve"   | 13  | quiz1   | 7     |
-| "Eve"   | 13  | quiz2   | 9     |
-| "Eve"   | 13  | quiz3   | 8     |
-| "Eve"   | 13  | quiz4   | 8     |
-| "Eve"   | 13  | midterm | 84    |
-| "Eve"   | 13  | final   | 77    |
+| name    | age | test      | score |
+| ------- | --- | --------- | ----- |
+| "Bob"   | 12  | "quiz1"   | 8     |
+| "Bob"   | 12  | "quiz2"   | 9     |
+| "Bob"   | 12  | "quiz3"   | 7     |
+| "Bob"   | 12  | "quiz4"   | 9     |
+| "Bob"   | 12  | "midterm" | 77    |
+| "Bob"   | 12  | "final"   | 87    |
+| "Alice" | 17  | "quiz1"   | 6     |
+| "Alice" | 17  | "quiz2"   | 8     |
+| "Alice" | 17  | "quiz3"   | 8     |
+| "Alice" | 17  | "quiz4"   | 7     |
+| "Alice" | 17  | "midterm" | 88    |
+| "Alice" | 17  | "final"   | 85    |
+| "Eve"   | 13  | "quiz1"   | 7     |
+| "Eve"   | 13  | "quiz2"   | 9     |
+| "Eve"   | 13  | "quiz3"   | 8     |
+| "Eve"   | 13  | "quiz4"   | 8     |
+| "Eve"   | 13  | "midterm" | 84    |
+| "Eve"   | 13  | "final"   | 77    |
 ```
 
 ### `pivotWider :: t1:Table * c1:ColName * c2:ColName -> t2:Table`
