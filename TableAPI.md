@@ -1237,7 +1237,7 @@ Scans the named column and fills in `v` when a cell is missing value.
 
 ## Data Cleaning
 
-### `pivotLonger :： t1:Table * cs:Seq<ColName> * c1:ColName * c2:ColName -> t2:Table`
+### `pivotLonger :: t1:Table * cs:Seq<ColName> * c1:ColName * c2:ColName -> t2:Table`
 
 #### Constraints
 
