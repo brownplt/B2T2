@@ -1,7 +1,7 @@
 import { AddColumn, CTop, Lookup, parseRow, parseTable, Row, SchemaOf, STop, Table, TTop, UpdateColumns, VTop } from "./EncodeTables";
 import { students, gradebook, studentsMissing, jellyAnon, employees, departments, jellyNamed, gradebookMissing } from "./ExampleTables";
 import { makeTester } from './unitTest'
-import { average, concat, filter, ge, le, length } from './helpers'
+import { average, concat, concatArray, even, filter, ge, le, length, removeAll, removeDuplicates } from './helpers'
 
 const Tester = makeTester()
 
@@ -10,6 +10,47 @@ let emptyTable: Table<{}> = { header: [] as Array<keyof {}>, content: [] };
 () => {
 	// - [x] `schema(t)` is equal to `{}`
 	// - [ ] `nrows(t)` is equal to `0`
+}
+
+let addRows = <S extends STop>(t1: Table<S>, rs: Array<Row<S>>): Table<S> => {
+	return {
+		header: t1.header,
+		content: [...t1.content, ...rs.map(({ content: [r] }) => r)]
+	}
+}
+() => {
+	// - [ ] for all `r` in `rs`, `schema(r)` is equal to `schema(t1)`
+	// - [ ] `schema(t2)` is equal to `schema(t1)`
+	// - [ ] `nrows(t2)` is equal to `nrows(t1) + length(rs)`
+}
+{
+	Tester.assertEqual(
+		'addRows 1',
+		() => addRows(
+			students,
+			[
+				parseRow([
+					["name", "Colton"], ["age", 19],
+					["favorite color", "blue"]])
+			]),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+			["Alice", 17, "green"],
+			["Eve", 13, "red"],
+			["Colton", 19, "blue"],
+		])
+	)
+	Tester.assertEqual(
+		'addRows 2',
+		() => addRows(gradebook, []),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
+			["Bob", 12, 8, 9, 77, 7, 9, 87],
+			["Alice", 17, 6, 8, 88, 8, 7, 85],
+			["Eve", 13, 7, 9, 84, 8, 8, 77],
+		])
+	)
 }
 
 let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, vs: Array<V>): Table<AddColumn<S, C, V>> => {
@@ -570,7 +611,7 @@ let ncols = <S extends STop>(t: Table<S>): number => {
 
 
 
-let header = <S extends STop>(t: Table<S>): Array<keyof S> => {
+let header = <S extends STop>(t: Table<S>): Array<CTop & keyof S> => {
 	return t.header;
 }
 // constraints
@@ -1313,10 +1354,10 @@ let pivotTable = <S extends STop>(t1: Table<S>, cs: Array<CTop & keyof S>, aggs:
 			]),
 		parseTable([
 			['get acne', 'brown', 'red proportion', 'pink proportion'],
-			[false, false, 0, 3 / 4],
-			[false, true, 1, 1],
 			[true, false, 0, 1 / 4],
+			[false, false, 0, 3 / 4],
 			[true, true, 0, 0],
+			[false, true, 1, 1],
 		])
 	)
 }
@@ -1340,7 +1381,7 @@ let groupBy = <S1 extends STop, S2 extends STop, K, V>(
 			map.set(k, [v])
 		}
 	}
-	return values([...map.entries()].sort().map(([k, vs]) => aggregate(k, vs)))
+	return values([...map.entries()].map(([k, vs]) => aggregate(k, vs)))
 }
 () => {
 	// - [ ] `schema(r1)` is equal to `schema(t1)`
@@ -1483,7 +1524,170 @@ let fillna = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, c: C, v: S
 	)
 }
 
-// TODO: the entries after fillna
+let pivotLonger = <S extends STop, C extends CTop & keyof S, C1 extends CTop, C2 extends CTop>(t1: Table<S>, cs: Array<C>, c1: C1, c2: C2): Table<Omit<S, C> & Record<C1, CTop> & Record<C2, S[C]>> => {
+	return selectMany(
+		t1,
+		(r1, _) => {
+			return values(cs.map((c) => {
+				return parseRow([
+					[c1, c],
+					[c2, getValue(r1, c)]
+				])
+			}))
+		},
+		(r2, r3) => {
+			const remainingColumns = t1.header.filter((c) => {
+				return !(cs as string[]).includes(c)
+			})
+			return hcat(selectColumns3(r2, remainingColumns), r3) as Row<any>
+		}
+	)
+}
+() => {
+	// - [ ] `length(cs)` is positive
+	// - [ ] `cs` has no duplicates
+	// - [x] for all `c` in `cs`, `c` is in `header(t1)`
+	// - [x] for all `c` in `cs`, `schema(t1)[c]` is equal to `schema(t1)[cs[0]]`
+	// - [ ] `concat(removeAll(header(t1), cs), [c1, c2])` has no duplicates
+	// - [ ] `header(t2)` is equal to `concat(removeAll(header(t1), cs), [c1, c2])`
+	// - [x] for all `c` in `removeAll(header(t1), cs)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+	// - [x] `schema(t2)[c1]` is equal to `ColName`
+	// - [x] `schema(t2)[c2]` is equal to `schema(t1)[cs[0]]`
+}
+{
+	Tester.assertEqual(
+		'pivotLonger 1',
+		() => pivotLonger(gradebook, ["midterm", "final"], "exam", "score"),
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'quiz3', 'quiz4', 'exam', 'score'],
+			["Bob", 12, 8, 9, 7, 9, "midterm", 77],
+			["Bob", 12, 8, 9, 7, 9, "final", 87],
+			["Alice", 17, 6, 8, 8, 7, "midterm", 88],
+			["Alice", 17, 6, 8, 8, 7, "final", 85],
+			["Eve", 13, 7, 9, 8, 8, "midterm", 84],
+			["Eve", 13, 7, 9, 8, 8, "final", 77],
+		])
+	)
+	Tester.assertEqual(
+		'pivotLonger 2',
+		() => pivotLonger(gradebook, ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"], "test", "score"),
+		parseTable([
+			['name', 'age', 'test', 'score'],
+			["Bob", 12, 'quiz1', 8],
+			["Bob", 12, 'quiz2', 9],
+			["Bob", 12, 'quiz3', 7],
+			["Bob", 12, 'quiz4', 9],
+			["Bob", 12, 'midterm', 77],
+			["Bob", 12, 'final', 87],
+			["Alice", 17, 'quiz1', 6],
+			["Alice", 17, 'quiz2', 8],
+			["Alice", 17, 'quiz3', 8],
+			["Alice", 17, 'quiz4', 7],
+			["Alice", 17, 'midterm', 88],
+			["Alice", 17, 'final', 85],
+			["Eve", 13, 'quiz1', 7],
+			["Eve", 13, 'quiz2', 9],
+			["Eve", 13, 'quiz3', 8],
+			["Eve", 13, 'quiz4', 8],
+			["Eve", 13, 'midterm', 84],
+			["Eve", 13, 'final', 77],
+		])
+	)
+}
+
+let pivotWider = <S1 extends STop, C extends CTop, C1 extends CTop, C2 extends CTop & keyof S1>(t1: Table<S1 & Record<C1, C>>, c1: C1, c2: C2): Table<Omit<S1, C2> & Record<C, S1[C2]>> => {
+	const keptColumns = removeAll(header(t1), [c1, c2])
+	const newColumns = removeDuplicates(getColumn2(t1, c1))
+	const grouped = groupBy(
+		t1,
+		(r) => JSON.stringify(selectColumns3(r, keptColumns)),
+		(r) => selectColumns3(r, [c1, c2]) as any,
+		(k, vs) => {
+			const keyCol = JSON.parse(k)
+			const newColVals = values(vs as any)
+			const lookup = <S extends STop, C extends CTop & keyof S>(t: Table<S>, c: C, v: S[C]) => {
+				let filtered = tfilter(t, (r) => getValue(r, c) === v);
+				if (nrows(filtered) > 0) {
+					return getRow(filtered, 0)
+				} else {
+					return parseRow(t.header.map((c) => [c, null]))
+				}
+			}
+			return hcat(keyCol, parseRow(newColumns.map((c) => {
+				return [c, getValue(lookup(newColVals, c1, c), c2)]
+			}))) as any
+		})
+	return grouped as any;
+}
+() => {
+	// - [ ] `c1` is in `header(t1)`
+	// - [ ] `c2` is in `header(t1)`
+	// - [x] `schema(t1)[c1]` is `ColName`
+	// - [ ] `concat(removeAll(header(t1), [c1, c2]), removeDuplicates(getColumn(t1, c1)))` has no duplicates
+	// - [ ] `header(t2)` is equal to `concat(removeAll(header(t1), [c1, c2]), removeDuplicates(getColumn(t1, c1)))`
+	// - [x] for all `c` in `removeAll(header(t1), [c1, c2])`, `schema(t2)[c]` is equal to `schema(t1)[c]`
+	// - [x] for all `c` in `removeDuplicates(getColumn(t1, c1))`, `schema(t2)[c]` is equal to `schema(t1)[c2]`
+}
+{
+	Tester.assertEqual(
+		'pivotWider 1',
+		() => pivotWider(students, "name", "age"),
+		parseTable([
+			['favorite color', 'Bob', 'Alice', 'Eve'],
+			["blue", 12, null, null],
+			["green", null, 17, null],
+			["red", null, null, 13],
+		])
+	)
+	Tester.assertEqual(
+		'pivotWider 2',
+		() => pivotLonger(
+			gradebook,
+			["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"],
+			"test",
+			"score"),
+		parseTable([
+			['name', 'age', 'test', 'score'],
+			["Bob", 12, 'quiz1', 8],
+			["Bob", 12, 'quiz2', 9],
+			["Bob", 12, 'quiz3', 7],
+			["Bob", 12, 'quiz4', 9],
+			["Bob", 12, 'midterm', 77],
+			["Bob", 12, 'final', 87],
+			["Alice", 17, 'quiz1', 6],
+			["Alice", 17, 'quiz2', 8],
+			["Alice", 17, 'quiz3', 8],
+			["Alice", 17, 'quiz4', 7],
+			["Alice", 17, 'midterm', 88],
+			["Alice", 17, 'final', 85],
+			["Eve", 13, 'quiz1', 7],
+			["Eve", 13, 'quiz2', 9],
+			["Eve", 13, 'quiz3', 8],
+			["Eve", 13, 'quiz4', 8],
+			["Eve", 13, 'midterm', 84],
+			["Eve", 13, 'final', 77],
+		])
+	)
+	Tester.assertEqual(
+		'pivotWider 3',
+		() => {
+			const longerTable = pivotLonger(
+				gradebook,
+				["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"],
+				"test",
+				"score")
+			return pivotWider(longerTable, "test", "score")
+		},
+		parseTable([
+			['name', 'age', 'quiz1', 'quiz2', 'quiz3', 'quiz4', 'midterm', 'final'],
+			["Bob", 12, 8, 9, 7, 9, 77, 87],
+			["Alice", 17, 6, 8, 8, 7, 88, 85],
+			["Eve", 13, 7, 9, 8, 8, 84, 77],
+		])
+	)
+}
+
+// TODO: the entries after pivotWider
 
 let select = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>, n: number) => Row<S2>): Table<S2> => {
 	return values(t1.content.map((r, i) => f({
@@ -1529,6 +1733,71 @@ let select = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>, 
 			["Bob Smith", 82],
 			["Alice Smith", 86.5],
 			["Eve Smith", 80.5],
+		])
+	)
+}
+
+let selectMany = <S1 extends STop, S2 extends STop, S3 extends STop>(t1: Table<S1>, project: (r1: Row<S1>, n: number) => Table<S2>, result: (r2: Row<S1>, r3: Row<S2>) => Row<S3>): Table<S3> => {
+	return values(t1.content.flatMap((r1, i) => {
+		const row1: Row<S1> = { header: t1.header, content: [r1] }
+		const projection = project(row1, i)
+		return projection.content.map((r2) => {
+			const row2: Row<S2> = { header: projection.header, content: [r2] }
+			return result(row1, row2)
+		})
+	}))
+}
+() => {
+	// - [ ] `schema(r1)` is equal to `schema(t1)`
+	// - [ ] `n` is in `range(nrows(t1))`
+	// - [ ] `schema(r2)` is equal to `schema(t1)`
+	// - [ ] `schema(r3)` is equal to `schema(t2)`
+	// - [ ] `schema(t2)` is equal to `schema(r4)`
+}
+{
+	Tester.assertEqual(
+		'selectMany 1',
+		() => selectMany(
+			students,
+			(r, n) => {
+				if (even(n)) {
+					return r
+				} else {
+					return head(r, 0)
+				}
+			},
+			(r1, r2) => {
+				return r2
+			}),
+		parseTable([
+			['name', 'age', 'favorite color'],
+			["Bob", 12, "blue"],
+			["Eve", 13, "red"],
+		])
+	)
+	const repeatRow = <S extends STop>(r: Row<S>, n: number): Table<S> => {
+		if (n == 0) {
+			return r
+		} else {
+			return addRows(repeatRow(r, n - 1), [r])
+		}
+	}
+	Tester.assertEqual(
+		'selectMany 2',
+		() => selectMany(
+			gradebook,
+			repeatRow,
+			(r1: Row<SchemaOf<typeof gradebook>>, r2: Row<SchemaOf<typeof gradebook>>) => {
+				return selectColumns3(r2, ["midterm"]) as Row<any>
+			}),
+		parseTable([
+			['midterm'],
+			[77],
+			[88],
+			[88],
+			[84],
+			[84],
+			[84],
 		])
 	)
 }

@@ -1,3 +1,13 @@
+export const removeAll = <X>(a: Array<X>, b: Array<X>): Array<X> => {
+	return a.filter((x) => {
+		return !b.includes(x)
+	})
+}
+
+export const even = (n: number) => {
+	return n === Math.floor(n / 2) * 2
+}
+
 export const le = (n1: number, n2: number) => {
 	return n1 <= n2
 }
@@ -24,4 +34,18 @@ export const length = <X>(xs: Array<X>) => {
 
 export const concat = (xs1: string, xs2: string) => {
 	return xs1 + xs2
+}
+
+export const concatArray = <X>(xs1: Array<X>, xs2: Array<X>) => {
+	return [...xs1, ...xs2]
+}
+
+export const removeDuplicates = <X>(xs: Array<X>): Array<X> => {
+	const ys: Array<X> = [];
+	for (const x of xs) {
+		if (! ys.includes(x)) {
+			ys.push(x)
+		}
+	}
+	return ys;
 }

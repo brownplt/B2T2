@@ -21,23 +21,23 @@ export const makeTester = () => {
 	}
 	const myDiff = (apple: any, orange: any): string => {
 		if (typeof apple !== typeof orange) {
-			return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
+			return `${JSON.stringify(apple, null, 4)} cannot be equal to ${JSON.stringify(orange, null, 4)}`;
 		}
 		if (typeof apple !== 'object') {
 			if (apple === orange) {
 				return '';
 			} else {
-				return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
+				return `${JSON.stringify(apple, null, 4)} cannot be equal to ${JSON.stringify(orange, null, 4)}`;
 			}
 		}
 		if (apple === null && orange === null) {
 			return '';
 		}
 		if (apple === null || orange === null) {
-			return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
+			return `${JSON.stringify(apple, null, 4)} cannot be equal to ${JSON.stringify(orange, null, 4)}`;
 		}
 		if (Object.keys(apple).length !== Object.keys(orange).length) {
-			return `${JSON.stringify(apple)} cannot be equal to ${JSON.stringify(orange)}`;
+			return `${JSON.stringify(apple, null, 4)} cannot be equal to ${JSON.stringify(orange, null, 4)}`;
 		}
 		for (const key of Object.keys(apple)) {
 			const diff = myDiff(apple[key], orange[key])
@@ -62,7 +62,7 @@ export const makeTester = () => {
 			try {
 				const apple = makeApple();
 				const diff = myDiff(apple, orange);
-				assertBoolean(!diff, `${name}: ${diff}.\n${JSON.stringify(apple)}\n${JSON.stringify(orange)}`)
+				assertBoolean(!diff, `${name}: ${diff}.\n${JSON.stringify(apple, null, 4)}\n${JSON.stringify(orange, null, 4)}`)
 			} catch (e) {
 				errors.push(`${name}: error ${e.toString()}`)
 			}
