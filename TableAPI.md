@@ -1327,27 +1327,6 @@ The inverse of `pivotLonger`.
       ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"],
       "test",
       "score")
-> longerTable
-| name    | age | test    | score |
-| ------- | --- | ------- | ----- |
-| "Bob"   | 12  | quiz1   | 8     |
-| "Bob"   | 12  | quiz2   | 9     |
-| "Bob"   | 12  | quiz3   | 7     |
-| "Bob"   | 12  | quiz4   | 9     |
-| "Bob"   | 12  | midterm | 77    |
-| "Bob"   | 12  | final   | 87    |
-| "Alice" | 17  | quiz1   | 6     |
-| "Alice" | 17  | quiz2   | 8     |
-| "Alice" | 17  | quiz3   | 8     |
-| "Alice" | 17  | quiz4   | 7     |
-| "Alice" | 17  | midterm | 88    |
-| "Alice" | 17  | final   | 85    |
-| "Eve"   | 13  | quiz1   | 7     |
-| "Eve"   | 13  | quiz2   | 9     |
-| "Eve"   | 13  | quiz3   | 8     |
-| "Eve"   | 13  | quiz4   | 8     |
-| "Eve"   | 13  | midterm | 84    |
-| "Eve"   | 13  | final   | 77    |
 > pivotWider(longerTable, "test", "score")
 | name    | age | quiz1 | quiz2 | quiz3 | quiz4 | midterm | final |
 | ------- | --- | ----- | ----- | ----- | ----- | ------- | ----- |
