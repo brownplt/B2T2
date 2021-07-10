@@ -1375,7 +1375,7 @@ When columns `cs` of table `t` have sequences, returns a `Table` where each elem
 | "Eve"   | 13  | 9       | 84      | 77    |
 | "Eve"   | 13  | 8       | 84      | 77    |
 | "Eve"   | 13  | 8       | 84      | 77    |
-> t = buildColumn(gradebookSeq, "quiz-pass?"
+> t = buildColumn(gradebookSeq, "quiz-pass?",
     function(r):
       isPass =
         function(n):
@@ -1389,7 +1389,7 @@ When columns `cs` of table `t` have sequences, returns a `Table` where each elem
 | "Bob"   | 12  | [8, 9, 7, 9] | 77      | 87    | [true, true, false, true]  |
 | "Alice" | 17  | [6, 8, 8, 7] | 88      | 85    | [false, true, true, false] |
 | "Eve"   | 13  | [7, 9, 8, 8] | 84      | 77    | [false, true, true, true]  |
-> flatten(gradebookSeq, ["quiz-pass?", "quizzes"])
+> flatten(t, ["quiz-pass?", "quizzes"])
 | name    | age | quizzes | midterm | final | quiz-pass? |
 | ------- | --- | ------- | ------- | ----- | ---------- |
 | "Bob"   | 12  | 8       | 77      | 87    | true       |
@@ -1430,7 +1430,7 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
 ```lua
 > addLastName =
     function(name):
-      concat(name, "Smith")
+      concat(name, " Smith")
     end
 > transformColumn(students, "name", addLastName)
 | name          | age | favorite color |
@@ -1451,10 +1451,10 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
 | ------- | --- | ------ | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | "pass" | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | "fail" | 8     | 88      | 8     | 7     | 85    |
-| "Eve"   | 13  | "fail" | 9     | 84      | 8     | 8     | 77    |
+| "Eve"   | 13  | "pass" | 9     | 84      | 8     | 8     | 77    |
 ```
 
-### `renameColumns : t1:Table * ccs:Seq<ColName * ColName> -> t2:Table`
+### `renameColumns :: t1:Table * ccs:Seq<ColName * ColName> -> t2:Table`
 
 #### Constraints
 
