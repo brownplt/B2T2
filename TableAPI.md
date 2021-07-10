@@ -1489,8 +1489,8 @@ Updates column names. Each element of `ccs` specifies the old name and the new n
 | name    | age | quiz1 | quiz2 | final | quiz3 | quiz4 | midterm |
 | ------- | --- | ----- | ----- | ----- | ----- | ----- | ------- |
 | "Bob"   | 12  | 8     | 9     | 77    | 7     | 9     | 87      |
-| "Alice" | 17  | 6     | 8     | 88    |       | 7     | 85      |
-| "Eve"   | 13  |       | 9     | 84    | 8     | 8     | 77      |
+| "Alice" | 17  | 6     | 8     | 88    | 8     | 7     | 85      |
+| "Eve"   | 13  | 7     | 9     | 84    | 8     | 8     | 77      |
 ```
 
 ### `find :: t:Table * r:Row -> n:Error<Number>`
