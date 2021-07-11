@@ -49,3 +49,7 @@ export const removeDuplicates = <X>(xs: Array<X>): Array<X> => {
 	}
 	return ys;
 }
+
+export const map = <X, Y>(xs: Array<X>, f: (x: X) => Y): Array<Y> => {
+	return xs.map(f)
+}

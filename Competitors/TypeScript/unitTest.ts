@@ -57,6 +57,22 @@ export const makeTester = () => {
 			successCount++;
 		}
 	}
+	const assertThrow = (name: string, makeApple: () => any, orange: any) => {
+		todos.push(() => {
+			let value;
+			for (const _ of [1]) {
+				try {
+					value = makeApple();
+					break;
+				} catch (apple) {
+					const diff = myDiff(apple, orange);
+					assertBoolean(!diff, `${name}: ${diff}.\n${JSON.stringify(apple, null, 4)}\n${JSON.stringify(orange, null, 4)}`)
+					return
+				}
+			}
+			throw `expecting error, received ${value}`
+		})
+	}
 	const assertEqual = (name: string, makeApple: () => any, orange: any) => {
 		todos.push(() => {
 			try {
@@ -64,14 +80,18 @@ export const makeTester = () => {
 				const diff = myDiff(apple, orange);
 				assertBoolean(!diff, `${name}: ${diff}.\n${JSON.stringify(apple, null, 4)}\n${JSON.stringify(orange, null, 4)}`)
 			} catch (e) {
-				errors.push(`${name}: error ${e.toString()}`)
+				throw e;
 			}
 		})
 	}
 	const go = () => {
 		console.log('BEGIN')
 		for (const thunk of todos) {
-			thunk()
+			try {
+				thunk()
+			} catch (e) {
+				errors.push(`Caught exception: ${e}`)
+			}
 		}
 		for (const e of errors) {
 			console.log(e)
@@ -82,6 +102,6 @@ export const makeTester = () => {
 		console.log('END')
 	}
 	return {
-		assertEqual, go
+		assertEqual, assertThrow, go
 	}
 }
