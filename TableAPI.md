@@ -1489,8 +1489,8 @@ Updates column names. Each element of `ccs` specifies the old name and the new n
 | name    | age | quiz1 | quiz2 | final | quiz3 | quiz4 | midterm |
 | ------- | --- | ----- | ----- | ----- | ----- | ----- | ------- |
 | "Bob"   | 12  | 8     | 9     | 77    | 7     | 9     | 87      |
-| "Alice" | 17  | 6     | 8     | 88    |       | 7     | 85      |
-| "Eve"   | 13  |       | 9     | 84    | 8     | 8     | 77      |
+| "Alice" | 17  | 6     | 8     | 88    | 8     | 7     | 85      |
+| "Eve"   | 13  | 7     | 9     | 84    | 8     | 8     | 77      |
 ```
 
 ### `find :: t:Table * r:Row -> n:Error<Number>`
@@ -1555,7 +1555,7 @@ Categorizes rows of the input table into groups by the key of each row. The key 
 > groupByRetentive(jellyAnon, "brown")
 | key   | groups                                                                                  |
 | ----- | --------------------------------------------------------------------------------------- |
-| true  | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
+| false | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ | |
 |       | | true     | false | false | false | true  | false  | false | true   | false | false  | |
 |       | | true     | false | true  | false | true  | true   | false | false  | false | false  | |
@@ -1565,7 +1565,7 @@ Categorizes rows of the input table into groups by the key of each row. The key 
 |       | | true     | false | true  | false | false | false  | false | true   | true  | false  | |
 |       | | false    | false | true  | false | false | false  | false | false  | true  | false  | |
 |       | | true     | false | false | false | false | false  | false | true   | false | false  | |
-| false | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
+| true  | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ | |
 |       | | true     | false | false | false | false | false  | true  | true   | false | false  | |
 |       | | false    | true  | false | false | false | true   | true  | false  | true  | false  | |
@@ -1610,7 +1610,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 > groupBySubtractive(jellyAnon, "brown")
 | key   | groups                                                                          |
 | ----- | ------------------------------------------------------------------------------- |
-| true  | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
+| false | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ | |
 |       | | true     | false | false | false | true  | false  | true   | false | false  | |
 |       | | true     | false | true  | false | true  | true   | false  | false | false  | |
@@ -1620,7 +1620,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 |       | | true     | false | true  | false | false | false  | true   | true  | false  | |
 |       | | false    | false | true  | false | false | false  | false  | true  | false  | |
 |       | | true     | false | false | false | false | false  | true   | false | false  | |
-| false | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
+| true  | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ | |
 |       | | true     | false | false | false | false | false  | true   | false | false  | |
 |       | | false    | true  | false | false | false | true   | false  | true  | false  | |
