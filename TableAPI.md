@@ -1555,7 +1555,7 @@ Categorizes rows of the input table into groups by the key of each row. The key 
 > groupByRetentive(jellyAnon, "brown")
 | key   | groups                                                                                  |
 | ----- | --------------------------------------------------------------------------------------- |
-| true  | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
+| false | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ | |
 |       | | true     | false | false | false | true  | false  | false | true   | false | false  | |
 |       | | true     | false | true  | false | true  | true   | false | false  | false | false  | |
@@ -1565,7 +1565,7 @@ Categorizes rows of the input table into groups by the key of each row. The key 
 |       | | true     | false | true  | false | false | false  | false | true   | true  | false  | |
 |       | | false    | false | true  | false | false | false  | false | false  | true  | false  | |
 |       | | true     | false | false | false | false | false  | false | true   | false | false  | |
-| false | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
+| true  | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ | |
 |       | | true     | false | false | false | false | false  | true  | true   | false | false  | |
 |       | | false    | true  | false | false | false | true   | true  | false  | true  | false  | |
