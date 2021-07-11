@@ -1858,7 +1858,7 @@ Correlates the rows of two tables based on matching keys.
     end
 > addGradeColumn =
     function(r1, r2):
-      addColumn(r1, "grade", getValue(r2, "final"))
+      addColumn(r1, "grade", [getValue(r2, "final")])
     end
 > join(students, gradebook, getName, getName, addGradeColumn)
 | name    | age | favorite color | grade |
