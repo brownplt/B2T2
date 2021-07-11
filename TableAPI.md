@@ -1610,7 +1610,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 > groupBySubtractive(jellyAnon, "brown")
 | key   | groups                                                                          |
 | ----- | ------------------------------------------------------------------------------- |
-| true  | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
+| false | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ | |
 |       | | true     | false | false | false | true  | false  | true   | false | false  | |
 |       | | true     | false | true  | false | true  | true   | false  | false | false  | |
@@ -1620,7 +1620,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 |       | | true     | false | true  | false | false | false  | true   | true  | false  | |
 |       | | false    | false | true  | false | false | false  | false  | true  | false  | |
 |       | | true     | false | false | false | false | false  | true   | false | false  | |
-| false | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
+| true  | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ | |
 |       | | true     | false | false | false | false | false  | true   | false | false  | |
 |       | | false    | true  | false | false | false | true   | false  | true  | false  | |
