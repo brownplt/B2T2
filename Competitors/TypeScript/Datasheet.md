@@ -50,13 +50,31 @@ The encoding is straightforward. Given a table, its representation includes two 
 
 ### Are there consistent changes made to the way the operations are represented?
 
+Every table type is translated to `Table<S>`, where `S` is a type that represent an _unorderred_ schema.
+
+When two schemas are equal, we create a type variable and use that variable for both.
+
+When we need to constraint a column name, we create a type variable (usually named `C`) and constraint that type variable. For example, to specify that a variable `c` must be a column name of a `Table<S>`, we write `c: C` and `C extends CTop & keyof S`, which means `C` must be a column name (`CTop`) and must be a key of the object type that represents the unorderred schema (`S`). 
+
+An exception to the last "consistent change" is that if we need to specify the type that `c` maps to, we write `C extends CTop` and constraint the schema. For example, our `tsort` operator only accepts a numeric column. We wrote `S extends STop & Record<C, number>` to specify that `S`, the unordered schema of the table to be sorted, must map `C` to `number`.
+
 ### Which operations are entirely inexpressible? Why?
+
+All operations are at least partially expressible.
 
 ### Which operations are only partially expressible? Why, and what’s missing?
 
+We cannot express constraints on the number of rows, the number of columns, and the order of column names. We also cannot specify that a sequence has no duplicates.
+
+Yet another prevalent limitation on the expressibility of the operations comes from the fact that we cannot constraint variables themselves, but only their types. This limitation is most obvious in column names. The best way we can do to constraint variables bound to column names is to write `c: C` and then constarint `C`. Many operators will have a broken output type if `C` is not instantiated with string literal types. For example, if a programmer wrote `addColumn(t, c, vs)` and the type of `c` is a union of string literal types (e.g. `"foo" | "bar"`), then the type system will think two columns are added. This limitation is so prevalent that we chose not to document in throught out `TableAPI.ts`.
+
 ### Which operations’ expressibility is unknown? Why?
 
+All operations are expressible. Most of them are partialy expressible.
+
 ### Which operations can be expressed more precisely than in the benchmark? How?
+
+No operation can be expressed more precisely than in the benchmark.
 
 ## Example Programs
 

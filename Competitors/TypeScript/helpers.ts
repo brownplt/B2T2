@@ -53,3 +53,7 @@ export const removeDuplicates = <X>(xs: Array<X>): Array<X> => {
 export const map = <X, Y>(xs: Array<X>, f: (x: X) => Y): Array<Y> => {
 	return xs.map(f)
 }
+
+export const range = (n: number) => {
+	return Array.from(Array(n).keys())
+}

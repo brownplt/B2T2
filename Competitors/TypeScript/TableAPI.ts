@@ -5,14 +5,14 @@ import { average, concat, concatArray, even, filter, ge, le, length, map, remove
 
 const Tester = makeTester()
 
-let emptyTable: Table<{}> = { header: [] as Array<keyof {}>, content: [] };
+export let emptyTable: Table<{}> = { header: [] as Array<keyof {}>, content: [] };
 // constraints
 () => {
 	// - [x] `schema(t)` is equal to `{}`
 	// - [ ] `nrows(t)` is equal to `0`
 }
 
-let addRows = <S extends STop>(t1: Table<S>, rs: Array<Row<S>>): Table<S> => {
+export let addRows = <S extends STop>(t1: Table<S>, rs: Array<Row<S>>): Table<S> => {
 	return {
 		header: t1.header,
 		content: [...t1.content, ...rs.map(({ content: [r] }) => r)]
@@ -53,7 +53,7 @@ let addRows = <S extends STop>(t1: Table<S>, rs: Array<Row<S>>): Table<S> => {
 	)
 }
 
-let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, vs: Array<V>): Table<AddColumn<S, C, V>> => {
+export let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, vs: Array<V>): Table<AddColumn<S, C, V>> => {
 	return {
 		header: [...t1.header, c],
 		content: t1.content.map((r, i) => {
@@ -96,7 +96,7 @@ let addColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c
 	)
 }
 
-let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, f: (r: Row<S>) => V): Table<AddColumn<S, C, V>> => {
+export let buildColumn = <S extends STop, C extends CTop, V extends VTop>(t1: Table<S>, c: C, f: (r: Row<S>) => V): Table<AddColumn<S, C, V>> => {
 	return addColumn(t1, c, t1.content.map((r) => f({ header: t1.header, content: [r] })))
 }
 // constraints
@@ -202,7 +202,7 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 }
 
 
-let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Table<S1 & S2> => {
+export let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Table<S1 & S2> => {
 	return {
 		header: [...t1.header, ...t2.header],
 		content: t1.content.map((r1, i) => {
@@ -244,7 +244,7 @@ let hcat = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Tab
 }
 
 
-let values = <S extends STop>(rs: Array<Row<S>>): Table<S> => {
+export let values = <S extends STop>(rs: Array<Row<S>>): Table<S> => {
 	return {
 		header: rs[0].header,
 		content: rs.map(({ content: [r] }) => r)
@@ -284,7 +284,7 @@ let values = <S extends STop>(rs: Array<Row<S>>): Table<S> => {
 }
 
 
-let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Table<S1 & S2> => {
+export let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>): Table<S1 & S2> => {
 	return {
 		header: [...t1.header, ...t2.header],
 		content: t1.content.flatMap((r1) => {
@@ -329,7 +329,7 @@ let crossJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>)
 }
 
 
-let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, cs: Array<CTop & keyof S1 & keyof S2>): Table<S1 & Omit<S2, keyof S1>> => {
+export let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, cs: Array<CTop & keyof S1 & keyof S2>): Table<S1 & Omit<S2, keyof S1>> => {
 	const header = [...t1.header, ...t2.header.filter((c) => {
 		return !cs.includes(c as (CTop & keyof S1 & keyof S2))
 	})] as Array<CTop & keyof (S1 & Omit<S2, keyof S1>)>
@@ -391,7 +391,7 @@ let leftJoin = <S1 extends STop, S2 extends STop>(t1: Table<S1>, t2: Table<S2>, 
 }
 
 
-let nrows = <S extends STop>(t: Table<S>): number => {
+export let nrows = <S extends STop>(t: Table<S>): number => {
 	return t.content.length;
 }
 // constraints
@@ -406,7 +406,7 @@ let nrows = <S extends STop>(t: Table<S>): number => {
 
 
 
-let ncols = <S extends STop>(t: Table<S>): number => {
+export let ncols = <S extends STop>(t: Table<S>): number => {
 	return t.header.length;
 }
 // constraints
@@ -422,7 +422,7 @@ let ncols = <S extends STop>(t: Table<S>): number => {
 
 
 
-let header = <S extends STop>(t: Table<S>): Array<CTop & keyof S> => {
+export let header = <S extends STop>(t: Table<S>): Array<CTop & keyof S> => {
 	return t.header;
 }
 // constraints
@@ -442,7 +442,7 @@ let header = <S extends STop>(t: Table<S>): Array<CTop & keyof S> => {
 }
 
 
-let getRow = <S extends STop>(t: Table<S>, n: number): Row<S> => {
+export let getRow = <S extends STop>(t: Table<S>, n: number): Row<S> => {
 	return {
 		header: t.header,
 		content: [t.content[n]]
@@ -468,7 +468,7 @@ let getRow = <S extends STop>(t: Table<S>, n: number): Row<S> => {
 		]))
 }
 
-let getValue = <S extends STop, C extends CTop & keyof S>(r: Row<S>, c: C): Lookup<S, C> => {
+export let getValue = <S extends STop, C extends CTop & keyof S>(r: Row<S>, c: C): Lookup<S, C> => {
 	return r.content[0][c]
 }
 // constraints
@@ -492,7 +492,7 @@ let getValue = <S extends STop, C extends CTop & keyof S>(r: Row<S>, c: C): Look
 		12)
 }
 
-let getColumn1 = <S extends STop>(t: Table<S>, n: number): Array<VTop> => {
+export let getColumn1 = <S extends STop>(t: Table<S>, n: number): Array<VTop> => {
 	return t.content.map((r) => r[t.header[n]])
 }
 () => {
@@ -513,7 +513,7 @@ let getColumn1 = <S extends STop>(t: Table<S>, n: number): Array<VTop> => {
 	)
 }
 
-let getColumn2 = <S extends STop, C extends keyof S>(t: Table<S>, c: C): Array<S[C]> => {
+export let getColumn2 = <S extends STop, C extends keyof S>(t: Table<S>, c: C): Array<S[C]> => {
 	return t.content.map((r) => r[c])
 }
 () => {
@@ -535,7 +535,7 @@ let getColumn2 = <S extends STop, C extends keyof S>(t: Table<S>, c: C): Array<S
 }
 
 
-let selectRows1 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<S> => {
+export let selectRows1 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<S> => {
 	return values(ns.map((n) => getRow(t1, n)))
 }
 () => {
@@ -566,7 +566,7 @@ let selectRows1 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<S> =>
 }
 
 
-let selectRows2 = <S extends STop>(t1: Table<S>, bs: Array<Boolean>): Table<S> => {
+export let selectRows2 = <S extends STop>(t1: Table<S>, bs: Array<Boolean>): Table<S> => {
 	return {
 		header: t1.header,
 		content: t1.content.filter((_, i) => bs[i])
@@ -598,7 +598,7 @@ let selectRows2 = <S extends STop>(t1: Table<S>, bs: Array<Boolean>): Table<S> =
 }
 
 
-let selectColumns1 = <S extends STop>(t1: Table<S>, bs: Array<boolean>): TTop => {
+export let selectColumns1 = <S extends STop>(t1: Table<S>, bs: Array<boolean>): TTop => {
 	const header = t1.header.filter((_, i) => bs[i])
 	return {
 		header: header as string[],
@@ -637,7 +637,7 @@ let selectColumns1 = <S extends STop>(t1: Table<S>, bs: Array<boolean>): TTop =>
 	)
 }
 
-let selectColumns2 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<Partial<S>> => {
+export let selectColumns2 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<Partial<S>> => {
 	const header = ns.map((n) => t1.header[n])
 	const content = t1.content.map(
 		(r) => Object.fromEntries(header.map((c) => [c, r[c]])) as Partial<S>)
@@ -675,7 +675,7 @@ let selectColumns2 = <S extends STop>(t1: Table<S>, ns: Array<number>): Table<Pa
 }
 
 
-let selectColumns3 = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, cs: Array<C>): Table<Pick<S, C>> => {
+export let selectColumns3 = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, cs: Array<C>): Table<Pick<S, C>> => {
 	return {
 		header: cs,
 		content: t1.content.map((r) => {
@@ -713,7 +713,7 @@ let selectColumns3 = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, cs
 	)
 }
 
-let head = <S extends STop>(t1: Table<S>, n: number): Table<S> => {
+export let head = <S extends STop>(t1: Table<S>, n: number): Table<S> => {
 	let end: number;
 	if (n >= 0) {
 		end = n
@@ -751,7 +751,7 @@ let head = <S extends STop>(t1: Table<S>, n: number): Table<S> => {
 	)
 }
 
-let distinct = <S extends STop>(t1: Table<S>): Table<S> => {
+export let distinct = <S extends STop>(t1: Table<S>): Table<S> => {
 	const distinctRows = (rs: Array<S>): Array<S> => {
 		if (rs.length === 0) {
 			return []
@@ -796,7 +796,7 @@ let distinct = <S extends STop>(t1: Table<S>): Table<S> => {
 	)
 }
 
-let dropColumns = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, cs: Array<C>): Table<Omit<S, C>> => {
+export let dropColumns = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, cs: Array<C>): Table<Omit<S, C>> => {
 	const header = t1.header.filter((c) => {
 		return !cs.includes(c as any);
 	}) as Array<CTop & keyof Omit<S, C>>
@@ -835,7 +835,7 @@ let dropColumns = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, cs: A
 	)
 }
 
-let tfilter = <S extends STop>(t1: Table<S>, f: (r: Row<S>) => boolean): Table<S> => {
+export let tfilter = <S extends STop>(t1: Table<S>, f: (r: Row<S>) => boolean): Table<S> => {
 	return {
 		header: t1.header,
 		content: t1.content.filter((r) => f({ header: t1.header, content: [r] }))
@@ -871,7 +871,7 @@ let tfilter = <S extends STop>(t1: Table<S>, f: (r: Row<S>) => boolean): Table<S
 	)
 }
 
-let tsort = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, c: C, b: boolean): Table<S> => {
+export let tsort = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, c: C, b: boolean): Table<S> => {
 	const content = t1.content.slice(0)
 	const sign = b ? 1 : -1;
 	content.sort((r1, r2) => {
@@ -924,7 +924,7 @@ let tsort = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, c
 	)
 }
 
-let sortByColumns = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, cs: Array<C>): Table<S> => {
+export let sortByColumns = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, cs: Array<C>): Table<S> => {
 	for (const c of [...cs].reverse()) {
 		t1 = tsort(t1, c, true)
 	}
@@ -961,7 +961,7 @@ let sortByColumns = <C extends CTop, S extends STop & Record<C, number>>(t1: Tab
 }
 
 
-let orderBy = <S extends STop>(t1: Table<S>, cmps: Array<[(r: Row<S>) => any, (k1: any, k2: any) => boolean]>): Table<S> => {
+export let orderBy = <S extends STop>(t1: Table<S>, cmps: Array<[(r: Row<S>) => any, (k1: any, k2: any) => boolean]>): Table<S> => {
 	const compare = (r1: S, r2: S) => {
 		for (const [getKey, compare] of cmps) {
 			const k1 = getKey({ header: t1.header, content: [r1] })
@@ -1023,7 +1023,7 @@ let orderBy = <S extends STop>(t1: Table<S>, cmps: Array<[(r: Row<S>) => any, (k
 	)
 }
 
-let count = <S extends STop, C extends keyof S>(t1: Table<S>, c: keyof S): Table<{ value: S[C], count: number }> => {
+export let count = <S extends STop, C extends keyof S>(t1: Table<S>, c: keyof S): Table<{ value: S[C], count: number }> => {
 	const vs = getColumn2(t1, c);
 	const map = new Map()
 	for (const v of vs) {
@@ -1071,7 +1071,7 @@ let count = <S extends STop, C extends keyof S>(t1: Table<S>, c: keyof S): Table
 	)
 }
 
-let bin = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, c: C, n: number): Table<{ group: string, count: number }> => {
+export let bin = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, c: C, n: number): Table<{ group: string, count: number }> => {
 	const vs = getColumn2(t1, c)
 	const min = Math.min(...vs)
 	const max = Math.max(...vs)
@@ -1115,7 +1115,7 @@ let bin = <C extends CTop, S extends STop & Record<C, number>>(t1: Table<S>, c: 
 }
 
 
-let pivotTable = <S extends STop>(t1: Table<S>, cs: Array<CTop & keyof S>, aggs: Array<[CTop, CTop & keyof S, (vs: Array<any>) => any]>): TTop => {
+export let pivotTable = <S extends STop>(t1: Table<S>, cs: Array<CTop & keyof S>, aggs: Array<[CTop, CTop & keyof S, (vs: Array<any>) => any]>): TTop => {
 	return groupBy(
 		t1,
 		(r) => JSON.stringify(cs.map((c) => [c, getValue(r, c)])),
@@ -1177,7 +1177,7 @@ let pivotTable = <S extends STop>(t1: Table<S>, cs: Array<CTop & keyof S>, aggs:
 	)
 }
 
-let groupBy = <S1 extends STop, S2 extends STop, K, V>(
+export let groupBy = <S1 extends STop, S2 extends STop, K, V>(
 	t1: Table<S1>,
 	key: (r1: Row<S1>) => K,
 	project: (r2: Row<S1>) => V,
@@ -1252,7 +1252,7 @@ let groupBy = <S1 extends STop, S2 extends STop, K, V>(
 }
 
 
-let completeCases = <S extends STop>(t: Table<S>, c: CTop & keyof S): Array<boolean> => {
+export let completeCases = <S extends STop>(t: Table<S>, c: CTop & keyof S): Array<boolean> => {
 	return getColumn2(t, c).map((v) => v !== null)
 }
 () => {
@@ -1272,7 +1272,7 @@ let completeCases = <S extends STop>(t: Table<S>, c: CTop & keyof S): Array<bool
 	)
 }
 
-let dropna = <S extends STop>(t1: Table<S>): Table<S> => {
+export let dropna = <S extends STop>(t1: Table<S>): Table<S> => {
 	for (const c of t1.header) {
 		t1 = selectRows2(t1, completeCases(t1, c))
 	}
@@ -1300,7 +1300,7 @@ let dropna = <S extends STop>(t1: Table<S>): Table<S> => {
 	)
 }
 
-let fillna = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, c: C, v: S[C]): Table<S> => {
+export let fillna = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, c: C, v: S[C]): Table<S> => {
 	return update(t1, (r) => {
 		const currentV = getValue(r, c);
 		if (currentV === null) {
@@ -1339,7 +1339,7 @@ let fillna = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, c: C, v: S
 	)
 }
 
-let pivotLonger = <S extends STop, C extends CTop & keyof S, C1 extends CTop, C2 extends CTop>(t1: Table<S>, cs: Array<C>, c1: C1, c2: C2): Table<Omit<S, C> & Record<C1, CTop> & Record<C2, S[C]>> => {
+export let pivotLonger = <S extends STop, C extends CTop & keyof S, C1 extends CTop, C2 extends CTop>(t1: Table<S>, cs: Array<C>, c1: C1, c2: C2): Table<Omit<S, C> & Record<C1, CTop> & Record<C2, S[C]>> => {
 	return selectMany(
 		t1,
 		(r1, _) => {
@@ -1410,7 +1410,7 @@ let pivotLonger = <S extends STop, C extends CTop & keyof S, C1 extends CTop, C2
 	)
 }
 
-let pivotWider = <S1 extends STop, C extends CTop, C1 extends CTop, C2 extends CTop & keyof S1>(t1: Table<S1 & Record<C1, C>>, c1: C1, c2: C2): Table<Omit<S1, C2> & Record<C, S1[C2]>> => {
+export let pivotWider = <S1 extends STop, C extends CTop, C1 extends CTop, C2 extends CTop & keyof S1>(t1: Table<S1 & Record<C1, C>>, c1: C1, c2: C2): Table<Omit<S1, C2> & Record<C, S1[C2]>> => {
 	const keptColumns = removeAll(header(t1), [c1, c2])
 	const newColumns = removeDuplicates(getColumn2(t1, c1))
 	const grouped = groupBy(
@@ -1473,7 +1473,7 @@ let pivotWider = <S1 extends STop, C extends CTop, C1 extends CTop, C2 extends C
 	)
 }
 
-let flatten = <S extends STop, C extends CTop>(t1: Table<S & Record<C, Array<any>>>, cs: Array<C>): Table<S & Record<C, any>> => {
+export let flatten = <S extends STop, C extends CTop>(t1: Table<S & Record<C, Array<any>>>, cs: Array<C>): Table<S & Record<C, any>> => {
 	if (length(cs) === 0) {
 		return t1;
 	} else {
@@ -1554,7 +1554,7 @@ let flatten = <S extends STop, C extends CTop>(t1: Table<S & Record<C, Array<any
 	)
 }
 
-let transformColumn = <S extends STop, C extends CTop & keyof S, V>(t1: Table<S>, c: C, f: (v1: S[C]) => V): Table<UpdateColumns<S, Record<C, V>>> => {
+export let transformColumn = <S extends STop, C extends CTop & keyof S, V>(t1: Table<S>, c: C, f: (v1: S[C]) => V): Table<UpdateColumns<S, Record<C, V>>> => {
 	return update(
 		t1,
 		(r1) => {
@@ -1607,7 +1607,7 @@ let transformColumn = <S extends STop, C extends CTop & keyof S, V>(t1: Table<S>
 	)
 }
 
-let renameColumns = <S extends STop, C1 extends CTop & keyof S, C2 extends CTop>(t1: Table<S>, ccs: Array<[C1, C2]>): Table<Omit<S, C1> & Record<C2, any>> => {
+export let renameColumns = <S extends STop, C1 extends CTop & keyof S, C2 extends CTop>(t1: Table<S>, ccs: Array<[C1, C2]>): Table<Omit<S, C1> & Record<C2, any>> => {
 	const c1s = ccs.map(([c1, c2]) => c1)
 	const c2s = ccs.map(([c1, c2]) => c2)
 	return select(t1, (r, _) => {
@@ -1653,7 +1653,7 @@ let renameColumns = <S extends STop, C1 extends CTop & keyof S, C2 extends CTop>
 	)
 }
 
-let find = <S extends STop>(t: Table<S>, r: Row<Partial<S>>): number => {
+export let find = <S extends STop>(t: Table<S>, r: Row<Partial<S>>): number => {
 	const match = (r1: Row<S>) => {
 		return r.header.every((c) => (getValue(r, c) === getValue(r1, c)))
 	}
@@ -1682,7 +1682,7 @@ let find = <S extends STop>(t: Table<S>, r: Row<Partial<S>>): number => {
 	)
 }
 
-let groupByRetentive = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, c: C): Table<{ "key": S[C], 'groups': Table<S> }> => {
+export let groupByRetentive = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, c: C): Table<{ "key": S[C], 'groups': Table<S> }> => {
 	return groupBy(t1, (r) => getValue(r, c), (r) => r, (k, vs) => {
 		return parseRow([
 			['key', k],
@@ -1745,7 +1745,7 @@ let groupByRetentive = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, 
 	)
 }
 
-let groupBySubtractive = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, c: C): Table<{ "key": S[C], 'groups': Table<Omit<S, C>> }> => {
+export let groupBySubtractive = <S extends STop, C extends CTop & keyof S>(t1: Table<S>, c: C): Table<{ "key": S[C], 'groups': Table<Omit<S, C>> }> => {
 	return groupBy(t1, (r) => getValue(r, c), (r) => r, (k, vs) => {
 		return parseRow([
 			['key', k],
@@ -1811,7 +1811,7 @@ let groupBySubtractive = <S extends STop, C extends CTop & keyof S>(t1: Table<S>
 
 
 
-let update = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>) => Row<S2>): Table<UpdateColumns<S1, S2>> => {
+export let update = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>) => Row<S2>): Table<UpdateColumns<S1, S2>> => {
 	return {
 		header: t1.header,
 		content: t1.content.map((r) => {
@@ -1868,7 +1868,7 @@ let update = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>) 
 	)
 }
 
-let select = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>, n: number) => Row<S2>): Table<S2> => {
+export let select = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>, n: number) => Row<S2>): Table<S2> => {
 	return values(t1.content.map((r, i) => f({
 		header: t1.header,
 		content: [r]
@@ -1916,7 +1916,7 @@ let select = <S1 extends STop, S2 extends STop>(t1: Table<S1>, f: (r1: Row<S1>, 
 	)
 }
 
-let selectMany = <S1 extends STop, S2 extends STop, S3 extends STop>(t1: Table<S1>, project: (r1: Row<S1>, n: number) => Table<S2>, result: (r2: Row<S1>, r3: Row<S2>) => Row<S3>): Table<S3> => {
+export let selectMany = <S1 extends STop, S2 extends STop, S3 extends STop>(t1: Table<S1>, project: (r1: Row<S1>, n: number) => Table<S2>, result: (r2: Row<S1>, r3: Row<S2>) => Row<S3>): Table<S3> => {
 	return values(t1.content.flatMap((r1, i) => {
 		const row1: Row<S1> = { header: t1.header, content: [r1] }
 		const projection = project(row1, i)
@@ -1981,7 +1981,7 @@ let selectMany = <S1 extends STop, S2 extends STop, S3 extends STop>(t1: Table<S
 	)
 }
 
-let groupJoin = <K, S1 extends STop, S2 extends STop, S3 extends STop>(t1: Table<S1>, t2: Table<S2>, getKey1: (r1: Row<S1>) => K, getKey2: (r2: Row<S2>) => K, aggregate: (r3: Row<S1>, t3: Table<S2>) => Row<S3>): Table<S3> => {
+export let groupJoin = <K, S1 extends STop, S2 extends STop, S3 extends STop>(t1: Table<S1>, t2: Table<S2>, getKey1: (r1: Row<S1>) => K, getKey2: (r2: Row<S2>) => K, aggregate: (r3: Row<S1>, t3: Table<S2>) => Row<S3>): Table<S3> => {
 	return select(t1, (r1, _) => {
 		const k = getKey1(r1)
 		return aggregate(r1, tfilter(t2, (r2) => getKey2(r2) === k))
@@ -2030,7 +2030,7 @@ let groupJoin = <K, S1 extends STop, S2 extends STop, S3 extends STop>(t1: Table
 	)
 }
 
-let join = <K, S1 extends STop, S2 extends STop, S3 extends STop>(t1: Table<S1>, t2: Table<S2>, getKey1: (r1: Row<S1>) => K, getKey2: (r2: Row<S2>) => K, combine: (r3: Row<S1>, r4: Row<S2>) => Row<S3>): Table<S3> => {
+export let join = <K, S1 extends STop, S2 extends STop, S3 extends STop>(t1: Table<S1>, t2: Table<S2>, getKey1: (r1: Row<S1>) => K, getKey2: (r2: Row<S2>) => K, combine: (r3: Row<S1>, r4: Row<S2>) => Row<S3>): Table<S3> => {
 	return selectMany(
 		t1,
 		(r1, _) => {
