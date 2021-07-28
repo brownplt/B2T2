@@ -47,7 +47,7 @@ Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the
 > pHacking =
     function(t):
       colAcne = getColumn(t, "get acne")
-      jellyAnon = drop(t, "get acne")
+      jellyAnon = dropColumns(t, ["get acne"])
       for c in header(jellyAnon):
         colJB = getColumn(t, c)
         p = fisherTest(colAcne, colJB)
