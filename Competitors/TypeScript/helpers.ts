@@ -57,3 +57,25 @@ export const map = <X, Y>(xs: Array<X>, f: (x: X) => Y): Array<Y> => {
 export const range = (n: number) => {
 	return Array.from(Array(n).keys())
 }
+
+export const sample = <X>(xs: Array<X>, n: number) => {
+	const chosen: Set<number> = new Set()
+	const result: Array<X> = []
+	for (; n > 0; n--) {
+		let i: number;
+		while (true) {
+			i = Math.floor(Math.random() * xs.length)
+			if (! chosen.has(i)) {
+				chosen.add(i)
+				break
+			}
+		}
+		result.push(xs[i])
+	}
+	return result
+}
+
+export const fisherTest = (xs: Array<boolean>, ys: Array<boolean>) => {
+	console.log("TODO: Fisher's exact test")
+	return 0.06
+}

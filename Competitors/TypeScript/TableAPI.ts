@@ -1012,7 +1012,7 @@ export let orderBy = <S extends STop>(t1: Table<S>, cmps: Array<[(r: Row<S>) => 
 			const compareGrade = (g1: number[], g2: number[]) => {
 				return le(average(g1), average(g2))
 			}
-			orderBy(gradebook, [[nameLength, ge], [midtermAndFinal, compareGrade]])
+			return orderBy(gradebook, [[nameLength, ge], [midtermAndFinal, compareGrade]])
 		},
 		parseTable([
 			['name', 'age', 'quiz1', 'quiz2', 'midterm', 'quiz3', 'quiz4', 'final'],
