@@ -30,7 +30,7 @@ A type system should try to realize that `sampleRows` requires `n` is in `range(
 > sampleRows =
     function(t, n):
       indexes = sample(range(nrows(t)), n)
-      selectRowsByNumbers(t, indexes)
+      selectRows(t, indexes)
     end
 > sampleRows(gradebook, 2)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
