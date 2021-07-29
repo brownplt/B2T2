@@ -46,6 +46,7 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 - `map`: the conventional sequence (e.g. lists) map
 - `removeDuplicates`: consumes a sequence and produces a subsequence with all duplicated elements removed
 - `removeAll`: consumes two sequences and produces a subsequence of the first input, removing all elements that also appear in the second input.
+- `colNameOfNumber`: converts a `Number` to a `ColName`
 
 #### Relations
 
