@@ -43,7 +43,7 @@ export const concatArray = <X>(xs1: Array<X>, xs2: Array<X>) => {
 export const removeDuplicates = <X>(xs: Array<X>): Array<X> => {
 	const ys: Array<X> = [];
 	for (const x of xs) {
-		if (! ys.includes(x)) {
+		if (!ys.includes(x)) {
 			ys.push(x)
 		}
 	}
@@ -65,7 +65,7 @@ export const sample = <X>(xs: Array<X>, n: number) => {
 		let i: number;
 		while (true) {
 			i = Math.floor(Math.random() * xs.length)
-			if (! chosen.has(i)) {
+			if (!chosen.has(i)) {
 				chosen.add(i)
 				break
 			}
@@ -76,6 +76,34 @@ export const sample = <X>(xs: Array<X>, n: number) => {
 }
 
 export const fisherTest = (xs: Array<boolean>, ys: Array<boolean>) => {
-	console.log("TODO: Fisher's exact test")
-	return 0.06
+	const contigencyTable = [
+		[0, 0],
+		[0, 0],
+	]
+	const b2i = (b: boolean) => {
+		return b ? 1 : 0
+	}
+	for (let i = 0; i < xs.length; i++) {
+		contigencyTable[b2i(xs[i])][b2i(ys[i])]++
+	}
+
+	const factorial = (n: number): number => {
+		if (n === 0) {
+			return 1
+		} else {
+			return n * factorial(n - 1)
+		}
+	}
+	const [[a, b], [c, d]] = contigencyTable
+	const p = (factorial(a + b) * factorial(c + d) * factorial(a + c) * factorial(b + d)) / (factorial(a) * factorial(b) * factorial(c) * factorial(d) * factorial(a + b + c + d))
+	return p
+}
+
+
+export const startsWith = (s: string, prefix: string) => {
+	return s.startsWith(prefix)
+}
+
+export const colNameOfNumber = (n: number) => {
+	return n + ""
 }
