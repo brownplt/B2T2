@@ -27,7 +27,7 @@ Operators are collected from the following resources:
   - [the definition of methods and some functions](https://www.pyret.org/docs/latest/tables.html)
   - [the definition of other functions](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB)
 - [Compare Python pandas with R TidyVerse](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html)
-- [Compare Python pandas with SQl](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_sql.html)
+- [Compare Python pandas with SQL](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_sql.html)
 - [Compare Julia DataFrame with Python pandas and R TidyVerse](https://dataframes.juliadata.org/stable/man/comparisons/)
 
 For our convenience, we sometimes apply table operators to rows (e.g. `selectColumns(r, ["foo", "bar"])`). A implementation of Table API can either view rows as a subtype of tables, overload those operators, or give different names to row variants of the operators.
