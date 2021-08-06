@@ -108,7 +108,7 @@ This example also computes the average quiz score for each student in `gradebook
     map(
       range(4),
       function(i):
-        concat("quiz", colNameOfNumber(i))
+        concat("quiz", colNameOfNumber(i + 1))
       end)
 > quizTable = selectColumns(gradebook, quizColNames)
 > quizAndAverage =
@@ -125,8 +125,7 @@ This example also computes the average quiz score for each student in `gradebook
 > addColumn(
     gradebook,
     "average-quiz",
-    getColumn(quizAndAverage, "average")
-    end)
+    getColumn(quizAndAverage, "average"))
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | average-quiz |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ------------ |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | 8.25         |
