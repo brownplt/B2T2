@@ -66,7 +66,7 @@ We found a link between orange jelly beans and acne (p < 0.05).
 This example program is similar to pHackingHomogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table contains only boolean values.
 
 ```lua
-> pHacking(dropColumn(jellyNamed, "name"))
+> pHacking(dropColumns(jellyNamed, ["name"]))
 We found a link between orange jelly beans and acne (p < 0.05).
 ```
 
@@ -183,7 +183,7 @@ Ideally, this user-defined function should achieve the same type constraints as 
               function(r):
                 getValue(r, c) == k
               end)
-          dropColumn(g, c)
+          dropColumns(g, [c])
         end
       buildColumn(keys, "groups", makeGroup)
     end
