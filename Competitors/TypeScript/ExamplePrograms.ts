@@ -2,7 +2,7 @@ import { CTop, parseRow, parseTable, Row, SchemaOf, STop, Table } from './Encode
 import { addColumn, addRows, buildColumn, dropColumns, emptyTable, getColumn2, getValue, header, nrows, selectColumns1, selectColumns2, selectColumns3, selectRows1, selectRows2, tfilter } from './TableAPI'
 import { filter, fisherTest, map, range, sample, length, startsWith, concat, colNameOfNumber, average, removeDuplicates } from './helpers'
 import { makeTester } from './unitTest'
-import { gradebook, gradebookMissing, jellyAnon, jellyNamed } from './ExampleTables'
+import { gradebook, gradebookMissing, jellyAnon, jellyNamed, students } from './ExampleTables'
 
 const Tester = makeTester()
 
@@ -147,18 +147,121 @@ const tableOfColumn =
     }
 
 const groupByRetentive = <S extends STop, C extends CTop & keyof S>(t: Table<S>, c: C) => {
-  const keys = tableOfColumn("key", removeDuplicates(getColumn2(t, c)))
-  const makeGroup =
-    (kr: Row<SchemaOf<typeof keys>>) => {
-      const k = getValue(kr, "key")
-      return tfilter(t,
-        (r) => {
-          return getValue(r, c) == k
-        })
-      }
-  return buildColumn(keys, "groups", makeGroup)
+    const keys = tableOfColumn("key", removeDuplicates(getColumn2(t, c)))
+    const makeGroup =
+        (kr: Row<SchemaOf<typeof keys>>) => {
+            const k = getValue(kr, "key")
+            return tfilter(t,
+                (r) => {
+                    return getValue(r, c) == k
+                })
+        }
+    return buildColumn(keys, "groups", makeGroup)
 }
 
-// TODO test groupByRetentive
+{
+    Tester.assertEqual(
+        'groupByRetentive 1',
+        () => groupByRetentive(students, "favorite color"),
+        parseTable([
+            ['key', 'groups'],
+            ["blue", parseTable([
+                ['name', 'age', 'favorite color'],
+                ["Bob", 12, "blue"]
+            ])],
+            ["green", parseTable([
+                ['name', 'age', 'favorite color'],
+                ["Alice", 17, "green"]
+            ])],
+            ["red", parseTable([
+                ['name', 'age', 'favorite color'],
+                ["Eve", 13, "red"]
+            ])]
+        ])
+    )
+    Tester.assertEqual(
+        'groupByRetentive 2',
+        () => groupByRetentive(jellyAnon, "brown"),
+        parseTable([
+            ['key', 'groups'],
+            [false, parseTable([
+                ['get acne', 'red', 'black', 'white', 'green', 'yellow', 'brown', 'orange', 'pink', 'purple'],
+                [true, false, false, false, true, false, false, true, false, false],
+                [true, false, true, false, true, true, false, false, false, false],
+                [false, false, false, false, true, false, false, false, true, false],
+                [false, false, false, false, false, true, false, false, false, false],
+                [false, false, false, false, false, true, false, false, true, false],
+                [true, false, true, false, false, false, false, true, true, false],
+                [false, false, true, false, false, false, false, false, true, false],
+                [true, false, false, false, false, false, false, true, false, false],
+            ])],
+            [true, parseTable([
+                ['get acne', 'red', 'black', 'white', 'green', 'yellow', 'brown', 'orange', 'pink', 'purple'],
+                [true, false, false, false, false, false, true, true, false, false],
+                [false, true, false, false, false, true, true, false, true, false],
+            ])]
+        ])
+    )
+}
+
+
+const groupBySubtractive = <S extends STop, C extends CTop & keyof S>(t: Table<S>, c: C) => {
+    const keys = tableOfColumn("key", removeDuplicates(getColumn2(t, c)))
+    const makeGroup =
+        (kr: Row<SchemaOf<typeof keys>>) => {
+            const k = getValue(kr, "key")
+            const g = tfilter(t,
+                (r) => {
+                    return getValue(r, c) == k
+                })
+            return dropColumns(g, [c])
+        }
+    return buildColumn(keys, "groups", makeGroup)
+}
+
+{
+    Tester.assertEqual(
+        'groupBySubtractive 1',
+        () => groupBySubtractive(students, "favorite color"),
+        parseTable([
+            ['key', 'groups'],
+            ["blue", parseTable([
+                ['name', 'age'],
+                ["Bob", 12]
+            ])],
+            ["green", parseTable([
+                ['name', 'age'],
+                ["Alice", 17]
+            ])],
+            ["red", parseTable([
+                ['name', 'age'],
+                ["Eve", 13]
+            ])],
+        ])
+    )
+    Tester.assertEqual(
+        'groupBySubtractive 2',
+        () => groupBySubtractive(jellyAnon, "brown"),
+        parseTable([
+            ['key', 'groups'],
+            [false, parseTable([
+                ['get acne', 'red', 'black', 'white', 'green', 'yellow', 'orange', 'pink', 'purple'],
+                [true, false, false, false, true, false, true, false, false],
+                [true, false, true, false, true, true, false, false, false],
+                [false, false, false, false, true, false, false, true, false],
+                [false, false, false, false, false, true, false, false, false],
+                [false, false, false, false, false, true, false, true, false],
+                [true, false, true, false, false, false, true, true, false],
+                [false, false, true, false, false, false, false, true, false],
+                [true, false, false, false, false, false, true, false, false],
+            ])],
+            [true, parseTable([
+                ['get acne', 'red', 'black', 'white', 'green', 'yellow', 'orange', 'pink', 'purple'],
+                [true, false, false, false, false, false, true, false, false],
+                [false, true, false, false, false, true, false, true, false],
+            ])]
+        ])
+    )
+}
 
 Tester.go()
