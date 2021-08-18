@@ -24,7 +24,7 @@ This example defines a function that computes the dot-product of two numeric col
 
 This example defines a function that randomly samples rows of a table. This function might be interesting when working with tidy tables, where each row is one observation. "Pure" languages (e.g. Haskell) might find typing this example challenging because generating random number is stateful.
 
-A type system should try to realize that `sampleRows` requires `n` is in `range(nrows(t))` and ensures that the output table has the same schema as `t` and as many rows as `n`.
+In addition to test the type system's ability in combining stateful operations and table operations, this example also checks if the type system can assign a precise type to sampleRows: `n` is required to be in `range(nrows(t))`, and the output table has the same schema as `t` and as many rows as `n`.
 
 ```lua
 > sampleRows =
@@ -42,6 +42,8 @@ A type system should try to realize that `sampleRows` requires `n` is in `range(
 ## pHackingHomogeneous
 
 Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `jellyAnon`, is homogeneous because all of its columns contain boolean values. It is interesting to compare this program with the next example, pHackingHeterogeneous, which processes `jellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
+
+This example is testing whether the type system can iterate over column names when all columns have the same sort.
 
 ```lua
 > pHacking =
