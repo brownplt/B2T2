@@ -50,6 +50,12 @@ The encoding is straightforward. Given a table, its representation includes two 
 
 ### Are there consistent changes made to the way the operations are represented?
 
+Overloaded operations are defined as distinct operations with related names. For example, we have `selectRows1` and `selectRows2`.
+
+`Error<T>` is encoded as if it was `T`. Errors are represented as exceptions and hence not described as part of the types.
+
+`Seq<>` is encoded as `Array<>`.
+
 Every table type is translated to `Table<S>`, where `S` is a type that represent an _unorderred_ schema.
 
 When two schemas are equal, we create a type variable and use that variable for both.
@@ -66,7 +72,7 @@ All operations are at least partially expressible.
 
 We cannot express constraints on the number of rows, the number of columns, and the order of column names. We also cannot specify that a sequence has no duplicates.
 
-Yet another prevalent limitation on the expressibility of the operations comes from the fact that we cannot constraint variables themselves, but only their types. This limitation is most obvious in column names. The best way we can do to constraint variables bound to column names is to write `c: C` and then constarint `C`. Many operators will have a broken output type if `C` is not instantiated with string literal types. For example, if a programmer wrote `addColumn(t, c, vs)` and the type of `c` is a union of string literal types (e.g. `"foo" | "bar"`), then the type system will think two columns are added. This limitation is so prevalent that we chose not to document in throught out `TableAPI.ts`.
+Yet another prevalent limitation on the expressibility of the operations comes from the fact that we cannot constraint variables themselves, but only their types. This limitation is most obvious in column names. The best way we can do to constraint variables bound to column names is to write `c: C` and then constarint `C`. Many operators will have a broken output type if `C` is not instantiated with string literal types. For example, if a programmer wrote `addColumn(t, c, vs)` and the type of `c` is a union of string literal types (e.g. `"foo" | "bar"`), then the type system will think two columns are added. This limitation is so prevalent that we chose not to document it throught out `TableAPI.ts`.
 
 ### Which operations’ expressibility is unknown? Why?
 
@@ -80,11 +86,24 @@ No operation can be expressed more precisely than in the benchmark.
 
 ### Which examples are inexpressible? Why?
 
+All examples are expressible.
+
 ### Which examples’ expressibility is unknown? Why?
+
+All examples are expressible.
+
+### Which examples are only partially expressible? Why, and what’s missing?
+
+Please see the comments in [ExamplePrograms.ts](ExamplePrograms.ts)
 
 ### Which examples can be expressed more precisely than in the benchmark? How?
 
+Please see the comments in [ExamplePrograms.ts](ExamplePrograms.ts)
+
 ### How direct is the mapping from the pseudocode in the benchmark to representations in your system? How complex is the encoding?
+
+The mapping is trivial most of the time. Constraints must be translated to type annotations. This part of translation is similar to the translation of TableAPI. Sometimes explicit casts must be inserted to convince the type
+system (e.g. in quizScoreFilter).
 
 ## Errors
 
@@ -104,6 +123,8 @@ Expressiveness, in turn, can be for multiple artifacts:
 * the type system’s reporting of the violation
 
 ### Which error situations are known to be inexpressible? Why?
+
+TODO
 
 ### Which error situations are only partially expressible? Why, and what’s missing?
 
