@@ -4,10 +4,6 @@ import { filter, fisherTest, map, range, sample, length, startsWith, concat, col
 import { makeTester } from './unitTest'
 import { gradebook, gradebookMissing, jellyAnon, jellyNamed, students } from './ExampleTables'
 
-// TODO: For each example program, answer the following questions.
-//   Which examples are only partially expressible? Why, and what’s missing?
-//   Which examples can be expressed more precisely than in the benchmark? How? 
-
 const Tester = makeTester()
 
 // ## dotProduct
@@ -100,7 +96,7 @@ Tester.assertEqual(
 
 // ## quizScoreFilter
 
-// This example is expressed as precise as in the benchmark. 
+// This example is expressed **more** precise than in the benchmark. 
 // TypeScript doesn't understand the connection between 
 // `startsWith(..., "quiz")` and numbers. We had to use a cast to work around
 // the type system.
@@ -134,7 +130,7 @@ Tester.assertEqual(
 
 // ## quizScoreSelect
 
-// This example is expressed as precise as in the benchmark. 
+// This example is expressed **more** precise than in the benchmark. 
 // TypeScript doesn't understand the connection between computed column names
 // and numbers. We had to use a cast to work around the type system.
 
