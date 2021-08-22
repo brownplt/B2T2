@@ -92,11 +92,7 @@ All examples are expressible.
 
 All examples are expressible.
 
-### Which examples are only partially expressible? Why, and what’s missing?
-
-Please see the comments in [ExamplePrograms.ts](ExamplePrograms.ts)
-
-### Which examples can be expressed more precisely than in the benchmark? How?
+### Which examples, or aspects thereof, can be expressed especially precisely? How?
 
 Please see the comments in [ExamplePrograms.ts](ExamplePrograms.ts)
 

@@ -8,7 +8,7 @@ const Tester = makeTester()
 
 // ## dotProduct
 
-// This example is expressed as precise as in the benchmark.
+// This example is not expressed especially precisely.
 // TypeScript doesn't support unit checkers.
 
 const sum = (ns: number[]) => ns.reduce((a, b) => a + b, 0)
@@ -26,7 +26,7 @@ Tester.assertEqual(
 
 // ## sampleRows
 
-// This example is expressed as precise as in the benchmark. 
+// This example is not expressed especially precisely.
 // TypeScript's type system imposes no restriction on randomness.
 
 const sampleRows = <S extends STop>(t: Table<S>, n: number): Table<S> => {
@@ -48,7 +48,7 @@ Tester.assertEqual(
 
 // ## pHackingHomogeneous
 
-// This example is expressed as precise as in the benchmark. 
+// This example is not expressed especially precisely.
 
 const pHacking = <S extends STop & { "get acne": boolean } & Record<string, boolean>>(t: Table<S>): string[] => {
     // We store the printed strings so that it can be easily compared to the 
@@ -76,7 +76,7 @@ Tester.assertEqual(
 
 // ## pHackingHeterogeneous
 
-// This example is expressed as precise as in the benchmark. 
+// This example is not expressed especially precisely.
 
 Tester.assertEqual(
     'pHackingHeterogeneous',
@@ -96,7 +96,7 @@ Tester.assertEqual(
 
 // ## quizScoreFilter
 
-// This example is expressed **more** precise than in the benchmark. 
+// This example **is** expressed especially precisely.
 // TypeScript doesn't understand the connection between 
 // `startsWith(..., "quiz")` and numbers. We had to use a cast to work around
 // the type system.
@@ -130,7 +130,7 @@ Tester.assertEqual(
 
 // ## quizScoreSelect
 
-// This example is expressed **more** precise than in the benchmark. 
+// This example **is** expressed especially precisely.
 // TypeScript doesn't understand the connection between computed column names
 // and numbers. We had to use a cast to work around the type system.
 
@@ -168,7 +168,8 @@ Tester.assertEqual(
     ]))
 
 // ## groupByRetentive
-// This example is expressed as precise as in the benchmark. 
+
+// This example is not expressed especially precisely.
 
 const tableOfColumn =
     <C extends CTop, V>(c: C, vs: Array<V>) => {
@@ -235,7 +236,8 @@ const groupByRetentive = <S extends STop, C extends CTop & keyof S>(t: Table<S>,
 }
 
 // ## groupBySubtractive
-// This example is expressed as precise as in the benchmark. 
+
+// This example is not expressed especially precisely.
 
 const groupBySubtractive = <S extends STop, C extends CTop & keyof S>(t: Table<S>, c: C) => {
     const keys = tableOfColumn("key", removeDuplicates(getColumn2(t, c)))
