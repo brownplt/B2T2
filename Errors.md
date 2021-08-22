@@ -96,7 +96,7 @@ The schema specifies that there are four columns. But the rows have three column
 
 This section lists errors in using tables. Each example comes with a context, which lists the used tables, and a task, which states how the table(s) should be used.
 
-### midFinal
+### mid -> midterm
 
 #### Context
 
@@ -104,13 +104,13 @@ This section lists errors in using tables. Each example comes with a context, wh
 
 #### Task
 
-The programmer was asked to visualize as a scatter plot the connection between
-midterm and final exam grades.
+The programmer was asked to extract the midterm column from the 
+`gradebook` table.
 
 #### A Buggy Program
 
 ```lua
-> scatterPlot(gradebook, "mid", "final")
+> getColumn(gradebook, "mid")
 ```
 
 #### What is the Bug?
@@ -121,7 +121,7 @@ contains a `"midterm"` column.
 #### A Corrected Program
 
 ```lua
-> scatterPlot(gradebook, "midterm", "final")
+> getColumn(gradebook, "midterm")
 ```
 
 ### blackAndWhite
