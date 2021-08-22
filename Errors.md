@@ -349,7 +349,7 @@ The programmer was asked to count the number of participants that consumed jelly
 > keep =
     function(color):
       function(r):
-        r[color]
+        getValue(r, color)
       end
     end
 > countParticipants(jellyAnon, "brown")
