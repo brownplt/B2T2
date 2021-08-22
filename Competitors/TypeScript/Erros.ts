@@ -1,18 +1,13 @@
 // # Errors
 
-import { students } from "./ExampleTables"
+import { Row, STop, Table } from "./EncodeTables"
+import { jellyAnon, jellyNamed, students } from "./ExampleTables"
+import { buildColumn, count, getValue } from "./TableAPI"
 
 // ## Malformed Tables
 
 // The schema is expressed by the type annotation and the header of the table value.
-const missingSchema: {
-    header: ["name", "age", "favorite color"],
-    content: {
-        name: string;
-        age: number;
-        'favorite color': string;
-    }[];
-} = {
+const missingSchema: Table<> = {
     content: [
         {
             "name": "Bob",
@@ -32,7 +27,7 @@ const missingSchema: {
     ]
 }
 
-const missingRow: Students = {
+const missingRow: Table<{ 'name': string, 'age': number, 'favorite color': string }> = {
     header: ['name', 'age', 'favorite color'],
     content: [
         {
@@ -50,7 +45,7 @@ const missingRow: Students = {
     ]
 }
 
-const missingCell: Students = {
+const missingCell: Table<{ 'name': string, 'age': number, 'favorite color': string }> = {
     header: ['name', 'age', 'favorite color'],
     content: [
         {
@@ -71,7 +66,7 @@ const missingCell: Students = {
 }
 
 
-const swappedColumns: Students = {
+const swappedColumns: Table<{ 'name': string, 'age': number, 'favorite color': string }> = {
     header: ['name', 'age', 'favorite color'],
     content: [
         {
@@ -93,7 +88,7 @@ const swappedColumns: Students = {
 }
 
 
-const schemaTooShort: Students = {
+const schemaTooShort: Table<{ 'name': string, 'age': number, 'favorite color': string }> = {
     header: ['name', 'age'],
     content: [
         {
@@ -116,4 +111,32 @@ const schemaTooShort: Students = {
 
 // ## Using Tables
 
-scatterPlot
+// ### midFinal
+
+// TODO
+
+// ### blackAndWhite
+
+const eatBlackAndWhite = <S extends STop & { "black": boolean, "white": boolean }>(r: Row<S>) => {
+    return getValue(r, "black and white") == true
+}
+buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
+
+// ### pieCount
+
+// TODO
+
+// ### brownGetAcne
+
+const brownAndGetAcne = <S extends STop & { "brown": boolean, "get acne": boolean }>(r: Row<S>) => {
+    return getValue(r, "brown") && getValue(r, "get acne")
+}
+const brownAndGetAcneTable = buildColumn(jellyNamed, "part2", brownAndGetAcne)
+
+count(brownAndGetAcneTable, "brown and get acne")
+
+// ### getOnlyRow
+
+// TODO
+
+// TODO: rest
