@@ -140,7 +140,7 @@ participant consumed black jelly beans and white ones".
 ```lua
 > eatBlackAndWhite =
     function(r):
-      r["black and white"] == true
+      getValue(r, "black and white") == true
     end
 > buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)?
 ```
@@ -148,7 +148,7 @@ participant consumed black jelly beans and white ones".
 #### What is the Bug?
 
 The logical `and` appears at a wrong place. The task is asking the programmer
-to write `r["black"] and r["white"]`, but the buggy program accesses the
+to write `getValue(r, "black") and getValue(r, "white")`, but the buggy program accesses the
 invalid column `"black and white"` instead.
 
 #### A Corrected Program
@@ -156,7 +156,7 @@ invalid column `"black and white"` instead.
 ```lua
 > eatBlackAndWhite =
     function(r):
-      r["black"] and r["white"]
+      getValue(r, "black") and getValue(r, "white")
     end
 > buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
 ```
@@ -330,7 +330,7 @@ The programmer was asked to count the number of participants that consumed jelly
     end
 > keep =
     function(r):
-      r["color"]
+      getValue(r, "color")
     end
 > countParticipants(jellyAnon, "brown")
 ```
@@ -362,7 +362,7 @@ The programmer was asked to count the number of participants that consumed jelly
     function(t, color):
       keep =
         function(r):
-          r["color"]
+          getValue(r, "color")
         end
       nrows(tfilter(t, keep))
     end
