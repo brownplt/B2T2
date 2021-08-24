@@ -94,7 +94,7 @@ All examples are expressible.
 
 ### Which examples, or aspects thereof, can be expressed especially precisely? How?
 
-Please see the comments in [ExamplePrograms.ts](ExamplePrograms.ts)
+None of the examples are especially precise.
 
 ### How direct is the mapping from the pseudocode in the benchmark to representations in your system? How complex is the encoding?
 
