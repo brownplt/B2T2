@@ -1,7 +1,7 @@
 // # Errors
 
 import { CTop, Row, STop, Table } from "./EncodeTables"
-import { departments, jellyAnon, jellyNamed, students } from "./ExampleTables"
+import { departments, employees, jellyAnon, jellyNamed, students } from "./ExampleTables"
 import { buildColumn, count, getRow, getValue, nrows, tfilter } from "./TableAPI"
 
 // ## Malformed Tables
@@ -170,10 +170,15 @@ countParticipants(jellyAnon, "brown")
 const lastNameToDeptId =
     (deptTab: typeof departments, name: string) => {
         const matchName =
-            (r) =>
+            <S extends STop & { "Last Name": string }>(r: Row<S>) =>
                 getValue(r, "Last Name") == name
         const matchedTab = tfilter(deptTab, matchName)
         const matchedRow = getRow(matchedTab, 0)
         return getValue(matchedRow, "Department ID")
     }
-// TODO: rest
+const employeeToDepartment =
+    (name: string, emplTab: typeof employees, deptTab: typeof departments) =>
+        buildColumn(emplTab, "Department Name",
+            (r) =>
+                lastNameToDeptId(deptTab, getValue(r, "Last Name"))
+        )
