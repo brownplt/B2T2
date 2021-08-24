@@ -98,8 +98,10 @@ Please see the comments in [ExamplePrograms.ts](ExamplePrograms.ts)
 
 ### How direct is the mapping from the pseudocode in the benchmark to representations in your system? How complex is the encoding?
 
-The mapping is trivial most of the time. Constraints must be translated to type annotations. This part of translation is similar to the translation of TableAPI. Sometimes explicit casts must be inserted to convince the type
-system (e.g. in quizScoreFilter).
+In general, constraints must be translated to type annotations. This part of translation is similar to the translation of TableAPI.
+
+In certain examples, sometimes explicit casts must be inserted to convince the type
+system. For details, please see the comments in [ExamplePrograms.ts](ExamplePrograms.ts).
 
 ## Errors
 
