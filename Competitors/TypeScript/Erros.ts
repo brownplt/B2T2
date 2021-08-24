@@ -1,8 +1,8 @@
 // # Errors
 
-import { Row, STop, Table } from "./EncodeTables"
-import { jellyAnon, jellyNamed, students } from "./ExampleTables"
-import { buildColumn, count, getValue } from "./TableAPI"
+import { CTop, Row, STop, Table } from "./EncodeTables"
+import { departments, jellyAnon, jellyNamed, students } from "./ExampleTables"
+import { buildColumn, count, getRow, getValue, nrows, tfilter } from "./TableAPI"
 
 // ## Malformed Tables
 
@@ -137,6 +137,43 @@ count(brownAndGetAcneTable, "brown and get acne")
 
 // ### getOnlyRow
 
-// TODO
+getValue(
+    getRow(
+        tfilter(students,
+            (r) =>
+                getValue(r, "name") == "Alice"
+        ),
+        1),
+    "favorite color")
 
+// ### favoriteColor
+
+const participantsLikeGreen =
+    <S extends { 'favorite color': string }>(t: Table<S>) =>
+        tfilter(t,
+            (r) =>
+                getValue(r, "favorite color")
+        )
+
+// ### brownJellybeans
+
+const countParticipants =
+    <C extends CTop, S extends STop & Record<C, boolean>>(t: Table<S>, color: C) =>
+        nrows(tfilter(t, keep))
+const keep =
+    <S extends STop & { 'color': any }>(r: Row<S>) =>
+        getValue(r, "color")
+countParticipants(jellyAnon, "brown")
+
+// ### employeeToDepartment
+
+const lastNameToDeptId =
+    (deptTab: typeof departments, name: string) => {
+        const matchName =
+            (r) =>
+                getValue(r, "Last Name") == name
+        const matchedTab = tfilter(deptTab, matchName)
+        const matchedRow = getRow(matchedTab, 0)
+        return getValue(matchedRow, "Department ID")
+    }
 // TODO: rest
