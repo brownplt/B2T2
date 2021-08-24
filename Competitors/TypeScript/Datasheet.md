@@ -100,8 +100,7 @@ Please see the comments in [ExamplePrograms.ts](ExamplePrograms.ts)
 
 In general, constraints must be translated to type annotations. This part of translation is similar to the translation of TableAPI.
 
-In certain examples, sometimes explicit casts must be inserted to convince the type
-system. For details, please see the comments in [ExamplePrograms.ts](ExamplePrograms.ts).
+In certain examples, sometimes explicit casts must be inserted to convince the type system. For details, please see the comments on `quizScoreFilter` and `quizScoreSelect` in [ExamplePrograms.ts](ExamplePrograms.ts).
 
 ## Errors
 
