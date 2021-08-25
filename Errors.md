@@ -4,6 +4,12 @@ This file presents a diagnostic challenge. Each example includes a buggy program
 
 These examples are adapted from student code collected in CS111 at Brown University.
 
+To keep the authenticity of some error cases, we assume the existence of two plotting functions:
+
+- `scatterPlot :: (t:Table, c1:ColName, c2:ColName) -> Image`, where both input columns must contain numbers
+- `pieChart :: (t:Table, c1:ColName, c2:ColName) -> Image`, where the first column must contain categorical values, and the second column must contain positive numbers
+
+
 ## Malformed Tables
 
 This section lists errors that programmers can make when constructing table constants. All these malformed tables should be corrected to the `students` table, which is shown below with a full schema declaration.
