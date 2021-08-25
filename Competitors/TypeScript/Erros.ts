@@ -1,7 +1,7 @@
 // # Errors
 
-import { CTop, Row, STop, Table } from "./EncodeTables"
-import { departments, employees, jellyAnon, jellyNamed, students } from "./ExampleTables"
+import { CTop, Row, SchemaOf, STop, Table } from "./EncodeTables"
+import { departments, employees, gradebook, jellyAnon, jellyNamed, students } from "./ExampleTables"
 import { buildColumn, count, getRow, getValue, nrows, tfilter } from "./TableAPI"
 
 // ## Malformed Tables
@@ -88,22 +88,22 @@ const swappedColumns: Table<{ 'name': string, 'age': number, 'favorite color': s
 }
 
 
-const schemaTooShort: Table<{ 'name': string, 'age': number, 'favorite color': string }> = {
+const schemaTooShort: Table<{ 'name': string, 'age': number }> = {
     header: ['name', 'age'],
     content: [
         {
-            "age": "Bob",
-            "name": 12,
+            "name": "Bob",
+            "age": 12,
             "favorite color": "blue"
         },
         {
-            "age": "Alice",
-            "name": 17,
+            "name": "Alice",
+            "age": 17,
             "favorite color": "green"
         },
         {
-            "age": "Eve",
-            "name": 13,
+            "name": "Eve",
+            "age": 13,
             "favorite color": "red"
         }
     ]
@@ -113,18 +113,52 @@ const schemaTooShort: Table<{ 'name': string, 'age': number, 'favorite color': s
 
 // ### midFinal
 
-// TODO
+type ScatterPlot = <C1 extends CTop, C2 extends CTop, S extends STop & Record<C1 | C2, number>>(t: Table<S>, c1: C1, c2: C2) => void
+
+(scatterPlot: ScatterPlot) => {
+    scatterPlot(gradebook, "mid", "final")
+}
+
+// // corrected
+
+// (scatterPlot: ScatterPlot) => {
+//     scatterPlot(gradebook, "midterm", "final")
+// }
 
 // ### blackAndWhite
 
-const eatBlackAndWhite = <S extends STop & { "black": boolean, "white": boolean }>(r: Row<S>) => {
+const eatBlackAndWhite = (r: Row<SchemaOf<typeof jellyAnon>>) => {
     return getValue(r, "black and white") == true
 }
 buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
 
+// corrected
+
+// const eatBlackAndWhite = (r: Row<SchemaOf<typeof jellyAnon>>) => {
+//     return getValue(r, "black") && getValue(r, "white")
+// }
+// buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
+
+
 // ### pieCount
 
-// TODO
+type PieChart = <C1 extends CTop, C2 extends CTop, S extends STop & Record<C1, string | boolean> & Record<C2, number>>(t: Table<S>, c1: C1, c2: C2) => void
+
+(pieChart: PieChart) => {
+    const showAcneProportions =
+        <S extends { "get acne": boolean } & STop>(t: Table<S>) =>
+            pieChart(count(t, "get acne"), "true", "get acne")
+    showAcneProportions(jellyAnon)
+}
+
+// // corrected
+
+// (pieChart: PieChart) => {
+//     const showAcneProportions =
+//         <S extends STop & { "get acne": boolean }>(t: Table<S>) =>
+//             pieChart(count(t, "get acne"), "value", "count")
+//     showAcneProportions(jellyAnon)
+// }
 
 // ### brownGetAcne
 
@@ -134,6 +168,15 @@ const brownAndGetAcne = <S extends STop & { "brown": boolean, "get acne": boolea
 const brownAndGetAcneTable = buildColumn(jellyNamed, "part2", brownAndGetAcne)
 
 count(brownAndGetAcneTable, "brown and get acne")
+
+// corrected
+
+// const brownAndGetAcne = <S extends STop & { "brown": boolean, "get acne": boolean }>(r: Row<S>) => {
+//     return getValue(r, "brown") && getValue(r, "get acne")
+// }
+// const brownAndGetAcneTable = buildColumn(jellyNamed, "brown and get acne", brownAndGetAcne)
+
+// count(brownAndGetAcneTable, "brown and get acne")
 
 // ### getOnlyRow
 
@@ -146,6 +189,17 @@ getValue(
         1),
     "favorite color")
 
+// corrected
+
+// getValue(
+//     getRow(
+//         tfilter(students,
+//             (r) =>
+//                 getValue(r, "name") == "Alice"
+//         ),
+//         0),
+//     "favorite color")
+
 // ### favoriteColor
 
 const participantsLikeGreen =
@@ -154,6 +208,15 @@ const participantsLikeGreen =
             (r) =>
                 getValue(r, "favorite color")
         )
+
+// // corrected
+
+// const participantsLikeGreen =
+//     <S extends { 'favorite color': string }>(t: Table<S>) =>
+//         tfilter(t,
+//             (r) =>
+//                 getValue(r, "favorite color") == 'green'
+//         )
 
 // ### brownJellybeans
 
@@ -164,6 +227,28 @@ const keep =
     <S extends STop & { 'color': any }>(r: Row<S>) =>
         getValue(r, "color")
 countParticipants(jellyAnon, "brown")
+
+// // corrected 1
+
+// const countParticipants =
+//     <C extends CTop, S extends STop & Record<C, boolean>>(t: Table<S>, color: C) =>
+//         nrows(tfilter(t, keep(color)))
+// const keep =
+//     <C extends CTop>(color: C) =>
+//         <S extends STop & Record<C, boolean>>(r: Row<S>) =>
+//             getValue(r, color)
+// countParticipants(jellyAnon, "brown")
+
+// corrected 2
+
+// const countParticipants =
+//     <C extends CTop, S extends STop & Record<C, boolean>>(t: Table<S>, color: C) => {
+//         const keep =
+//             <S extends STop & Record<C, boolean>>(r: Row<S>) =>
+//                 getValue(r, color)
+//         return nrows(tfilter(t, keep))
+//     }
+// countParticipants(jellyAnon, "brown")
 
 // ### employeeToDepartment
 
@@ -182,3 +267,27 @@ const employeeToDepartment =
             (r) =>
                 lastNameToDeptId(deptTab, getValue(r, "Last Name"))
         )
+
+// // corrected
+
+// const deptIdToDeptName =
+//     (deptTab: typeof departments, deptId: number) => {
+//         const matchName =
+//             (r: Row<SchemaOf<typeof departments>>) => {
+//                 return getValue(r, "Department ID") == deptId
+//             }
+//         const matchedTab = tfilter(deptTab, matchName)
+//         const matchedRow = getRow(matchedTab, 0)
+//         return getValue(matchedRow, "Department Name")
+//     }
+// const employeeToDepartment =
+//     (name: string, emplTab: typeof employees, deptTab: typeof departments) => {
+//         const matchName =
+//             (r: Row<SchemaOf<typeof employees>>) => {
+//                 return getValue(r, "Last Name") == name
+//             }
+//         const matchedTab = tfilter(emplTab, matchName)
+//         const matchedRow = getRow(matchedTab, 0)
+//         const deptId = getValue(matchedRow, "Department ID")
+//         return deptIdToDeptName(deptTab, deptId)
+//     }

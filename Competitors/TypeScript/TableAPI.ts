@@ -1023,7 +1023,7 @@ export let orderBy = <S extends STop>(t1: Table<S>, cmps: Array<[(r: Row<S>) => 
 	)
 }
 
-export let count = <S extends STop, C extends keyof S>(t1: Table<S>, c: keyof S): Table<{ value: S[C], count: number }> => {
+export let count = <S extends STop, C extends keyof S>(t1: Table<S>, c: C): Table<{ value: S[C], count: number }> => {
 	const vs = getColumn2(t1, c);
 	const map = new Map()
 	for (const v of vs) {

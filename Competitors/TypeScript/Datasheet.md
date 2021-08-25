@@ -121,16 +121,30 @@ Expressiveness, in turn, can be for multiple artifacts:
 
 ### Which error situations are known to be inexpressible? Why?
 
-TODO
+`swappedColumns`. In the benchmark, table cells are associated with column indices, so are table headers. It is the mismatch between the two association that leads to the error. In our encoding, table cells are associated with column names rather than column indices. 
 
 ### Which error situations are only partially expressible? Why, and what’s missing?
 
+`getOnlyRow`. Our encoding can express the buggy program but cannot detect the error. 
+
 ### Which error situations’ expressibility is unknown? Why?
+
+None.
 
 ### Which error situations can be expressed more precisely than in the benchmark? How?
 
+None.
+
 ### Which error situations are prevented from being constructed? How?
 
+None.
+
 ### For each error situation that is at least partially expressible, what is the quality of feedback to the programmer?
+
+All "Malformed Tables" situations provide readable feedback.
+
+The feedback of `midFinal` is not pointing out the similarity between the wrong column name, `"mid"`, and a valid one `"midterm"`
+
+TODO
 
 ### For each error situation that is prevented from being constructed, what is the quality of feedback to the programmer?
