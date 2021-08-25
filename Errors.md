@@ -368,7 +368,7 @@ The programmer was asked to count the number of participants that consumed jelly
     function(t, color):
       keep =
         function(r):
-          getValue(r, "color")
+          getValue(r, color)
         end
       nrows(tfilter(t, keep))
     end
