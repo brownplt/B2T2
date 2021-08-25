@@ -36,10 +36,6 @@ export const concat = (xs1: string, xs2: string) => {
 	return xs1 + xs2
 }
 
-export const concatArray = <X>(xs1: Array<X>, xs2: Array<X>) => {
-	return [...xs1, ...xs2]
-}
-
 export const removeDuplicates = <X>(xs: Array<X>): Array<X> => {
 	const ys: Array<X> = [];
 	for (const x of xs) {

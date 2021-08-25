@@ -1,6 +1,6 @@
 import { CTop, parseRow, parseTable, Row, SchemaOf, STop, Table } from './EncodeTables'
-import { addColumn, addRows, buildColumn, dropColumns, emptyTable, getColumn2, getValue, header, nrows, selectColumns1, selectColumns2, selectColumns3, selectRows1, selectRows2, tfilter } from './TableAPI'
-import { filter, fisherTest, map, range, sample, length, startsWith, concat, colNameOfNumber, average, removeDuplicates } from './helpers'
+import { addColumn, addRows, buildColumn, dropColumns, emptyTable, getColumn2, getValue, header, nrows, selectColumns3, selectRows1, tfilter } from './TableAPI'
+import { filter, fisherTest, map, range, length, startsWith, concat, colNameOfNumber, average, removeDuplicates, sample } from './helpers'
 import { makeTester } from './unitTest'
 import { gradebook, gradebookMissing, jellyAnon, jellyNamed, students } from './ExampleTables'
 
@@ -13,7 +13,7 @@ const sum = (ns: number[]) => ns.reduce((a, b) => a + b, 0)
 const dotProduct = <C1 extends CTop, C2 extends CTop, S extends STop & Record<C1 | C2, number>>(t: Table<S>, c1: C1, c2: C2): number => {
     const ns = getColumn2(t, c1)
     const ms = getColumn2(t, c2)
-    return sum(range(nrows(t)).map(i => ns[i] * ms[i]))
+    return sum(map(range(nrows(t)), i => ns[i] * ms[i]))
 }
 
 Tester.assertEqual(

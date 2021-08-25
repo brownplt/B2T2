@@ -1,7 +1,7 @@
 import { AddColumn, CTop, Lookup, parseRow, parseTable, Row, SchemaOf, STop, Table, TTop, UpdateColumns, VTop } from "./EncodeTables";
 import { students, gradebook, studentsMissing, jellyAnon, employees, departments, jellyNamed, gradebookMissing, gradebookSeq } from "./ExampleTables";
 import { makeTester } from './unitTest'
-import { average, concat, concatArray, even, filter, ge, le, length, map, removeAll, removeDuplicates } from './helpers'
+import { average, concat, even, filter, ge, le, length, map, removeAll, removeDuplicates } from './helpers'
 
 const Tester = makeTester()
 
