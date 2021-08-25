@@ -412,7 +412,7 @@ The programmer was given two tables, one maps employee names to department IDs, 
 
 There are several problems in this program. First, `employeeToDepartment` is expected to return a department name, but it returns a table. Another problem is that the helper function is named `lastNameToDeptId`. The name suggests that this function maps the employee names to department IDs. But in `employeeToDepartment`, `lastNameToDeptId` is expected to produce department names. Finally, `deptTab`, the first parameter of `lastNameToDeptId`, has a name suggesting that it is bound to a department table. However, `lastNameToDeptId` uses `deptTab` as an employee table.
 
-#### A Corrected Prgram
+#### A Corrected Program
 
 ```lua
 > deptIdToDeptName =
