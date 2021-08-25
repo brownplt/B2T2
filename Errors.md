@@ -416,10 +416,10 @@ There are several problems in this program. First, `employeeToDepartment` is exp
 
 ```lua
 > deptIdToDeptName =
-    function(deptTab, name):
+    function(deptTab, deptId):
       matchName =
         function(r):
-          getValue(r, "Department ID") == name
+          getValue(r, "Department ID") == deptId
         end
       matchedTab = tfilter(deptTab, matchName)
       matchedRow = getRow(matchedTab, 0)
