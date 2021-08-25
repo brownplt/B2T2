@@ -2,6 +2,12 @@
 
 This file challenges type systems with some programs that might be difficult to typecheck.
 
+To keep the authenticity of some example programs, we assume the existence of the following functions in addition to the assumed function listed at the beginning of Table API document:
+
+- `fisherTest`: consumes two sequences of booleans, performs the [Fisher's exact test](https://en.wikipedia.org/wiki/Fisher%27s_exact_test), and returns the p-value. The two sequences must be of the same length.
+- `sample`: consumes a sequence and a natural number `n`. Samples `n` elements of the input sequence without replacement.
+
+
 ## dotProduct
 
 This example defines a function that computes the dot-product of two numeric columns. When assigning a type to `dotProduct`, the type system should try to enforce that both `c1` and `c2` refer to numeric columns in `t`.
