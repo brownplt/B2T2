@@ -125,7 +125,7 @@ Expressiveness, in turn, can be for multiple artifacts:
 
 ### Which error situations are only partially expressible? Why, and what’s missing?
 
-`getOnlyRow`. Our encoding can express the buggy program but cannot detect the error. 
+`getOnlyRow`. The feedback is missing. Our encoding can express the buggy program but cannot detect the error. 
 
 ### Which error situations’ expressibility is unknown? Why?
 
@@ -143,8 +143,22 @@ None.
 
 All "Malformed Tables" situations provide readable feedback.
 
-The feedback of `midFinal` is not pointing out the similarity between the wrong column name, `"mid"`, and a valid one `"midterm"`
+The feedback of `midFinal` is long and not pointing out the similarity between the given, invalid column name (`"mid"`) and a valid one (`"midterm"`)
 
-TODO
+The feedback of `blackAndWhite` is not pointing out the similarity between the given, invalid column name (`"black and white"`) and valid ones (`"black"` and `"white"`).
+
+The feedback of `pieCount` can be misleading, as it underlines the table argument but the real problem lies in the other two argument.
+
+The feedback of `brownGetAcne` is fair.
+
+`getOnlyRow` is missing feedback.
+
+The feedback of `favoriteColor` is fair.
+
+The feedback of `brownJellybeans` is not very helpful. It only points out one code fragment that might be at fault, but there are more, including the definition of `keep`, the string constant `"color"`, and the unused parameter `color`.
+
+The feedback of `employeeToDepartment` is fair. It points out that `"Last Name"` is not one of `"Department Name"` and `"Department ID"`. From this mismatch, the programmer should be able to realize that they confuse the department table with the employee table. 
 
 ### For each error situation that is prevented from being constructed, what is the quality of feedback to the programmer?
+
+No situation is prevented from being constructed.
