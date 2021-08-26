@@ -149,15 +149,15 @@ The feedback of `blackAndWhite` is not pointing out the similarity between the g
 
 The feedback of `pieCount` can be misleading, as it underlines the table argument but the real problem lies in the other two argument.
 
-The feedback of `brownGetAcne` is fair.
+The feedback of `brownGetAcne` gives the programmer enough information to find the issue. It could be better if it suggests the programm to focus on the mismatch between `"part2"` and `brownAndGetAcneTable`/`"brown and get acne"`.
 
 `getOnlyRow` is missing feedback.
 
-The feedback of `favoriteColor` is fair.
+The feedback of `favoriteColor` gives the programmer enough information to find the issue. We can not see much room for improvement.
 
 The feedback of `brownJellybeans` is not very helpful. It only points out one code fragment that might be at fault, but there are more, including the definition of `keep`, the string constant `"color"`, and the unused parameter `color`.
 
-The feedback of `employeeToDepartment` is fair. It points out that `"Last Name"` is not one of `"Department Name"` and `"Department ID"`. From this mismatch, the programmer should be able to realize that they confuse the department table with the employee table. 
+The feedback of `employeeToDepartment` gives the programmer enough information to find the issue. It points out that `"Last Name"` is not one of `"Department Name"` and `"Department ID"`. From this mismatch, the programmer should be able to realize that they confuse the department table with the employee table. 
 
 ### For each error situation that is prevented from being constructed, what is the quality of feedback to the programmer?
 

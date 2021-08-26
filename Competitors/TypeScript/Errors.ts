@@ -162,7 +162,7 @@ type PieChart = <C1 extends CTop, C2 extends CTop, S extends STop & Record<C1, s
     }
 }
 
-// ### brownAndGetAcne
+// ### brownGetAcne
 
 () => {
     const buggy = () => {
