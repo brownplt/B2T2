@@ -36,10 +36,11 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 
 #### Functions
 
+- `even`: consumes an integer and returns a boolean
 - `length`: consumes a sequence and measures its length
 - `schema`: extracts the schema of a table
 - `range`: consumes a number and produces a sequence of valid indices
-- `concat`: concatenates two sequences
+- `concat`: concatenates two sequences or two strings
 - `startsWith`: checks whether a string starts with another string
 - `average`: computes the average of a sequence of numbers
 - `filter`: the conventional sequence (e.g. lists) filter

@@ -2,6 +2,12 @@
 
 This file challenges type systems with some programs that might be difficult to typecheck.
 
+To keep the authenticity of some example programs, we assume the existence of the following functions in addition to the assumed function listed at the beginning of Table API document:
+
+- `fisherTest :: bs1:Seq<Boolean>, bs2:Seq<Boolean> -> n:Number`, where the two sequences must be of the same length. This function performs the [Fisher's exact test](https://en.wikipedia.org/wiki/Fisher%27s_exact_test), and returns the p-value. 
+- `sample<V> :: vs1:Seq<V> * n:Number -> vs2:Seq<V>`, where `n` is in `range(length(vs1) + 1)`.
+
+
 ## dotProduct
 
 This example defines a function that computes the dot-product of two numeric columns. When assigning a type to `dotProduct`, the type system should try to enforce that both `c1` and `c2` refer to numeric columns in `t`.
