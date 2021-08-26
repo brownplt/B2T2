@@ -4,8 +4,8 @@ This file challenges type systems with some programs that might be difficult to 
 
 To keep the authenticity of some example programs, we assume the existence of the following functions in addition to the assumed function listed at the beginning of Table API document:
 
-- `fisherTest`: consumes two sequences of booleans, performs the [Fisher's exact test](https://en.wikipedia.org/wiki/Fisher%27s_exact_test), and returns the p-value. The two sequences must be of the same length.
-- `sample`: consumes a sequence and a natural number `n`, and samples `n` elements of the input sequence without replacement.
+- `fisherTest :: bs1:Seq<Boolean>, bs2:Seq<Boolean> -> n:Number`, where the two sequences must be of the same length. This function performs the [Fisher's exact test](https://en.wikipedia.org/wiki/Fisher%27s_exact_test), and returns the p-value. 
+- `sample<V> :: vs1:Seq<V> * n:Number -> vs2:Seq<V>`, where `n` is in `range(length(vs1) + 1)`.
 
 
 ## dotProduct
