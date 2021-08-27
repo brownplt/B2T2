@@ -2,6 +2,12 @@
 
 This file challenges type systems with some programs that might be difficult to typecheck.
 
+To keep the authenticity of some example programs, we assume the existence of the following functions in addition to the assumed function listed at the beginning of Table API document:
+
+- `fisherTest :: bs1:Seq<Boolean>, bs2:Seq<Boolean> -> n:Number`, where the two sequences must be of the same length. This function performs the [Fisher's exact test](https://en.wikipedia.org/wiki/Fisher%27s_exact_test), and returns the p-value. 
+- `sample<V> :: vs1:Seq<V> * n:Number -> vs2:Seq<V>`, where `n` is in `range(length(vs1) + 1)`.
+
+
 ## dotProduct
 
 This example defines a function that computes the dot-product of two numeric columns. When assigning a type to `dotProduct`, the type system should try to enforce that both `c1` and `c2` refer to numeric columns in `t`.
@@ -30,9 +36,9 @@ A type system should try to realize that `sampleRows` requires `n` is in `range(
 > sampleRows =
     function(t, n):
       indexes = sample(range(nrows(t)), n)
-      selectRowsByNumbers(t, indexes)
+      selectRows(t, indexes)
     end
-> sampleRows(gradebook, 2)
+> sampleRows(gradebookMissing, 2)
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- |
 | "Eve"   | 13  |       | 9     | 84      | 8     | 8     | 77    |
@@ -41,13 +47,13 @@ A type system should try to realize that `sampleRows` requires `n` is in `range(
 
 ## pHackingHomogeneous
 
-Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `jellyAnon`, is homogeneous because all of its columns contain boolean values. It is interesting to compare this program with the next example, Jelly Bean Heterogeneous, which processes `jellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
+Inspired by [XKCD](https://xkcd.com/882/), this example program investigates the association between getting acne and consuming jelly beans of a particular color. The processed table, `jellyAnon`, is homogeneous because all of its columns contain boolean values. It is interesting to compare this program with the next example, pHackingHeterogeneous, which processes `jellyNamed`, a table that contains an additional string-typed column. Some type systems might understand this program but not the next one.
 
 ```lua
 > pHacking =
     function(t):
       colAcne = getColumn(t, "get acne")
-      jellyAnon = drop(t, "get acne")
+      jellyAnon = dropColumns(t, ["get acne"])
       for c in header(jellyAnon):
         colJB = getColumn(t, c)
         p = fisherTest(colAcne, colJB)
@@ -66,7 +72,7 @@ We found a link between orange jelly beans and acne (p < 0.05).
 This example program is similar to pHackingHomogeneous but processes a table with an extra column, `"name"`. This column is dropped before calling the `pHacking` function. This example is interesting because the type system needs to understand that after dropping the column, the table contains only boolean values.
 
 ```lua
-> pHacking(dropColumn(jellyNamed, "name"))
+> pHacking(dropColumns(jellyNamed, ["name"]))
 We found a link between orange jelly beans and acne (p < 0.05).
 ```
 
@@ -108,7 +114,7 @@ This example also computes the average quiz score for each student in `gradebook
     map(
       range(4),
       function(i):
-        concat("quiz", colNameOfNumber(i))
+        concat("quiz", colNameOfNumber(i + 1))
       end)
 > quizTable = selectColumns(gradebook, quizColNames)
 > quizAndAverage =
@@ -125,8 +131,7 @@ This example also computes the average quiz score for each student in `gradebook
 > addColumn(
     gradebook,
     "average-quiz",
-    getColumn(quizAndAverage, "average")
-    end)
+    getColumn(quizAndAverage, "average"))
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final | average-quiz |
 | ------- | --- | ----- | ----- | ------- | ----- | ----- | ----- | ------------ |
 | "Bob"   | 12  | 8     | 9     | 77      | 7     | 9     | 87    | 8.25         |
@@ -184,7 +189,7 @@ Ideally, this user-defined function should achieve the same type constraints as 
               function(r):
                 getValue(r, c) == k
               end)
-          dropColumn(g, c)
+          dropColumns(g, [c])
         end
       buildColumn(keys, "groups", makeGroup)
     end

@@ -4,6 +4,12 @@ This file presents a diagnostic challenge. Each example includes a buggy program
 
 These examples are adapted from student code collected in CS111 at Brown University.
 
+To keep the authenticity of some error cases, we assume the existence of two plotting functions:
+
+- `scatterPlot :: t:Table * c1:ColName * c2:ColName -> Image`, where both input columns must contain numbers.
+- `pieChart :: t:Table * c1:ColName * c2:ColName -> Image`, where the first column must contain categorical values, and the second column must contain positive numbers.
+
+
 ## Malformed Tables
 
 This section lists errors that programmers can make when constructing table constants. All these malformed tables should be corrected to the `students` table, which is shown below with a full schema declaration.
@@ -140,7 +146,7 @@ participant consumed black jelly beans and white ones".
 ```lua
 > eatBlackAndWhite =
     function(r):
-      r["black and white"] == true
+      getValue(r, "black and white") == true
     end
 > buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)?
 ```
@@ -148,7 +154,7 @@ participant consumed black jelly beans and white ones".
 #### What is the Bug?
 
 The logical `and` appears at a wrong place. The task is asking the programmer
-to write `r["black"] and r["white"]`, but the buggy program accesses the
+to write `getValue(r, "black") and getValue(r, "white")`, but the buggy program accesses the
 invalid column `"black and white"` instead.
 
 #### A Corrected Program
@@ -156,7 +162,7 @@ invalid column `"black and white"` instead.
 ```lua
 > eatBlackAndWhite =
     function(r):
-      r["black"] and r["white"]
+      getValue(r, "black") and getValue(r, "white")
     end
 > buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
 ```
@@ -330,7 +336,7 @@ The programmer was asked to count the number of participants that consumed jelly
     end
 > keep =
     function(r):
-      r["color"]
+      getValue(r, "color")
     end
 > countParticipants(jellyAnon, "brown")
 ```
@@ -349,7 +355,7 @@ The programmer was asked to count the number of participants that consumed jelly
 > keep =
     function(color):
       function(r):
-        r[color]
+        getValue(r, color)
       end
     end
 > countParticipants(jellyAnon, "brown")
@@ -362,7 +368,7 @@ The programmer was asked to count the number of participants that consumed jelly
     function(t, color):
       keep =
         function(r):
-          r["color"]
+          getValue(r, color)
         end
       nrows(tfilter(t, keep))
     end
@@ -406,14 +412,14 @@ The programmer was given two tables, one maps employee names to department IDs, 
 
 There are several problems in this program. First, `employeeToDepartment` is expected to return a department name, but it returns a table. Another problem is that the helper function is named `lastNameToDeptId`. The name suggests that this function maps the employee names to department IDs. But in `employeeToDepartment`, `lastNameToDeptId` is expected to produce department names. Finally, `deptTab`, the first parameter of `lastNameToDeptId`, has a name suggesting that it is bound to a department table. However, `lastNameToDeptId` uses `deptTab` as an employee table.
 
-#### A Corrected Prgram
+#### A Corrected Program
 
 ```lua
 > deptIdToDeptName =
-    function(deptTab, name):
+    function(deptTab, deptId):
       matchName =
         function(r):
-          getValue(r, "Department ID") == name
+          getValue(r, "Department ID") == deptId
         end
       matchedTab = tfilter(deptTab, matchName)
       matchedRow = getRow(matchedTab, 0)

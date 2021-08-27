@@ -27,7 +27,7 @@ Operators are collected from the following resources:
   - [the definition of methods and some functions](https://www.pyret.org/docs/latest/tables.html)
   - [the definition of other functions](https://code.pyret.org/editor#share=1btFfKCcas4zkQ6-SYCYMkcDCqmduzQqB)
 - [Compare Python pandas with R TidyVerse](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_r.html)
-- [Compare Python pandas with SQl](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_sql.html)
+- [Compare Python pandas with SQL](https://pandas.pydata.org/pandas-docs/stable/getting_started/comparison/comparison_with_sql.html)
 - [Compare Julia DataFrame with Python pandas and R TidyVerse](https://dataframes.juliadata.org/stable/man/comparisons/)
 
 For our convenience, we sometimes apply table operators to rows (e.g. `selectColumns(r, ["foo", "bar"])`). A implementation of Table API can either view rows as a subtype of tables, overload those operators, or give different names to row variants of the operators.
@@ -36,16 +36,18 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 
 #### Functions
 
+- `even`: consumes an integer and returns a boolean
 - `length`: consumes a sequence and measures its length
 - `schema`: extracts the schema of a table
 - `range`: consumes a number and produces a sequence of valid indices
-- `concat`: concatenates two sequences
+- `concat`: concatenates two sequences or two strings
 - `startsWith`: checks whether a string starts with another string
 - `average`: computes the average of a sequence of numbers
 - `filter`: the conventional sequence (e.g. lists) filter
 - `map`: the conventional sequence (e.g. lists) map
 - `removeDuplicates`: consumes a sequence and produces a subsequence with all duplicated elements removed
 - `removeAll`: consumes two sequences and produces a subsequence of the first input, removing all elements that also appear in the second input.
+- `colNameOfNumber`: converts a `Number` to a `ColName`
 
 #### Relations
 
@@ -437,7 +439,7 @@ Returns a `Number` representing the number of columns in the `Table`.
 > ncols(students)
 3
 > ncols(studentsMissing)
-8
+3
 ```
 
 ### `header :: t:Table -> cs:Seq<ColName>`
@@ -666,7 +668,7 @@ Consumes a `Table` and a `Seq<Boolean>` deciding whether each column should be k
 
 ##### Ensures:
 
-- `length(header(t2))` is equal to `length(ns)`
+- `ncols(t2)` is equal to `length(ns)`
 - for all `i` in `range(length(ns))`, `header(t2)[i]` is equal to `header(t1)[ns[i]]`
 - for all `c` in `header(t2)`, `schema(t2)[c]` is equal to `schema(t1)[c]`
 - `nrows(t2)` is equal to `nrows(t1)`
@@ -1109,17 +1111,17 @@ Partitions rows into groups and summarize each group with the functions in `agg`
     end
 > pivotTable(
     jellyNamed,
-    ["brown", "get acne"],
+    ["get acne", "brown"],
     [
       ("red proportion", "red", proportion),
       ("pink proportion", "pink", proportion)
     ])
 | get acne | brown | red proportion | pink proportion |
 | -------- | ----- | -------------- | --------------- |
-| false    | true  | 0              | 1/4             |
 | false    | false | 0              | 3/4             |
+| false    | true  | 1              | 1               |
+| true     | false | 0              | 1/4             |
 | true     | true  | 0              | 0               |
-| true     | false | 1              | 1               |
 ```
 
 ### `groupBy<K,V> :: t1:Table * key:(r1:Row -> k1:K) * project:(r2:Row -> v:V) * aggregate:(k2:K * vs:Seq<V> -> r3:Row) -> t2:Table`
@@ -1222,7 +1224,7 @@ Return a `Seq<Boolean>` with `true` entries indicating rows without missing valu
 Removes rows that have some values missing
 
 ```lua
-> dropna(studentMissing)
+> dropna(studentsMissing)
 | name    | age | favorite color |
 | ------- | --- | -------------- |
 | "Alice" | 17  | "green"        |
@@ -1232,7 +1234,7 @@ Removes rows that have some values missing
 | "Bob" | 12  | 8     | 9     | 77      | 7     | 9     | 87    |
 ```
 
-### `fillna : t1:Table * c:ColName * v:Value -> t2:Table`
+### `fillna :: t1:Table * c:ColName * v:Value -> t2:Table`
 
 #### Constraints
 
@@ -1267,7 +1269,7 @@ Scans the named column and fills in `v` when a cell is missing value.
 
 ## Data Cleaning
 
-### `pivotLonger : t1:Table * cs:Seq<ColName> * c1:ColName * c2:ColName -> t2:Table`
+### `pivotLonger :: t1:Table * cs:Seq<ColName> * c1:ColName * c2:ColName -> t2:Table`
 
 #### Constraints
 
@@ -1301,26 +1303,26 @@ Reshapes the input table and make it longer. The data kept in the named columns 
 | "Eve"   | 13  | 7     | 9     | 8     | 8     | "midterm" | 84    |
 | "Eve"   | 13  | 7     | 9     | 8     | 8     | "final"   | 77    |
 > pivotLonger(gradebook, ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"], "test", "score")
-| name    | age | test    | score |
-| ------- | --- | ------- | ----- |
-| "Bob"   | 12  | quiz1   | 8     |
-| "Bob"   | 12  | quiz2   | 9     |
-| "Bob"   | 12  | quiz3   | 7     |
-| "Bob"   | 12  | quiz4   | 9     |
-| "Bob"   | 12  | midterm | 77    |
-| "Bob"   | 12  | final   | 87    |
-| "Alice" | 17  | quiz1   | 6     |
-| "Alice" | 17  | quiz2   | 8     |
-| "Alice" | 17  | quiz3   | 8     |
-| "Alice" | 17  | quiz4   | 7     |
-| "Alice" | 17  | midterm | 88    |
-| "Alice" | 17  | final   | 85    |
-| "Eve"   | 13  | quiz1   | 7     |
-| "Eve"   | 13  | quiz2   | 9     |
-| "Eve"   | 13  | quiz3   | 8     |
-| "Eve"   | 13  | quiz4   | 8     |
-| "Eve"   | 13  | midterm | 84    |
-| "Eve"   | 13  | final   | 77    |
+| name    | age | test      | score |
+| ------- | --- | --------- | ----- |
+| "Bob"   | 12  | "quiz1"   | 8     |
+| "Bob"   | 12  | "quiz2"   | 9     |
+| "Bob"   | 12  | "quiz3"   | 7     |
+| "Bob"   | 12  | "quiz4"   | 9     |
+| "Bob"   | 12  | "midterm" | 77    |
+| "Bob"   | 12  | "final"   | 87    |
+| "Alice" | 17  | "quiz1"   | 6     |
+| "Alice" | 17  | "quiz2"   | 8     |
+| "Alice" | 17  | "quiz3"   | 8     |
+| "Alice" | 17  | "quiz4"   | 7     |
+| "Alice" | 17  | "midterm" | 88    |
+| "Alice" | 17  | "final"   | 85    |
+| "Eve"   | 13  | "quiz1"   | 7     |
+| "Eve"   | 13  | "quiz2"   | 9     |
+| "Eve"   | 13  | "quiz3"   | 8     |
+| "Eve"   | 13  | "quiz4"   | 8     |
+| "Eve"   | 13  | "midterm" | 84    |
+| "Eve"   | 13  | "final"   | 77    |
 ```
 
 ### `pivotWider :: t1:Table * c1:ColName * c2:ColName -> t2:Table`
@@ -1357,27 +1359,6 @@ The inverse of `pivotLonger`.
       ["quiz1", "quiz2", "quiz3", "quiz4", "midterm", "final"],
       "test",
       "score")
-> longerTable
-| name    | age | test    | score |
-| ------- | --- | ------- | ----- |
-| "Bob"   | 12  | quiz1   | 8     |
-| "Bob"   | 12  | quiz2   | 9     |
-| "Bob"   | 12  | quiz3   | 7     |
-| "Bob"   | 12  | quiz4   | 9     |
-| "Bob"   | 12  | midterm | 77    |
-| "Bob"   | 12  | final   | 87    |
-| "Alice" | 17  | quiz1   | 6     |
-| "Alice" | 17  | quiz2   | 8     |
-| "Alice" | 17  | quiz3   | 8     |
-| "Alice" | 17  | quiz4   | 7     |
-| "Alice" | 17  | midterm | 88    |
-| "Alice" | 17  | final   | 85    |
-| "Eve"   | 13  | quiz1   | 7     |
-| "Eve"   | 13  | quiz2   | 9     |
-| "Eve"   | 13  | quiz3   | 8     |
-| "Eve"   | 13  | quiz4   | 8     |
-| "Eve"   | 13  | midterm | 84    |
-| "Eve"   | 13  | final   | 77    |
 > pivotWider(longerTable, "test", "score")
 | name    | age | quiz1 | quiz2 | quiz3 | quiz4 | midterm | final |
 | ------- | --- | ----- | ----- | ----- | ----- | ------- | ----- |
@@ -1426,7 +1407,7 @@ When columns `cs` of table `t` have sequences, returns a `Table` where each elem
 | "Eve"   | 13  | 9       | 84      | 77    |
 | "Eve"   | 13  | 8       | 84      | 77    |
 | "Eve"   | 13  | 8       | 84      | 77    |
-> t = buildColumn(gradebookSeq, "quiz-pass?"
+> t = buildColumn(gradebookSeq, "quiz-pass?",
     function(r):
       isPass =
         function(n):
@@ -1440,7 +1421,7 @@ When columns `cs` of table `t` have sequences, returns a `Table` where each elem
 | "Bob"   | 12  | [8, 9, 7, 9] | 77      | 87    | [true, true, false, true]  |
 | "Alice" | 17  | [6, 8, 8, 7] | 88      | 85    | [false, true, true, false] |
 | "Eve"   | 13  | [7, 9, 8, 8] | 84      | 77    | [false, true, true, true]  |
-> flatten(gradebookSeq, ["quiz-pass?", "quizzes"])
+> flatten(t, ["quiz-pass?", "quizzes"])
 | name    | age | quizzes | midterm | final | quiz-pass? |
 | ------- | --- | ------- | ------- | ----- | ---------- |
 | "Bob"   | 12  | 8       | 77      | 87    | true       |
@@ -1481,7 +1462,7 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
 ```lua
 > addLastName =
     function(name):
-      concat(name, "Smith")
+      concat(name, " Smith")
     end
 > transformColumn(students, "name", addLastName)
 | name          | age | favorite color |
@@ -1502,10 +1483,10 @@ Consumes a `Table`, a `ColName` representing a column name, and a transformation
 | ------- | --- | ------ | ----- | ------- | ----- | ----- | ----- |
 | "Bob"   | 12  | "pass" | 9     | 77      | 7     | 9     | 87    |
 | "Alice" | 17  | "fail" | 8     | 88      | 8     | 7     | 85    |
-| "Eve"   | 13  | "fail" | 9     | 84      | 8     | 8     | 77    |
+| "Eve"   | 13  | "pass" | 9     | 84      | 8     | 8     | 77    |
 ```
 
-### `renameColumns : t1:Table * ccs:Seq<ColName * ColName> -> t2:Table`
+### `renameColumns :: t1:Table * ccs:Seq<ColName * ColName> -> t2:Table`
 
 #### Constraints
 
@@ -1540,8 +1521,8 @@ Updates column names. Each element of `ccs` specifies the old name and the new n
 | name    | age | quiz1 | quiz2 | final | quiz3 | quiz4 | midterm |
 | ------- | --- | ----- | ----- | ----- | ----- | ----- | ------- |
 | "Bob"   | 12  | 8     | 9     | 77    | 7     | 9     | 87      |
-| "Alice" | 17  | 6     | 8     | 88    |       | 7     | 85      |
-| "Eve"   | 13  |       | 9     | 84    | 8     | 8     | 77      |
+| "Alice" | 17  | 6     | 8     | 88    | 8     | 7     | 85      |
+| "Eve"   | 13  | 7     | 9     | 84    | 8     | 8     | 77      |
 ```
 
 ### `find :: t:Table * r:Row -> n:Error<Number>`
@@ -1606,7 +1587,7 @@ Categorizes rows of the input table into groups by the key of each row. The key 
 > groupByRetentive(jellyAnon, "brown")
 | key   | groups                                                                                  |
 | ----- | --------------------------------------------------------------------------------------- |
-| true  | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
+| false | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ | |
 |       | | true     | false | false | false | true  | false  | false | true   | false | false  | |
 |       | | true     | false | true  | false | true  | true   | false | false  | false | false  | |
@@ -1616,7 +1597,7 @@ Categorizes rows of the input table into groups by the key of each row. The key 
 |       | | true     | false | true  | false | false | false  | false | true   | true  | false  | |
 |       | | false    | false | true  | false | false | false  | false | false  | true  | false  | |
 |       | | true     | false | false | false | false | false  | false | true   | false | false  | |
-| false | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
+| true  | | get acne | red   | black | white | green | yellow | brown | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ----- | ------ | ----- | ------ | |
 |       | | true     | false | false | false | false | false  | true  | true   | false | false  | |
 |       | | false    | true  | false | false | false | true   | true  | false  | true  | false  | |
@@ -1661,7 +1642,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 > groupBySubtractive(jellyAnon, "brown")
 | key   | groups                                                                          |
 | ----- | ------------------------------------------------------------------------------- |
-| true  | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
+| false | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ | |
 |       | | true     | false | false | false | true  | false  | true   | false | false  | |
 |       | | true     | false | true  | false | true  | true   | false  | false | false  | |
@@ -1671,7 +1652,7 @@ Similar to `groupByRetentive` but the named column is removed in the output.
 |       | | true     | false | true  | false | false | false  | true   | true  | false  | |
 |       | | false    | false | true  | false | false | false  | false  | true  | false  | |
 |       | | true     | false | false | false | false | false  | true   | false | false  | |
-| false | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
+| true  | | get acne | red   | black | white | green | yellow | orange | pink  | purple | |
 |       | | -------- | ----- | ----- | ----- | ----- | ------ | ------ | ----- | ------ | |
 |       | | true     | false | false | false | false | false  | true   | false | false  | |
 |       | | false    | true  | false | false | false | true   | false  | true  | false  | |
@@ -1768,10 +1749,10 @@ Projects each `Row` of a `Table` into a new `Table`.
         ("(midterm + final) / 2", (getValue(r, "midterm") + getValue(r, "final")) / 2)]
     end)
 | full name     | (midterm + final) / 2 |
-| ------------- | -------------------- |
-| "Bob Smith"   | 82                   |
-| "Alice Smith" | 86.5                 |
-| "Eve Smith"   | 80.5                 |
+| ------------- | --------------------- |
+| "Bob Smith"   | 82                    |
+| "Alice Smith" | 86.5                  |
+| "Eve Smith"   | 80.5                  |
 ```
 
 ### `selectMany :: t1:Table * project:(r1:Row * n:Number -> t2:Table) * result:(r2:Row * r3:Row -> r4:Row) -> t2:Table`
@@ -1908,7 +1889,7 @@ Correlates the rows of two tables based on matching keys.
     end
 > addGradeColumn =
     function(r1, r2):
-      addColumn(r1, "grade", getValue(r2, "final"))
+      addColumn(r1, "grade", [getValue(r2, "final")])
     end
 > join(students, gradebook, getName, getName, addGradeColumn)
 | name    | age | favorite color | grade |

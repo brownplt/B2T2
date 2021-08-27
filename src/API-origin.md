@@ -182,7 +182,7 @@ In CS111 Pyret, `transform-column(t, c, f)`
 ### Origins
 
 - Julia DataFrame's `sort` is similar but less general
-- pandas' `DataFrame.sort_value(by = [c ...], ascending = [b ...])`
+- pandas' `DataFrame.sort_values(by = [c ...], ascending = [b ...])`
 
 ## `orderBy :: t1:Table * Seq<Exists K . getKey:(r:Row -> k:K) * compare:(k1:K * k2:K -> Boolean)> -> t2:Table`
 
