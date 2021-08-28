@@ -1,5 +1,12 @@
 // # Errors
 
+// To see all static type errors in console, execute in this directory
+//
+//   tsc -b
+//
+// This command builds all .ts files in the current directory and prints
+// all type errors.
+
 import { CTop, Row, SchemaOf, STop, Table } from "./EncodeTables"
 import { departments, employees, gradebook, jellyAnon, jellyNamed, students } from "./ExampleTables"
 import { buildColumn, count, getRow, getValue, nrows, tfilter } from "./TableAPI"
