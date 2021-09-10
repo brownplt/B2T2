@@ -148,7 +148,7 @@ participant consumed black jelly beans and white ones".
     function(r):
       getValue(r, "black and white") == true
     end
-> buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)?
+> buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
 ```
 
 #### What is the Bug?
