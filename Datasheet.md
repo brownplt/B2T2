@@ -1,6 +1,6 @@
-# Reference
+## Reference
 
-> **Q**. What is the URL of the version of the benchmark being used?
+> Q. What is the URL of the version of the benchmark being used?
 
 
 > Q. On what date was this version of the datasheet last updated?
@@ -9,7 +9,7 @@
 > Q. If you are not using the latest benchmark available on that date, please explain why not.
 
 
-# Example Tables
+## Example Tables
 
 > Q. Do tables express heterogeneous data, or must data be homogenized?
 
