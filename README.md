@@ -33,7 +33,7 @@ This benchmark has an associated paper:
    volume={6},
    number={2},
    numpages={26},
-   year={2021}
+   year={2022}
   }
 ```
 
