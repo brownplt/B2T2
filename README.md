@@ -26,7 +26,7 @@ Refer to [`Competitors/TypeScript`](Competitors/TypeScript) for an example.
 This benchmark has an associated paper:
 
 ```
-  @article{lgk-pj-2021,
+  @article{lgk-pj-2022,
    title={Types for Tables: A Language Design Benchmark},
    author={Kuang-Chen Lu and Ben Greenman and and Shriram Krisnamurthi},
    journal={The Art, Science, and Engineering of Programming},
