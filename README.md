@@ -28,7 +28,7 @@ This benchmark has an associated paper:
 ```
   @article{lgk-pj-2022,
    title={Types for Tables: A Language Design Benchmark},
-   author={Kuang-Chen Lu and Ben Greenman and and Shriram Krisnamurthi},
+   author={Kuang-Chen Lu and Ben Greenman and and Shriram Krishnamurthi},
    journal={The Art, Science, and Engineering of Programming},
    volume={6},
    number={2},
