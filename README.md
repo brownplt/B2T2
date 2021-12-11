@@ -2,7 +2,14 @@
 
 The Brown Benchmark for Table Types
 
-## Benchmark Files
+## Context
+
+This benchmark is documented in the paper
+[Types for Tables: A Language Design Benchmark](https://cs.brown.edu/~sk/Publications/Papers/Published/lgk-b2t2/).
+Please read it to understand what this benchmark is trying to
+accomplish and what the following components are about.
+
+## Benchmark Components
 
 - [Definition of a Table](WhatIsATable.md)
 - [Example Tables](ExampleTables.md)
@@ -11,7 +18,7 @@ The Brown Benchmark for Table Types
 - [Errors](Errors.md)
 - [Datasheet Template](Datasheet.md)
 
-## Competitors
+## Submissions
 
 To submit an implementation of B2T2, open a pull request with a new folder for
 the `Competitors/` directory. The folder should include at least two things:
@@ -21,9 +28,9 @@ the `Competitors/` directory. The folder should include at least two things:
 
 Refer to [`Competitors/TypeScript`](Competitors/TypeScript) for an example.
 
-## Resources
+## Citation
 
-This benchmark has an associated paper:
+To refer to this benchmark, please use the following citation:
 
 ```
   @article{lgk-pj-2022,
@@ -37,3 +44,5 @@ This benchmark has an associated paper:
   }
 ```
 
+You may, if you wish, refer to this repository in *addition*, but
+please do refer to the above paper.
