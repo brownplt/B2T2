@@ -1,0 +1,11 @@
+name,get_acne,red,black,white,green,yellow,brown,orange,pink,purple
+Emily,true,false,false,false,true,false,false,true,false,false
+Jacob,true,false,true,false,true,true,false,false,false,false
+Emma,false,false,false,false,true,false,false,false,true,false
+Aidan,false,false,false,false,false,true,false,false,false,false
+Madison,false,false,false,false,false,true,false,false,true,false
+Ethan,true,false,true,false,false,false,false,true,true,false
+Hannah,false,false,true,false,false,false,false,false,true,false
+Matthew,true,false,false,false,false,false,true,true,false,false
+Hailey,true,false,false,false,false,false,false,true,false,false
+Nicholas,false,true,false,false,false,true,true,false,true,false

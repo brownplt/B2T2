@@ -1,0 +1,142 @@
+# initial tables
+let students = load("students.csv")
+let students_missing = load("students_missing.csv")
+let employees = load("employees.csv")
+let departments = load("departments.csv")
+let jelly_anon = load("jelly_anon.csv")
+let jelly_named = load("jelly_named.csv")
+let gradebook = load("gradebook.csv")
+let gradebook_missing = load("gradebook_missing.csv")
+
+# emptyTable -- just declare the variable with a type
+var empty: type_of(students)
+
+# addRows -- no append mechanism currently
+# XXX append(students, Student("Colton", 19, "blue"))
+
+# addColumn -- no explicit function; must take all columns manually
+from students select name, age, favorite_color, hair_color = ["brown", "red", "blonde"]
+# XXX from students update hair_color = ["brown", "red", "blonde"]
+
+# buildColumn -- no explicit function; must take all columns manually
+from students select name, age, favorite_color, is_teenager = (age > 12) and (age < 20)
+# XXX from students update is_teenager = (age > 12) and (age < 20)
+
+# vcat -- no append mechanism currently
+# XXX append(students, from students update age + 1)
+
+# hcat -- joins require a key currently
+# XXX join students, (from gradebook delete name, age)
+
+# values -- no tuples or anonymous types; must create type ahead of time
+data Value:
+  name: String
+end
+!Value(["Alice", "Bob"])
+
+# crossJoin -- no such function and no immediate plans to have one
+
+# leftJoin -- builtin
+join students, gradebook on name, age
+
+# nrows -- builtin
+len(students)
+
+# ncols -- no explicit function; just ask for number of members
+len(members_of(students))
+
+# header -- builtin
+members_of(students)
+
+# getRow -- no row indexing currently
+# XXX students[0]
+
+# getValue -- builtin
+students.name[0]
+
+# getColumn -- builtin for column names; no plans for integer indexing
+students.name
+
+# selectRows -- builtin for bool; no row indexing or indexing by array currently
+from students select where [true, false, true]
+# XXX students[[2, 0, 2, 1]]
+
+# selectColumns -- builtin for column names; no plans for other use cases
+from students select favorite_color, age
+
+# head -- no row indexing or slices currently
+# XXX students[:1]
+
+# distinct -- no mechanism currently
+# XXX unique(students)
+
+# dropColumn -- no mechanism currently
+# XXX from students delete age
+
+# dropColumns -- same as above
+# XXX from gradebook delete final, midterm
+
+# tfilter -- builtin
+from students select where age < 15
+
+# tsort -- builtin; no desc curretly
+sort students by age
+
+# sortByColumns -- same as above
+sort gradebook by quiz2, quiz1
+
+# orderBy -- same as above; issue with len(name) since applies to whole array
+sort gradebook by (midterm + final) / 2.
+# XXX sort students by map(len, name)
+
+# count -- just use builtin aggregation
+from students select count(name) by favorite_color
+
+# bin -- builtin; bar is incorrectly defined for just time types (needs int)
+# XXX from students select count(name) by bar(age, 5)
+
+# pivotTable -- no such function and no immediate plans to have one
+
+# groupBy -- builtin; missing map() function
+# XXX from students select mean(map(len, name)) by map(color_temp, favorite_color)
+
+# completeCases -- just compare a value to itself since nil always gives false
+students_missing.age == students_missing.age
+# XXX is_nil(students_missing.age)
+
+# dropna -- no such function and no immediate plans to have one
+
+# fillna -- no current mechanism
+# XXX from students_missing update fill(favorite_color, "white")
+
+# pivotLonger -- no such function and no immediate plans to have one
+
+# pivotWider -- no such function and no immediate plans to have one
+
+# flatten -- not applicable since nested structures aren't available
+
+# transformColumn -- operations on columns are builtin, but missing demo features
+# XXX from students update name = map(add_last_name, name)
+
+# renameColumns -- no explicit function; must take all columns manually
+from students select first_name = name, age, preferred_color = favorite_color
+
+# find -- no such function and no immediate plans to have one
+
+# groupByRetentive -- no such function and no immediate plans to have one
+
+# groupBySubtractive -- no such function and no immediate plans to have one
+
+# update -- functionality builtin; must take all columns manually
+from gradebook select name, age, quiz1, quiz2, midterm >= 85, quiz3, quiz4, final >= 85
+# XXX from gradebook update midterm >= 85, final >= 85
+
+# select -- builtin
+from gradebook select name, (midterm + final) / 2.
+
+# selectMany -- no such function and no immediate plans to have one
+
+# groupJoin -- not clear what the point of this is; joins and aggregations exist already
+
+# join -- left and asof are builtin; no plans for outer or union joins
+

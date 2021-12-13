@@ -1,0 +1,11 @@
+# It's certainly possible to define a type and then add the values to an object.
+# But since Empirical permits static typing via load(), this is much easier:
+
+let students = load("students.csv")
+let students_missing = load("students_missing.csv")
+let employees = load("employees.csv")
+let departments = load("departments.csv")
+let jelly_anon = load("jelly_anon.csv")
+let jelly_named = load("jelly_named.csv")
+let gradebook = load("gradebook.csv")
+let gradebook_missing = load("gradebook_missing.csv")
