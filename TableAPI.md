@@ -1696,7 +1696,7 @@ Consumes an existing `Table` and produces a new `Table` with the named columns u
 | "Bob"   | "kid"      | "blue"         |
 | "Alice" | "teenager" | "green"        |
 | "Eve"   | "teenager" | "red"          |
-> abstractFinal =
+> didWellInFinal =
     function(r):
       [row:
         ("midterm", 85 <= getValue(r, "midterm"))

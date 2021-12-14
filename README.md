@@ -20,13 +20,15 @@ accomplish and what the following components are about.
 
 ## Submissions
 
-To submit an implementation of B2T2, open a pull request with a new folder for
-the `Competitors/` directory. The folder should include at least two things:
+To submit an implementation of B2T2, open a pull request with a new folder in
+the `Media/` directory for your programming medium (which might be a language,
+a theoretical model, or some other way of expressing tabular programs).
+The folder should include at least two things:
 
 - code that addresses the main components of B2T2 (Tables, API, Example Programs, Errors)
 - a datasheet describing the implementation
 
-Refer to [`Competitors/TypeScript`](Competitors/TypeScript) for an example.
+Refer to [`Media/TypeScript`](Media/TypeScript) for an example.
 
 ## Citation
 
