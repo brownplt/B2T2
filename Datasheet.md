@@ -1,5 +1,10 @@
 ## Reference
 
+> Q. Where can we learn about the programming medium covered by this datasheet?
+> (Feel free to link to multiple kinds of artifacts: repositories, papers, videos, etc.
+> Please also include version information where applicable.)
+
+
 > Q. What is the URL of the version of the benchmark being used?
 
 
