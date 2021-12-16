@@ -1,12 +1,20 @@
 ## Reference
 
+> Q. Where can we learn about the programming medium covered by this datasheet?
+> (Feel free to link to multiple kinds of artifacts: repositories, papers, videos, etc.
+> Please also include version information where applicable.)
+
+https://www.empirical-soft.com
+
+Version 0.6.9
+
 > Q. What is the URL of the version of the benchmark being used?
 
-https://github.com/brownplt/B2T2/tree/cf4cd8daf3feb5f60df4a4a6ac8f09f22720b52b
+https://github.com/brownplt/B2T2/tree/74c604d3c0e1ff96428e6db9e29838a3920144f4
 
 > Q. On what date was this version of the datasheet last updated?
 
-2021-12-11
+2021-12-15
 
 > Q. If you are not using the latest benchmark available on that date, please explain why not.
 
@@ -103,7 +111,7 @@ Empirical currently only offers `select` operations on a table. It needs `update
  - `renameColumns`
  - `update`
 
-Additionally, Empirical needs a `map()` function since table operations assume that expressions operate on vectors.
+Additionally, Empirical needs a `map()` function since table operations assume that expressions operate on vectors. This would require a more powerful type system (eg., Hindley-Milner).
 
 Also, Empirical needs `desc` in the `sort` operation.
 
@@ -129,7 +137,7 @@ Empirical's lack of nested structures eliminates:
  - `groupByRetentive`
  - `groupBySubtractive`
 
-Column names cannot be accessed as string elements since that is the opposite of static typing. Empirical's metaprogramming does include a `compile()` routine that can handle any string expression that results in valid Empirical code at compile time. The language needs more robust string functions though to finish several of the examples:
+Empirical does not represent column names as string values. That said, Empirical's `compile()` routine can handle any string expression that results in valid Empirical code at compile time. Unfortunately, Empirical's string routines are fairly non-existent, which eliminates:
 
  - `pHackingHomogeneous`
  - `pHackingHeterogeneous`
@@ -188,17 +196,17 @@ See above.
 
 Good ol' static typing caused the invalid names and mismatched types to be reported at compile time:
 
-- `midFinal`
-- `favoriteColor`
-- `employeeToDepartment`
+ - `midFinal`
+ - `pieCount`
+ - `brownGetAcne`
+ - `favoriteColor`
+ - `employeeToDepartment`
 
 > Q. Which error situations are prevented from being constructed? How?
 
 The way Empirical expresses table operations means that some of the error situations are not even possible to encode:
 
  - `blackAndWhite`
- - `pieCount`
- - `brownGetAcne`
  - `brownJellybeans`
 
 > Q. For each error situation that is at least partially expressible, what is the quality of feedback to the programmer?

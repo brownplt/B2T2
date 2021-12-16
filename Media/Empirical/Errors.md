@@ -122,7 +122,7 @@ Since the header row is ignored, there are no issues.
 
 ### midFinal
 
-The missing field is identified at compile time.
+The non-existent field is identified at compile time.
 
 ```
 >>> gradebook.mid
@@ -155,11 +155,34 @@ The error version can't be represented in Empirical.
 
 ### pieCount
 
-The error version doesn't even make sense in Empirical.
+The non-existent field is identified at compile time.
+
+```
+>>> let chart = from jelly_anon select count=count(get_acne) by value=get_acne
+
+>>> chart.get_acne
+Error: get_acne is not a member
+
+>>> chart.count
+[5, 5]
+
+```
 
 ### brownGetAcne
 
-The error version doesn't even make sense in Empirical.
+The non-existent field is identified at compile time.
+
+```
+>>> let bg = from jelly_named select brown_and_get_acne = brown and get_acne
+
+>>> bg.brown and bg.get_acne
+Error: brown is not a member
+Error: get_acne is not a member
+
+>>> bg.brown_and_get_acne
+[false, false, false, false, false, false, false, true, false, false]
+
+```
 
 ### getOnlyRow
 
