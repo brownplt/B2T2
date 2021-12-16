@@ -1,0 +1,60 @@
+# initial tables
+let students = load("students.csv")
+let students_missing = load("students_missing.csv")
+let employees = load("employees.csv")
+let departments = load("departments.csv")
+let jelly_anon = load("jelly_anon.csv")
+let jelly_named = load("jelly_named.csv")
+let gradebook = load("gradebook.csv")
+let gradebook_missing = load("gradebook_missing.csv")
+
+# dotProduct -- trivial
+sum(gradebook.quiz1 * gradebook.quiz2)
+
+# sampleRows -- missing random()/sample() functions
+# XXX gradebook_missing[sample(range(len(gradebook_missing)), 2)]
+
+func fac(n: Int64):
+  var acc = 1, i = 1
+
+  while i <= n:
+    acc = acc * i
+    i = i + 1
+  end
+
+  return Float64(acc)
+end
+
+func fishers(xs: [Bool], ys: [Bool]):
+  let m = len(xs)
+  let xs_true = sum(Int64(xs))
+  let xs_false = m - xs_true
+
+  let n = len(ys)
+  let ys_true = sum(Int64(ys))
+  let ys_false = n - ys_true
+
+  let numerator = fac(xs_true + ys_true) * fac(xs_false + ys_false) * fac(m) * fac(n)
+  let denominator = fac(xs_true) * fac(xs_false) * fac(ys_true) * fac(ys_false) * fac(m + n)
+  return numerator / denominator
+end
+
+# pHackingHomogeneous -- no mechanism to access column names as strings outside compile() routine
+
+# pHackingHeterogeneous -- no mechanism to access column names as strings outside compile() routine
+
+# quizScoreFilter -- missing startswith() and unsplit() routines
+from gradebook select average_quiz = (quiz1 + quiz2 + quiz3 + quiz4) / 4.0
+# XXX let mo = members_of(gradebook)
+# XXX let qs = mo[startswith(ms, "quiz")]
+# XXX let arithmetic = "(" + unsplit(qs, ", ") + ") / " + String(Float64(len(qs)))
+# XXX compile("from gradebook update average_quiz = " + arithmetic)
+
+# quizScoreSelect -- missing exec, tuples, matrices
+# XXX let qs = values(from gradebook exec quiz1, quiz2, quiz3, quiz4)
+# XXX mean(transpose(qs))
+
+# groupByRetentive -- no nested structures
+
+# groupBySubtractive -- no nested structures
+
