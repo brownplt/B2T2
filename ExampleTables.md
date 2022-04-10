@@ -90,7 +90,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 | "Eve"   | 13  | 7     | 9     | 84      | 8     | 8     | 77    |
 ```
 
-## `gradebookMissing`: a gradebook table with some missing values.
+## `gradebookMissing`: a gradebook table with some missing values
 
 ```lua
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
