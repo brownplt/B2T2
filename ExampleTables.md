@@ -80,7 +80,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 | "Nicholas" | false    | true  | false | false | false | true   | true  | false  | true  | false  |
 ```
 
-## `gradebook`: a gradebook table with no missing values.
+## `gradebook`: a gradebook table with no missing values
 
 ```lua
 | name    | age | quiz1 | quiz2 | midterm | quiz3 | quiz4 | final |
