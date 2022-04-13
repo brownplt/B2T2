@@ -16,7 +16,7 @@ This example defines a function that computes the dot-product of two numeric col
 > dotProduct =
     function(t, c1, c2):
       ns = getColumn(t, c1)
-      ms = getColumn(t, c1)
+      ms = getColumn(t, c2)
       sum(map(range(nrows(t)),
         function(i):
           ns[i] * ms[i]
