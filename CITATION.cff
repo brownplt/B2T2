@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Lu"
+  given-names: "Kuang-Chen"
+  orcid: "https://orcid.org/0000-0001-6502-9275"
+- family-names: "Greenman"
+  given-names: "Ben"
+  orcid: "https://orcid.org/0000-0001-7078-9287"
+- family-names: "Krishnamurthi"
+  given-names: "Shriram"
+  orcid: "https://orcid.org/0000-0001-5184-1975"
+title: "B2T2"
+version: 1.0.0
+doi: 10.5281/zenodo.5496252
+date-released: 2022-04-23
+url: "https://github.com/brownplt/B2T2"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Lu"
+    given-names: "Kuang-Chen"
+    orcid: "https://orcid.org/0000-0001-6502-9275"
+  - family-names: "Greenman"
+    given-names: "Ben"
+    orcid: "https://orcid.org/0000-0001-7078-9287"
+  - family-names: "Krishnamurthi"
+    given-names: "Shriram"
+    orcid: "https://orcid.org/0000-0001-5184-1975"
+  doi: "10.22152/programming-journal.org/2022/6/8"
+  journal: "The Art, Science, and Engineering of Programming"
+  title: "Types for Tables: A Language Design Benchmark"
+  issue: 2
+  volume: 6
+  year: 2022
+  numpages: 26
