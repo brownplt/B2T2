@@ -41,7 +41,7 @@ To refer to this benchmark, please use the following citation:
    journal={The Art, Science, and Engineering of Programming},
    volume={6},
    number={2},
-   numpages={26},
+   pages={8:1--8:30},
    year={2022}
   }
 ```
