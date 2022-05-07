@@ -48,3 +48,17 @@ To refer to this benchmark, please use the following citation:
 
 You may, if you wish, refer to this repository in *addition*, but
 please do refer to the above paper.
+
+## What Makes Our Benchmark Good?
+
+We think B2T2 is reasonably good because it is fair, comprehensive, concise, and realistic.
+
+**Fairness**. A benchmark would be unfair if it was designed to favor some type systems. We collected operators from untyped languages, and we don't "own" a type system for tables, so there is no obvious problem when it comes to fairness.
+
+**Comprehensiveness**. A benchmark would be incomprehensive if it left out things that are obviously important. We have investigated widely used programming media, and also some educational materials. So we have made reasonable effort in including everything one would need in a realistic setting.
+
+**Conciseness**. Although we tried to be comprehensive, we also wanted to keep the benchmark within a reasonable size. So we kept important things but also compressed them. For example, if an operation is equivalent to a composition of other operations, the composition is not included.
+
+**Realistic**. We got operations from real libraries. 
+
+Future changes to B2T2 will be made with these perspectives in mind.
