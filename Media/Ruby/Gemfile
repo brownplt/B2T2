@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # gem 'sorbet-static-and-runtime'
+gem 'ruby2ruby'
 
 group :development, :test do
   gem 'rspec'

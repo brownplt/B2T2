@@ -1,3 +1,5 @@
+require './ensure_exception'
+require './require_exception'
 require './table'
 
 module TableAPI
@@ -5,8 +7,8 @@ module TableAPI
   def self.empty_table
     t = Table.new
 
-    raise "[Failed Ensure] schema(t) != [] | #{schema(t)} != []" unless schema(t) == []
-    raise "[Failed Ensure] row(t) != 0 | #{nrows(t)} != 0" unless nrows(t) == 0
+    assert_ensure { schema(t) != [] }
+    assert_ensure { nrows(t) != 0 }
 
     t
   end
@@ -34,23 +36,26 @@ module TableAPI
       # raise "[Failed Require] schema(r) is != schema(t1) | #{schema(r)} != #{schema(t1)}" unless schema(r) == schema(t1)
     end
 
-    raise "[Failed Ensure] schema(t2) != schema(t1) | #{schema(t2)} != #{schema(t1)}" unless schema(t2) == schema(t1)
-    raise "[Failed Ensure] nrows(t2) != nrows(t1) + length(rs) | #{nrows(t2)} != #{nrows(t1) + rs.size}" unless nrows(t2) == nrows(t1) + rs.size
+    assert_ensure { schema(t2) != schema(t1) }
+    assert_ensure { nrows(t2) != nrows(t1) + rs.size }
 
     t2
   end
 
   # addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table
   def self.add_column(t1, c, vs)
-    raise "[Failed Require] c is in headers(t1) | #{headers(t1)}" if headers(t1).member?(c)
-    raise "[Failed Require] length(vs) != nrows(t1) | #{vs.size} != #{nrows(t1)}" unless vs.size == nrows(t1)
+    # Rob's requirements
+    assert_require { !c[:column_name].instance_of?(String) }
+    assert_require { !c[:sort].instance_of?(String) }
+
+    # B2T2 requirements
+    assert_require { headers(t1).member?(c[:column_name]) }
+    assert_require { vs.size != nrows(t1) }
 
     t2 = t1.duplicate.tap do |t|
       t.add_header(c)
       i = 0
       t.rows.map! do |r|
-        # r.add_header(c)
-       
         r.add_cell(vs[i])
         i += 1
 
@@ -58,15 +63,27 @@ module TableAPI
       end
     end
 
-    raise "[Failed Ensure] header(t2) is equal to concat(header(t1), [c]) | #{headers(t2)} != #{headers(t1) + [c]}" unless headers(t2) == headers(t1) + [c]
-    # TODO: fix schema such that this method here has meaning. For now, a schema is essentially a wrapper around headers. So, indexing this does not make
-    #       a ton of sense. I am pretty sure I need to re-read definitions from the paper.
-    # headers(t1).each do |c|
-    #   raise "[Failed Ensure]" unless schema(t1)[c] == schema(t2)[c]
-    # end
-    # raise "[Failed Ensure]" unless schema(t2)[c].is_instance_of(vs[0].class)
-    raise "[Failed Ensure] nrows(t2) != nrows(t1) | #{nrows(t2)} != #{nrows(t1)}" unless nrows(t2) == nrows(t1)
+    assert_ensure { headers(t2) != headers(t1) + [c[:column_name]] }
+    headers(t1).each do |c|
+      assert_ensure { schema(t1).col(c) != schema(t2).col(c) }
+    end
+    assert_ensure { nrows(t2) != nrows(t1) }
+    assert_ensure { vs.any?{ |v| v.class.to_s != schema(t2).col(c[:column_name])[:sort] } }
 
     t2
+  end
+
+  # Especially hacky, but it works
+  def self.assert_require(&block)
+    file_name, line_number = block.source_location
+    message = IO.readlines(file_name)[line_number - 1].split("assert_require {")[1].split("}\n")[0].strip
+    raise RequireException.new "[Failed Require]: #{message}" if block.call
+  end
+
+  # Especially hacky, but it works
+  def self.assert_ensure(&block)
+    file_name, line_number = block.source_location
+    message = IO.readlines(file_name)[line_number - 1].split("assert_ensure {")[1].split("}\n")[0].strip
+    raise EnsureException.new "[Failed Ensure]: #{message}" if block.call
   end
 end
