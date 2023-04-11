@@ -1,8 +1,20 @@
 class Row
-  attr_accessor :schema, :value
+  attr_reader :schema, :values
 
-  def initialize(schema, value)
+  def initialize(schema, values)
     @schema = schema
-    @value = value
+    @values = values
+  end
+
+  def add_header(c)
+    @schema.add_header(c)
+  end
+
+  def add_value(v)
+    @values += [v]
+  end
+
+  def duplicate
+    Row.new(schema.duplicate, values.dup)
   end
 end

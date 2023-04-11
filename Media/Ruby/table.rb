@@ -1,8 +1,21 @@
 class Table
-  attr_accessor :rows, :schema
+  attr_accessor :rows
 
-  def initialize(schema: [], rows: [])
+  def initialize(schema: nil, rows: [])
     @rows = rows
     @schema = schema
+  end
+
+  def schema
+    @schema.nil? ? [] : @schema 
+  end
+
+  def add_header(c)
+    @schema = Schema.new if @schema.nil? || schema == []
+    @schema.add_header(c)
+  end
+
+  def duplicate
+    Table.new(schema: schema.nil? || schema == [] ? [] : schema.duplicate, rows: rows.map{ |r| r.duplicate} )
   end
 end
