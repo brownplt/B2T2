@@ -1,4 +1,7 @@
 class Schema
-  def initialize
+  attr_accessor :headers
+
+  def initialize(headers)
+    @headers = headers
   end
 end

@@ -1,8 +1,8 @@
 class Table
   attr_accessor :rows, :schema
 
-  def initialize(rows: [])
+  def initialize(schema: [], rows: [])
     @rows = rows
-    @schema = []
+    @schema = schema
   end
 end

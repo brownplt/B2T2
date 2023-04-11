@@ -1,10 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'sorbet-static-and-runtime'
+# gem 'sorbet-static-and-runtime'
 
 group :development, :test do
   gem 'rspec'
-  gem 'sorbet'
-  gem 'tapioca', require: false
+  # gem 'tapioca', require: false
 end
 

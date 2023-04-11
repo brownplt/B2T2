@@ -1,4 +1,5 @@
-# calculator_spec.rb
+require './row'
+require './schema'
 require './table_api'
 
 RSpec.describe TableAPI do
@@ -12,20 +13,34 @@ RSpec.describe TableAPI do
   end
 
   describe ".add_rows" do
-    context "original table is empty" do
-      it "creates a new table with an empty schema and no rows" do
-        original_table = TableAPI.empty_table
-        rows_to_add = ["some_row"]
+    let(:headers) { ["header_a", "header_b"]}
 
-        new_table = TableAPI.add_rows(original_table, rows_to_add)
-
-        expect(TableAPI.nrows(new_table)).to eq(1)
-      end
-    end
+    let(:schema) { Schema.new(headers)}
+    let(:row_a) { Row.new(schema, [1, true])}
+    let(:row_b) { Row.new(schema, [2, true])}
+    let(:row_c) { Row.new(schema, [3, false])}
 
     context "orginal table contains existing rows" do
-      it "creates a new table with an empty schema and no rows" do
-        expect(1).to eq(1)
+      context "it adds a row" do
+        it "creating a new table with two rows" do
+          original_table = Table.new(schema: schema, rows: [row_a])
+          rows_to_add = [row_b, row_c]
+  
+          new_table = TableAPI.add_rows(original_table, rows_to_add)
+  
+          expect(TableAPI.nrows(new_table)).to eq(3)
+        end
+      end
+
+      context "it adds no rows, an empty sequence" do
+        it "creating a new table with one rows" do
+          original_table = Table.new(rows: [row_a, row_b])
+          rows_to_add = []
+  
+          new_table = TableAPI.add_rows(original_table, rows_to_add)
+  
+          expect(TableAPI.nrows(new_table)).to eq(2)
+        end
       end
     end
   end

@@ -3,7 +3,12 @@ require './table'
 module TableAPI
   # emptyTable :: t:Table
   def self.empty_table
-    Table.new
+    t = Table.new
+
+    raise "[Failed Ensure] schema(t) != [] | #{schema(t)} != []" unless schema(t) == []
+    raise "[Failed Ensure] row(t) != 0 | #{nrows(t)} != 0" unless nrows(t) == 0
+
+    t
   end
 
   def self.schema(table)
@@ -15,11 +20,19 @@ module TableAPI
   end
 
   # addRows :: t1:Table * rs:Seq<Row> -> t2:Table
-  def self.add_rows(old_table, sequence_of_rows)
-    new_table = old_table.clone
+  def self.add_rows(t1, rs)
+    t2 = t1.dup.tap do |t|
+      t.rows += rs
+    end
 
-    new_table.rows.concat(sequence_of_rows)
+    # TODO: can we really call schema on both rows and tables?
+    rs.each do |r|
+      raise "[Failed Require] schema(r) is != schema(t1) | #{schema(r)} != #{schema(t1)}" unless schema(r) == schema(t1)
+    end
 
-    new_table
+    raise "[Failed Ensure] schema(t2) != schema(t1) | #{schema(t2)} != #{schema(t1)}" unless schema(t2) == schema(t1)
+    raise "[Failed Ensure] nrows(t2) != nrows(t1) + length(rs) | #{nrows(t2)} != #{nrows(t1) + rs.size}" unless nrows(t2) == nrows(t1) + rs.size
+
+    t2
   end
 end
