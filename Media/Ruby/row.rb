@@ -1,20 +1,16 @@
+# Row: an ordered sequence of cells
 class Row
-  attr_reader :schema, :values
+  attr_reader :cells
 
-  def initialize(schema, values)
-    @schema = schema
-    @values = values
+  def initialize(cells)
+    @cells = cells
   end
 
-  def add_header(c)
-    @schema.add_header(c)
-  end
-
-  def add_value(v)
-    @values += [v]
+  def add_cell(c)
+    @cells += [c]
   end
 
   def duplicate
-    Row.new(schema.duplicate, values.dup)
+    Row.new(cells.dup)
   end
 end

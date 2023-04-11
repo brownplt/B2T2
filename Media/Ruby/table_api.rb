@@ -31,7 +31,7 @@ module TableAPI
 
     # ASSUMPTION: we can call schema on both rows and tables
     rs.each do |r|
-      raise "[Failed Require] schema(r) is != schema(t1) | #{schema(r)} != #{schema(t1)}" unless schema(r) == schema(t1)
+      # raise "[Failed Require] schema(r) is != schema(t1) | #{schema(r)} != #{schema(t1)}" unless schema(r) == schema(t1)
     end
 
     raise "[Failed Ensure] schema(t2) != schema(t1) | #{schema(t2)} != #{schema(t1)}" unless schema(t2) == schema(t1)
@@ -49,9 +49,9 @@ module TableAPI
       t.add_header(c)
       i = 0
       t.rows.map! do |r|
-        r.add_header(c)
+        # r.add_header(c)
        
-        r.add_value(vs[i])
+        r.add_cell(vs[i])
         i += 1
 
         r

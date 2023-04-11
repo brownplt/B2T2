@@ -1,3 +1,4 @@
+require './cell'
 require './row'
 require './schema'
 require './table_api'
@@ -13,12 +14,15 @@ RSpec.describe TableAPI do
   end
 
   describe ".add_rows" do
-    let(:headers) { ["header_a", "header_b"]}
+    let(:headers) { [
+      { column_name: "header_a", sort: "number", order: 0 }, 
+      { column_name: "header_b", sort: "boolean", order: 1}
+    ]}
 
     let(:schema) { Schema.new(headers: headers)}
-    let(:row_a) { Row.new(schema, [1, true])}
-    let(:row_b) { Row.new(schema, [2, true])}
-    let(:row_c) { Row.new(schema, [3, false])}
+    let(:row_a) { Row.new([Cell.new(1), Cell.new(true)])}
+    let(:row_b) { Row.new([Cell.new(2), Cell.new(true)])}
+    let(:row_c) { Row.new([Cell.new(3), Cell.new(false)])}
 
     context "orginal table contains existing rows" do
       context "it adds a row" do
@@ -46,12 +50,14 @@ RSpec.describe TableAPI do
   end
 
   describe ".add_column" do
-    let(:headers) { ["header_a", "header_b"]}
-
+    let(:headers) { [
+      { column_name: "header_a", sort: "number", order: 0 }, 
+      { column_name: "header_b", sort: "boolean", order: 1}
+    ]}
     let(:schema) { Schema.new(headers: headers)}
-    let(:row_a) { Row.new(schema.clone, [1, true])}
-    let(:row_b) { Row.new(schema.clone, [2, true])}
-    let(:row_c) { Row.new(schema.clone, [3, false])}
+    let(:row_a) { Row.new([Cell.new(1), Cell.new(true)])}
+    let(:row_b) { Row.new([Cell.new(2), Cell.new(true)])}
+    let(:row_c) { Row.new([Cell.new(3), Cell.new(false)])}
 
     context "original table is empty" do
       # ASSUMPTION: if adding a column to an empty table, then we don't add an values

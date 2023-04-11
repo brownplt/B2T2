@@ -1,3 +1,4 @@
+# Table: an immutable, two part data structure: a schema and a rectangular collection of cells
 class Table
   attr_accessor :rows
 
