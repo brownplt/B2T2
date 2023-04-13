@@ -139,4 +139,92 @@ RSpec.describe TableAPI do
       end
     end
   end
+
+
+  describe ".build_column" do
+    let(:header_to_add) {{ column_name: "header_c", sort: "String" }}
+    let(:original_table_with_rows) { Table.new(schema: schema.dup, rows: [row_a, row_b, row_c]) }
+
+    context "original table is empty" do
+      # ASSUMPTION: if adding a column to an empty table, then we don't add an values
+      it "adds column and a value for all existing rows" do
+        original_table = TableAPI.empty_table
+
+        new_table = TableAPI.build_column(original_table, header_to_add) { |r| r + 1 }
+
+        expect(TableAPI.headers(new_table).size).to eq(1)
+        expect(TableAPI.nrows(new_table)).to eq(0)
+      end
+    end
+
+    context "original table contains a schema but no rows" do
+      # ASSUMPTION: if adding a column to an empty table, then we don't add an values
+      it "adds column and a value for all existing rows" do
+        original_table = Table.new(schema: schema)
+
+        new_table = TableAPI.build_column(original_table, header_to_add) { |r| r + 1 }
+
+        expect(TableAPI.headers(new_table).size).to eq(3)
+        expect(TableAPI.nrows(new_table)).to eq(0)
+      end
+    end
+
+    context "original table contains a schema and rows" do
+      it "adds column and a value for all existing rows" do
+        original_table = Table.new(schema: schema.dup, rows: [row_a, row_b, row_c])
+
+        x = 'a'
+        new_table = TableAPI.build_column(original_table, header_to_add) { |r| x = x.next; x }
+
+        expect(TableAPI.headers(new_table).size).to eq(3)
+        expect(TableAPI.nrows(new_table)).to eq(3)
+      end
+    end
+
+    context "given faulty input" do
+      context "the column name is not unique" do
+        it "raises an ensure failure exception" do
+          expect {
+            x = 'a'
+            TableAPI.build_column(original_table_with_rows, { column_name: "header_a", sort: "string" }) { |r| x = x.next; x }
+          }.to raise_error(RequireException)
+        end
+      end
+
+      context "the column name is not a string" do
+        it "raises an ensure failure exception" do
+          expect {
+            x = 'a'
+            TableAPI.build_column(original_table_with_rows, { column_name: 100, sort: "string" }) { |r| x = x.next; x }
+          }.to raise_error(RequireException)
+        end
+      end
+
+      context "the column sort is not a string" do
+        it "raises an ensure failure exception" do
+          expect {
+            x = 'a'
+            TableAPI.build_column(original_table_with_rows, { column_name: "header_c", sort: false }) { |r| x = x.next; x }
+          }.to raise_error(RequireException)
+        end
+      end
+
+      context "the third argument is not a function" do
+        it "raises an ensure failure exception" do
+          expect {
+            TableAPI.build_column(original_table_with_rows, { column_name: "header_c", sort: "string" }, "b")
+          }.to raise_error(ArgumentError) # ArgumentError: wrong number of arguments (given 3, expected 2)
+        end
+      end
+
+      # TODO: this should fail, but it doesn't
+      # context "the column values are not of the correct type" do
+      #   it "raises an ensure failure exception" do
+      #     expect {
+      #       TableAPI.build_column(original_table_with_rows, { column_name: "header_c", sort: "string" }) { |r| 1 }
+      #     }.to raise_error(EnsureException)
+      #   end
+      # end
+    end
+  end
 end

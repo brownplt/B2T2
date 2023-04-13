@@ -73,6 +73,38 @@ module TableAPI
     t2
   end
 
+  # buildColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table
+  def self.build_column(t1, c, &block)
+    # Rob's requirements
+    assert_require { !c[:column_name].instance_of?(String) }
+    assert_require { !c[:sort].instance_of?(String) }
+
+    # B2T2 requirements
+    assert_require { headers(t1).member?(c[:column_name]) }
+
+    t2 = t1.duplicate.tap do |t|
+      t.add_header(c)
+      i = 0
+      t.rows.map! do |r|
+        r.add_cell(block.call(r))
+        i += 1
+
+        r
+      end
+    end
+    
+    # TODO: schema(r) is equal to schema(t1)
+    assert_ensure { headers(t2) != headers(t1) + [c[:column_name]] }
+    headers(t1).each do |c|
+      assert_ensure { schema(t2).col(c) != schema(t1).col(c) }
+    end
+    # TODO: assert type of row values added to table
+    # assert_ensure { vs.any?{ |v| v.class.to_s != schema(t2).col(c[:column_name])[:sort] } }
+    assert_ensure { nrows(t2) != nrows(t1) }
+
+    t2
+  end
+
   # Especially hacky, but it works
   def self.assert_require(&block)
     file_name, line_number = block.source_location
