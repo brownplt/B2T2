@@ -14,11 +14,109 @@ Execute tests.
 bundle rspec .
 ```
 
-## How to Execute Static Type Checker (Sorbet)
+***
 
-For this project, we used [Sorbet](https://sorbet.org/), a `"fast, powerful type checked designed for Ruby and built by Stripe"`.
+## Table API Implementation Progress
 
-To type check.
-```
-bundle exec srb tc 
-```
+#### Assumptions
+
+**Functions:**
+
+* [ ] even
+* [ ] length
+* [ ] schema
+* [ ] range
+* [ ] concat
+* [ ] startsWith
+* [ ] average
+* [ ] filter
+* [ ] map
+* [ ] removeDuplicates
+* [ ] removeAll
+* [ ] colNameOfNumber
+
+
+**Relations:**
+
+* [ ] x has no duplicates
+* [ ] x is equal to y
+* [ ] x is (not) in y
+* [ ] x is a subsequence of y
+* [ ] x is of sort y
+* [ ] x is y
+* [ ] x is a categorical sort
+* [ ] x is (non-)negative
+* [ ] x is equal to the sort of y
+* [ ] x is the sort of elements of y
+* [ ] x is equal to y with all a_i replaced with b_i
+
+#### Constructors
+* [ ] emptyTable
+* [ ] addRows
+* [ ] addColumn
+* [ ] buildColumn
+* [ ] vcat
+* [ ] hcat
+* [ ] values
+* [ ] crossJoin
+* [ ] leftJoin
+
+#### Properties
+
+* [ ] nrows
+* [ ] ncols
+* [ ] header
+
+#### Access Subcomponents
+
+* [ ] getRow
+* [ ] getValue
+* [ ] getColumn (overloading 1 & 2)
+
+#### Subtable
+
+* [ ] selectRows (overloading 1 & 2)
+* [ ] selectColumns (overloading 1 & 2 & 3)
+* [ ] head
+* [ ] distinct
+* [ ] dropColumn
+* [ ] dropColumns
+* [ ] tfilter
+
+#### Ordering
+
+* [ ] tsort
+* [ ] sortByColumns
+* [ ] orderBy
+
+#### Aggregate
+
+* [ ] count
+* [ ] bin
+* [ ] piviotTable
+* [ ] groupBy
+
+#### Missing Values
+
+* [ ] completeCases
+* [ ] dropna
+* [ ] fillna
+
+#### Data Cleaning
+
+* [ ] pivotLonger
+* [ ] pivotWider
+
+#### Utilities
+
+* [ ] flatten
+* [ ] transformColumn
+* [ ] renameColumns
+* [ ] find
+* [ ] groupByRetentive
+* [ ] grouoBySubtractive
+* [ ] update
+* [ ] select
+* [ ] selectMany
+* [ ] groupJoin
+* [ ] join

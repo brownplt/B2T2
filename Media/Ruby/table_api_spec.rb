@@ -148,7 +148,6 @@ RSpec.describe TableAPI do
     end
   end
 
-
   describe ".build_column" do
     let(:header_to_add) {{ column_name: "header_c", sort: "String" }}
     let(:original_table_with_rows) { Table.new(schema: schema.dup, rows: [row_a, row_b, row_c]) }
