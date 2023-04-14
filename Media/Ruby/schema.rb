@@ -16,7 +16,7 @@ class Schema
     @headers += [c]
   end
 
-  def headers
+  def column_names
     @headers.map do |h| 
       h[:column_name]
     end
@@ -28,5 +28,16 @@ class Schema
 
   def duplicate
     Schema.new(headers: @headers.dup)
+  end
+
+  def ==(other)
+    return @headers == [] if other == []
+    return false if @headers.size != other.headers.size
+    
+    @headers.each_with_index do |header, i|
+      return false if other.headers[i] != header
+    end
+
+    true
   end
 end
