@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Cell: a container for data (which may be empty)
 class Cell
   attr_accessor :value

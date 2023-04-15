@@ -24,7 +24,7 @@ bundle rspec .
 
 * [x] even
 * [x] length
-* [x] schema
+* [x] schema (lives on the table class)
 * [x] range
 * [x] concat
 * [x] startsWith
