@@ -63,9 +63,9 @@ bundle rspec .
 
 #### Properties
 
-* [ ] nrows
-* [ ] ncols
-* [ ] header
+* [x] nrows
+* [x] ncols
+* [x] header
 
 #### Access Subcomponents
 

@@ -1,20 +1,20 @@
 module Basics
   # consumes an integer and returns a boolean
-  def self.even(number)
+  def even(number)
     assert_type_number(number)
 
     number % 2 == 0
   end 
 
   # consumes a sequence and measures its length
-  def self.length(sequence)
+  def length(sequence)
     assert_type_sequence(sequence)
 
     sequence.size
   end
 
   # extracts the schema of a table
-  def self.schema(table)
+  def schema(table)
     assert_type_table(table)
 
     table.schema
@@ -22,14 +22,14 @@ module Basics
 
   # TODO: is this the desired definition of range?
   # consumes a number and produces a sequence of valid indices
-  def self.range(number)
+  def range(number)
     assert_type_number(number)
 
     (0 ... number).to_a
   end
 
   # concatenates two sequences or two strings
-  def self.concat(value_a, value_b)
+  def concat(value_a, value_b)
     assert_types_match(value_a, value_b)
     assert_type_sequence_or_string(value_a)
 
@@ -37,7 +37,7 @@ module Basics
   end
 
   # checks whether a string starts with another string
-  def self.starts_with(string_value, start_value)
+  def starts_with(string_value, start_value)
     assert_type_string(string_value)
     assert_type_string(start_value)
 
@@ -45,7 +45,7 @@ module Basics
   end
 
   # computes the average of a sequence of numbers
-  def self.average(sequence_of_numbers)
+  def average(sequence_of_numbers)
     assert_type_sequence(sequence_of_numbers)
 
     return 0 unless sequence_of_numbers.size > 0
@@ -61,21 +61,21 @@ module Basics
   end
 
   # the conventional sequence (e.g. lists) filter
-  def self.filter(sequence, &block)
+  def filter(sequence, &block)
     assert_type_sequence(sequence)
 
     sequence.select { |x| block.call(x) }
   end
 
   # the conventional sequence (e.g. lists) map
-  def self.map(sequence, &block)
+  def map(sequence, &block)
     assert_type_sequence(sequence)
 
     sequence.map { |x| block.call(x) }
   end
 
   # consumes a sequence and produces a subsequence with all duplicated elements removed
-  def self.remove_duplicates(sequence)
+  def remove_duplicates(sequence)
     assert_type_sequence(sequence)
 
     memoize = {}
@@ -89,7 +89,7 @@ module Basics
   end
 
   # consumes two sequences and produces a subsequence of the first input, removing all elements that also appear in the second input
-  def self.remove_all(sequence_a, sequence_b)
+  def remove_all(sequence_a, sequence_b)
     assert_type_sequence(sequence_a)
     assert_type_sequence(sequence_b)
 
@@ -100,7 +100,7 @@ module Basics
 
   # TODO: figure out what the inputs should be
   # converts a `Number` to a `ColName`
-  def self.col_name_of_number(schema, number)
+  def col_name_of_number(schema, number)
     assert_type_schema(schema)
     assert_type_number(number)
     raise ArgumentError.new("number is greater than number of columns") if schema.headers.size < number
@@ -111,31 +111,31 @@ module Basics
   end
 
   #### helpers specific to this class ####
-  def self.assert_type_number(number)
+  def assert_type_number(number)
     raise ArgumentError.new("expected an int or float") unless number.is_a?(Integer) || number.is_a?(Float)
   end
 
-  def self.assert_type_sequence(sequence)
+  def assert_type_sequence(sequence)
     raise ArgumentError.new("expected a sequence") unless sequence.is_a?(Array)
   end
 
-  def self.assert_type_string(string)
+  def assert_type_string(string)
     raise ArgumentError.new("expected a string") unless string.is_a?(String)
   end
 
-  def self.assert_type_table(table)
+  def assert_type_table(table)
     raise ArgumentError.new("expected a table") unless table.is_a?(Table)
   end
 
-  def self.assert_type_schema(schema)
+  def assert_type_schema(schema)
     raise ArgumentError.new("expected a schema") unless schema.is_a?(Schema)
   end
 
-  def self.assert_type_sequence_or_string(value)
+  def assert_type_sequence_or_string(value)
     raise ArgumentError.new("expected a sequence or string") unless value.is_a?(Array) || value.is_a?(String)
   end
 
-  def self.assert_types_match(value_a, value_b)
+  def assert_types_match(value_a, value_b)
     raise ArgumentError.new("expected types to match") unless value_a.class == value_b.class
   end
 end

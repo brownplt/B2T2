@@ -4,11 +4,13 @@ require './table'
 require './table_api'
 
 RSpec.describe Basics do
+  include Basics
+
   describe '.even' do
     context 'when input is not a number' do
       it 'fails' do
         expect{
-          Basics.even("hello")
+          even("hello")
       }.to raise_error ArgumentError
       end
     end
@@ -16,33 +18,33 @@ RSpec.describe Basics do
     context 'when negative' do
       context 'when odd' do
         it 'is not even' do
-          expect(Basics.even(-1)).to be false
+          expect(even(-1)).to be false
         end
       end
   
       context 'when even' do
         it 'is even' do
-          expect(Basics.even(-2)).to be true
+          expect(even(-2)).to be true
         end
       end
     end
 
     context 'when zero' do
       it 'is even' do
-        expect(Basics.even(0)).to be true
+        expect(even(0)).to be true
       end
     end
 
     context 'when positive' do
       context 'when odd' do
         it 'is not even' do
-          expect(Basics.even(11)).to be false
+          expect(even(11)).to be false
         end
       end
   
       context 'when even' do
         it 'is even' do
-          expect(Basics.even(10)).to be true
+          expect(even(10)).to be true
         end
       end
     end
@@ -51,26 +53,26 @@ RSpec.describe Basics do
   describe '.length' do
     context 'when sequence has no elements' do
       it 'return length of 0' do
-        expect(Basics.length([])).to be 0
+        expect(length([])).to be 0
       end
     end
 
     context 'when sequence has a single element' do
       it 'return length of 0' do
-        expect(Basics.length([1])).to be 1
+        expect(length([1])).to be 1
       end
     end
 
     context 'when sequence has numerous elements' do
       it 'return length of 0' do
-        expect(Basics.length([1, 2, 3, 4])).to be 4
+        expect(length([1, 2, 3, 4])).to be 4
       end
     end
 
     context 'when input is not a sequence' do
       it 'fails' do
         expect {
-          Basics.length("a")
+          length("a")
         }.to raise_error(ArgumentError)
       end
     end
@@ -80,7 +82,7 @@ RSpec.describe Basics do
     context 'when input is not a table' do
       it 'fails' do
         expect {
-          Basics.schema("a")
+          schema("a")
         }.to raise_error(ArgumentError)
       end
     end
@@ -90,7 +92,7 @@ RSpec.describe Basics do
         it 'returns an empty schema' do
           table = TableAPI.empty_table
 
-          expect(Basics.schema(table)).to eq([])
+          expect(schema(table)).to eq([])
         end
       end
 
@@ -102,7 +104,7 @@ RSpec.describe Basics do
           ])
           table = Table.new(schema: schema)
 
-          expect(Basics.schema(table)).to eq(schema)
+          expect(schema(table)).to eq(schema)
         end
       end
     end
@@ -112,7 +114,7 @@ RSpec.describe Basics do
     context 'when input is not a number' do
       it 'fails' do
         expect {
-          Basics.range("a")
+          range("a")
         }.to raise_error(ArgumentError)
       end
     end
@@ -120,19 +122,19 @@ RSpec.describe Basics do
     context 'when input is valid' do
       context 'when range is 0' do
         it 'returns an empty array' do
-          expect(Basics.range(0)).to eq([])
+          expect(range(0)).to eq([])
         end
       end
 
       context 'when range is 1' do
         it 'returns an array of just one index' do
-          expect(Basics.range(1)).to eq([0])
+          expect(range(1)).to eq([0])
         end
       end
 
       context 'when range is 100' do
         it 'returns an array of 100 indecies where the first is 0 and the last is 99' do
-          actual = Basics.range(100)
+          actual = range(100)
 
           expect(actual.size).to eq(100)
           expect(actual[0]).to eq(0)
@@ -146,7 +148,7 @@ RSpec.describe Basics do
     context 'when input is not a string or array' do
       it 'fails' do
         expect {
-          Basics.concat("a", 1)
+          concat("a", 1)
         }.to raise_error(ArgumentError)
       end
     end
@@ -154,7 +156,7 @@ RSpec.describe Basics do
     context "when inputs don't match" do
       it 'fails' do
         expect {
-          Basics.range("a", ["a"])
+          range("a", ["a"])
         }.to raise_error(ArgumentError)
       end
     end
@@ -165,7 +167,7 @@ RSpec.describe Basics do
             value_a = ""
             value_b = ""
 
-            actual = Basics.concat(value_a, value_b)
+            actual = concat(value_a, value_b)
             expected = ""
 
             expect(actual).to eq(expected)
@@ -177,7 +179,7 @@ RSpec.describe Basics do
           value_a = ""
           value_b = "b"
 
-          actual = Basics.concat(value_a, value_b)
+          actual = concat(value_a, value_b)
           expected = "b"
 
           expect(actual).to eq(expected)
@@ -189,7 +191,7 @@ RSpec.describe Basics do
           value_a = "a"
           value_b = ""
 
-          actual = Basics.concat(value_a, value_b)
+          actual = concat(value_a, value_b)
           expected = "a"
 
           expect(actual).to eq(expected)
@@ -201,7 +203,7 @@ RSpec.describe Basics do
           value_a = "ab"
           value_b = "cd"
 
-          actual = Basics.concat(value_a, value_b)
+          actual = concat(value_a, value_b)
           expected = "abcd"
 
           expect(actual).to eq(expected)
@@ -215,7 +217,7 @@ RSpec.describe Basics do
           value_a = []
           value_b = []
 
-          actual = Basics.concat(value_a, value_b)
+          actual = concat(value_a, value_b)
           expected = []
 
           expect(actual).to eq(expected)
@@ -227,7 +229,7 @@ RSpec.describe Basics do
           value_a = []
           value_b = [2]
 
-          actual = Basics.concat(value_a, value_b)
+          actual = concat(value_a, value_b)
           expected = [2]
 
           expect(actual).to eq(expected)
@@ -239,7 +241,7 @@ RSpec.describe Basics do
           value_a = [1]
           value_b = []
 
-          actual = Basics.concat(value_a, value_b)
+          actual = concat(value_a, value_b)
           expected = [1]
 
           expect(actual).to eq(expected)
@@ -251,7 +253,7 @@ RSpec.describe Basics do
           value_a = [1, 2]
           value_b = [3, 4]
 
-          actual = Basics.concat(value_a, value_b)
+          actual = concat(value_a, value_b)
           expected = [1, 2, 3, 4]
 
           expect(actual).to eq(expected)
@@ -264,7 +266,7 @@ RSpec.describe Basics do
     context 'when string value is not a string' do
       it 'fails' do
         expect {
-          Basics.starts_with(10, "hel")
+          starts_with(10, "hel")
         }.to raise_error(ArgumentError)
       end
     end
@@ -272,7 +274,7 @@ RSpec.describe Basics do
     context "when starts with value is not a string" do
       it 'fails' do
         expect {
-          Basics.starts_with("hello", ["hel"])
+          starts_with("hello", ["hel"])
         }.to raise_error(ArgumentError)
       end
     end
@@ -280,32 +282,32 @@ RSpec.describe Basics do
     context "when both string value and start with value are strings" do
       context "when starts with is empty string" do
         it "always returns true" do
-          expect(Basics.starts_with("hello", "")).to be true
+          expect(starts_with("hello", "")).to be true
         end
       end
 
       context "when string value is an empty string" do
         it "returns false" do
-          expect(Basics.starts_with("", "hello")).to be false
+          expect(starts_with("", "hello")).to be false
         end
       end
 
       context "when both are empty strings" do
         it "returns true" do
-          expect(Basics.starts_with("", "")).to be true
+          expect(starts_with("", "")).to be true
         end
       end
 
       context "when neither are empty strings" do
         context "when starts with" do
           it "returns true" do
-            expect(Basics.starts_with("hello", "hel")).to be true
+            expect(starts_with("hello", "hel")).to be true
           end
         end
 
         context "when does not start with" do
           it "returns false" do
-            expect(Basics.starts_with("hello", "heo")).to be false
+            expect(starts_with("hello", "heo")).to be false
           end
         end
       end
@@ -316,7 +318,7 @@ RSpec.describe Basics do
     context 'when input is not a sequence' do
       it 'fails' do
         expect {
-          Basics.average(10)
+          average(10)
         }.to raise_error(ArgumentError)
       end
     end
@@ -324,14 +326,14 @@ RSpec.describe Basics do
     context "when input sequence has a non-number" do
       it 'fails' do
         expect {
-          Basics.average([0, 1, 2, false, 3, 4, 5])
+          average([0, 1, 2, false, 3, 4, 5])
         }.to raise_error(ArgumentError)
       end
     end
 
     context "when empty sequence" do
       it "returns average as 0" do
-        actual = Basics.average([])
+        actual = average([])
         expected = 0
 
         expect(actual).to eq(expected)
@@ -341,7 +343,7 @@ RSpec.describe Basics do
     context "when integer only sequence" do
       context "calculates average of divisible total" do
         it "returns averages as an integer" do
-          actual = Basics.average([2, 2, 5])
+          actual = average([2, 2, 5])
           expected = 3
 
           expect(actual).to eq(expected)
@@ -350,7 +352,7 @@ RSpec.describe Basics do
 
       context "calculates average of undivisible total" do
         it "returns averages as an integer" do
-          actual = Basics.average([2, 1])
+          actual = average([2, 1])
           expected = 1
 
           expect(actual).to eq(expected)
@@ -361,7 +363,7 @@ RSpec.describe Basics do
     context "when float only sequence" do
       context "calculates average of divisible total" do
         it "returns averages as a float" do
-          actual = Basics.average([2.0, 2.0, 5.0])
+          actual = average([2.0, 2.0, 5.0])
           expected = 3.0
 
           expect(actual).to eq(expected)
@@ -370,7 +372,7 @@ RSpec.describe Basics do
 
       context "calculates average of undivisible total" do
         it "returns averages as a float" do
-          actual = Basics.average([2.0, 1.0])
+          actual = average([2.0, 1.0])
           expected = 1.5
 
           expect(actual).to eq(expected)
@@ -381,7 +383,7 @@ RSpec.describe Basics do
     context "when both integers and floats" do
       context "calculates average of divisible total" do
         it "returns averages as a float" do
-          actual = Basics.average([2, 2.0, 5.0])
+          actual = average([2, 2.0, 5.0])
           expected = 3.0
 
           expect(actual).to eq(expected)
@@ -390,7 +392,7 @@ RSpec.describe Basics do
 
       context "calculates average of undivisible total" do
         it "returns averages as a float" do
-          actual = Basics.average([2, 1.0])
+          actual = average([2, 1.0])
           expected = 1.5
 
           expect(actual).to eq(expected)
@@ -403,14 +405,14 @@ RSpec.describe Basics do
     context 'when input is not a sequence' do
       it 'fails' do
         expect {
-          Basics.filter(10)
+          filter(10)
         }.to raise_error(ArgumentError)
       end
     end
 
     context 'when sequence is empty' do
       it 'returns an empty sequence' do
-        actual = Basics.filter([]) { |x| x + 1 }
+        actual = filter([]) { |x| x + 1 }
         expected = []
 
         expect(actual).to eq(expected)
@@ -419,7 +421,7 @@ RSpec.describe Basics do
 
     context 'when sequence is homogenous' do
       it 'returns result of executing filter over each element in sequence' do
-        actual = Basics.filter([1, 2, 3, 4, 5]) { |x| x % 2 == 0 }
+        actual = filter([1, 2, 3, 4, 5]) { |x| x % 2 == 0 }
         expected = [2, 4]
 
         expect(actual).to eq(expected)
@@ -428,7 +430,7 @@ RSpec.describe Basics do
 
     context 'when sequence is heterogenous' do
       it 'returns result of executing filter over each element in sequence' do
-        actual = Basics.filter([1, "hello", false]) { |x| x.to_s == "false" }
+        actual = filter([1, "hello", false]) { |x| x.to_s == "false" }
         expected = [false]
 
         expect(actual).to eq(expected)
@@ -440,14 +442,14 @@ RSpec.describe Basics do
     context 'when input is not a sequence' do
       it 'fails' do
         expect {
-          Basics.map(10)
+          map(10)
         }.to raise_error(ArgumentError)
       end
     end
 
     context 'when sequence is empty' do
       it 'returns an empty sequence' do
-        actual = Basics.map([]) { |x| x + 1 }
+        actual = map([]) { |x| x + 1 }
         expected = []
 
         expect(actual).to eq(expected)
@@ -456,7 +458,7 @@ RSpec.describe Basics do
 
     context 'when sequence is homogenous' do
       it 'returns result of executing map over each element in sequence' do
-        actual = Basics.map([1, 2, 3, 4, 5]) { |x| x + 1 }
+        actual = map([1, 2, 3, 4, 5]) { |x| x + 1 }
         expected = [2, 3, 4, 5, 6]
 
         expect(actual).to eq(expected)
@@ -465,7 +467,7 @@ RSpec.describe Basics do
 
     context 'when sequence is heterogenous' do
       it 'returns result of executing map over each element in sequence' do
-        actual = Basics.map([1, "hello", false]) { |x| x.to_s }
+        actual = map([1, "hello", false]) { |x| x.to_s }
         expected = ["1", "hello", "false"]
 
         expect(actual).to eq(expected)
@@ -477,27 +479,27 @@ RSpec.describe Basics do
     context 'when input is not a sequence' do
       it 'fails' do
         expect {
-          Basics.remove_duplicates(10)
+          remove_duplicates(10)
         }.to raise_error(ArgumentError)
       end
     end
 
     context 'when sequence is empty' do
       it 'returns an empty sequence' do
-        expect(Basics.remove_duplicates([])).to eq([])
+        expect(remove_duplicates([])).to eq([])
       end
     end
 
     context 'when sequence is homogenous' do
       it 'returns a sequence without duplicates' do
-        expect(Basics.remove_duplicates([1, 2, 1, 3, 4, 2, 2, 2, 1])).to eq([1, 2, 3, 4])
+        expect(remove_duplicates([1, 2, 1, 3, 4, 2, 2, 2, 1])).to eq([1, 2, 3, 4])
       end
     end
 
     context 'when sequence is heterogenous' do
       context 'when only simple primitives' do
         it 'returns a sequence without duplicates' do
-          expect(Basics.remove_duplicates([1, 2, 1, 3, "4", "2", 2, true, 1, true])).to eq([1, 2, 3, "4", "2", true])
+          expect(remove_duplicates([1, 2, 1, 3, "4", "2", 2, true, 1, true])).to eq([1, 2, 3, "4", "2", true])
         end
       end
 
@@ -506,7 +508,7 @@ RSpec.describe Basics do
           table1 = TableAPI.empty_table
           table2 = TableAPI.empty_table
   
-          expect(Basics.remove_duplicates([1, 2, 1, table1, table1, "4", "2", 2, true, 1, true, table2])).to eq([1, 2, table1, "4", "2", true, table2])  
+          expect(remove_duplicates([1, 2, 1, table1, table1, "4", "2", 2, true, 1, true, table2])).to eq([1, 2, table1, "4", "2", true, table2])  
         end
        end
     end
@@ -516,7 +518,7 @@ RSpec.describe Basics do
     context 'when first input is not a sequence' do
       it 'fails' do
         expect {
-          Basics.remove_all(10, [10])
+          remove_all(10, [10])
         }.to raise_error(ArgumentError)
       end
     end
@@ -524,7 +526,7 @@ RSpec.describe Basics do
     context 'when second input is not a sequence' do
       it 'fails' do
         expect {
-          Basics.remove_all([10], 10)
+          remove_all([10], 10)
         }.to raise_error(ArgumentError)
       end
     end
@@ -534,7 +536,7 @@ RSpec.describe Basics do
         sequence_a = []
         sequence_b = [false, 'a', 10]
 
-        actual = Basics.remove_all(sequence_a, sequence_b)
+        actual = remove_all(sequence_a, sequence_b)
         expected = []
 
         expect(actual).to eq(expected)
@@ -546,7 +548,7 @@ RSpec.describe Basics do
         sequence_a = [false, 'a', 10]
         sequence_b = []
 
-        actual = Basics.remove_all(sequence_a, sequence_b)
+        actual = remove_all(sequence_a, sequence_b)
         expected = [false, 'a', 10]
 
         expect(actual).to eq(expected)
@@ -559,7 +561,7 @@ RSpec.describe Basics do
           sequence_a = [false, 'a', 10]
           sequence_b = [false, 'a', 10]
   
-          actual = Basics.remove_all(sequence_a, sequence_b)
+          actual = remove_all(sequence_a, sequence_b)
           expected = []
   
           expect(actual).to eq(expected)
@@ -571,7 +573,7 @@ RSpec.describe Basics do
           sequence_a = [8, false, 9, 'a', 10, 11, 12]
           sequence_b = [false, 'a', 10, 10, true]
 
-          actual = Basics.remove_all(sequence_a, sequence_b)
+          actual = remove_all(sequence_a, sequence_b)
           expected = [8, 9, 11, 12]
 
           expect(actual).to eq(expected)
@@ -586,7 +588,7 @@ RSpec.describe Basics do
           sequence_a = [8, false, 9, 'a', 10, table1, table2]
           sequence_b = [false, 'a', 10, 10, true, table2, table2]
   
-          actual = Basics.remove_all(sequence_a, sequence_b)
+          actual = remove_all(sequence_a, sequence_b)
           expected = [8, 9, table1]
   
           expect(actual).to eq(expected)
@@ -605,7 +607,7 @@ RSpec.describe Basics do
     context 'when first input is not a schema' do
       it 'fails' do
         expect {
-          Basics.col_name_of_number(10, 1)
+          col_name_of_number(10, 1)
         }.to raise_error(ArgumentError)
       end
     end
@@ -613,7 +615,7 @@ RSpec.describe Basics do
     context 'when second input is not a number' do
       it 'fails' do
         expect {
-          Basics.col_name_of_number(non_empty_schema, "1")
+          col_name_of_number(non_empty_schema, "1")
         }.to raise_error(ArgumentError)
       end
     end
@@ -621,7 +623,7 @@ RSpec.describe Basics do
     context 'when second input is a number beyond size of schema' do
       it 'fails' do
         expect {
-          Basics.col_name_of_number(non_empty_schema, 3)
+          col_name_of_number(non_empty_schema, 3)
         }.to raise_error(ArgumentError)
       end
     end
@@ -629,21 +631,21 @@ RSpec.describe Basics do
     context 'when second input is a number less than or equal to zero' do
       it 'fails' do
         expect {
-          Basics.col_name_of_number(non_empty_schema, 0)
+          col_name_of_number(non_empty_schema, 0)
         }.to raise_error(ArgumentError)
       end
 
       it 'fails' do
         expect {
-          Basics.col_name_of_number(non_empty_schema, -1)
+          col_name_of_number(non_empty_schema, -1)
         }.to raise_error(ArgumentError)
       end
     end
 
     context "when non-empty schema and valid number" do
       it "returns the column name" do
-        expect(Basics.col_name_of_number(non_empty_schema, 1)).to eq("header_a")
-        expect(Basics.col_name_of_number(non_empty_schema, 2)).to eq("header_b")
+        expect(col_name_of_number(non_empty_schema, 1)).to eq("header_a")
+        expect(col_name_of_number(non_empty_schema, 2)).to eq("header_b")
       end
     end
   end
