@@ -24,16 +24,16 @@ bundle rspec .
 
 * [x] even
 * [x] length
-* [ ] schema
-* [ ] range
-* [ ] concat
-* [ ] startsWith
-* [ ] average
-* [ ] filter
-* [ ] map
-* [ ] removeDuplicates
-* [ ] removeAll
-* [ ] colNameOfNumber
+* [x] schema
+* [x] range
+* [x] concat
+* [x] startsWith
+* [x] average
+* [x] filter
+* [x] map
+* [x] removeDuplicates
+* [x] removeAll
+* [x] colNameOfNumber
 
 
 **Relations:**
