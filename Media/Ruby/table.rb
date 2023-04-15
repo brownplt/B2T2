@@ -2,7 +2,7 @@
 class Table
   attr_accessor :rows
 
-  def initialize(schema: nil, rows: [])
+  def initialize(schema: Schema.new, rows: [])
     @rows = rows
     @schema = schema
   end

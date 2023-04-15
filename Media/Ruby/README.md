@@ -51,7 +51,7 @@ bundle rspec .
 * [ ] x is equal to y with all a_i replaced with b_i
 
 #### Constructors
-* [ ] emptyTable
+* [x] emptyTable
 * [ ] addRows
 * [ ] addColumn
 * [ ] buildColumn

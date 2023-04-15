@@ -12,6 +12,8 @@ RSpec.describe TableAPI do
   ]}
   let(:schema) { Schema.new(headers: headers)}
 
+  let(:empty_schema) { Schema.new }
+
   let(:headers2) { [
     { column_name: "header_c", sort: "number" }, 
     { column_name: "header_d", sort: "boolean" }
@@ -26,7 +28,7 @@ RSpec.describe TableAPI do
     it "creates a table with an empty schema and no rows" do
       table = TableAPI.empty_table
 
-      expect(TableAPI.schema(table)).to eq([])
+      expect(TableAPI.schema(table)).to eq(empty_schema)
       expect(TableAPI.nrows(table)).to eq(0)
     end
   end

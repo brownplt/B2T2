@@ -7,7 +7,7 @@ module TableAPI
   def self.empty_table
     t = Table.new
 
-    assert_ensure { schema(t) == [] }
+    assert_ensure { schema(t) == Schema.new }
     assert_ensure { nrows(t) == 0 }
 
     t
