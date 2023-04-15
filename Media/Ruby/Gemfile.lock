@@ -1,12 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    ParseTree (3.0.8)
-      RubyInline (>= 3.7.0)
-      sexp_processor (>= 3.0.0)
-    RubyInline (3.13.0)
-      ZenTest (~> 4.3)
-    ZenTest (4.12.1)
     diff-lcs (1.5.0)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
@@ -30,9 +24,9 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
-  ParseTree
   rspec
   ruby2ruby
 

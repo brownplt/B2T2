@@ -22,8 +22,8 @@ bundle rspec .
 
 **Functions:**
 
-* [ ] even
-* [ ] length
+* [x] even
+* [x] length
 * [ ] schema
 * [ ] range
 * [ ] concat
