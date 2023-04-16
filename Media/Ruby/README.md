@@ -69,9 +69,9 @@ bundle rspec .
 
 #### Access Subcomponents
 
-* [ ] getRow
-* [ ] getValue
-* [ ] getColumn (overloading 1 & 2)
+* [x] getRow
+* [x] getValue
+* [x] getColumn (overloading 1 & 2)
 
 #### Subtable
 
