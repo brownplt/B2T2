@@ -52,9 +52,9 @@ bundle rspec .
 
 #### Constructors
 * [x] emptyTable
-* [ ] addRows
-* [ ] addColumn
-* [ ] buildColumn
+* [x] addRows
+* [x] addColumn
+* [x] buildColumn
 * [ ] vcat
 * [ ] hcat
 * [ ] values
