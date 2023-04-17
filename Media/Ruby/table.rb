@@ -5,6 +5,9 @@ require './ensure_exception'
 require './require_exception'
 require './type_extensions'
 
+# rubocop:disable Metrics/ClassLength
+# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/MethodLength
 # Table: an immutable, two part data structure: a schema and a rectangular collection of cells
 class Table
   include Basics
@@ -41,19 +44,71 @@ class Table
     new_table
   end
 
-  def self.add_column; end
+  # MODIFIED: we include the sort of the column as well as the column name
+  # addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table
+  def self.add_column(table, column, values)
+    assert_require { table.header.none? { |h| h == column[:column_name] } }
+    assert_require { values.size == table.nrows }
 
-  def self.build_column; end
+    new_schema = Schema.new(headers: table.schema.headers + [column])
+    new_rows = table.rows.zip(values).map do |row, value|
+      row.schema = new_schema
+      row.cells << Cell.new(column[:column_name], value)
+    end
+    new_table = Table.new(schema: new_schema, rows: new_rows)
 
-  def self.vcat; end
+    assert_ensure { new_table.header == table.header + [column[:column_name]] }
+    assert_ensure { table.header.all? { |c| table.schema[c] == new_table.schema[c] } }
+    assert_ensure { values.all? { |v| v.is_a?(new_table.schema[column[:column_name]][:sort]) } }
+    assert_ensure { new_table.nrows == table.nrows }
 
-  def self.hcat; end
+    new_table
+  end
 
-  def self.values; end
+  # buildColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table
+  def self.build_column(table, column, &block)
+    assert_require { table.header.none? { |h| h == column[:column_name] } }
 
-  def self.cross_join; end
+    new_schema = Schema.new(headers: table.schema.headers + [column])
+    new_rows = table.rows.map do |row|
+      row.schema = new_schema
+      row.cells << Cell.new(column[:column_name], block.call(row))
 
-  def self.left_join; end
+      row
+    end
+    new_table = Table.new(schema: new_schema, rows: new_rows)
+
+    assert_ensure { new_table.header == table.header + [column[:column_name]] }
+    assert_ensure { table.header.all? { |c| table.schema[c] == new_table.schema[c] } }
+    assert_ensure do
+      new_table.rows.all? do |r|
+        new_table.get_value(r, column[:column_name]).is_a?(new_table.schema[column[:column_name]][:sort])
+      end
+    end
+    assert_ensure { new_table.nrows == table.nrows }
+
+    new_table
+  end
+
+  def self.vcat
+    raise NotImplementedError
+  end
+
+  def self.hcat
+    raise NotImplementedError
+  end
+
+  def self.values
+    raise NotImplementedError
+  end
+
+  def self.cross_join
+    raise NotImplementedError
+  end
+
+  def self.left_join
+    raise NotImplementedError
+  end
   ####################
 
   #### Properties ####
@@ -84,7 +139,6 @@ class Table
   end
 
   # getValue :: r:Row * c:ColName -> v:Value
-  # rubocop:disable Metrics/AbcSize
   def get_value(row, column_name)
     assert_type_string(column_name)
 
@@ -173,3 +227,5 @@ class Table
   end
   ####################
 end
+# rubocop:enable Metrics/ClassLength
+# rubocop:enable Metrics/MethodLength

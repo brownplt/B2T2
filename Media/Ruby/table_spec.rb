@@ -88,6 +88,99 @@ RSpec.describe Table do
         end
       end
     end
+
+    describe '.add_column' do
+      context 'when header is not unique' do
+        it 'fails the require' do
+          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          expect do
+            described_class.add_column(table, { column_name: 'header_a', sort: Integer }, [1, 2, 3])
+          end.to raise_error(RequireException)
+        end
+      end
+
+      context 'when number of rows does not match number of values' do
+        it 'fails the require' do
+          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          expect do
+            described_class.add_column(table, { column_name: 'header_d', sort: Integer }, [1, 2, 3, 4, 5, 6])
+          end.to raise_error(RequireException)
+        end
+      end
+
+      context 'when sort of row values does not match header' do
+        it 'fails the require' do
+          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          expect do
+            described_class.add_column(table, { column_name: 'header_d', sort: Integer }, [1, false, 3])
+          end.to raise_error(EnsureException)
+        end
+      end
+
+      context 'when table is empty' do
+        it 'adds column to the table' do
+          table = described_class.empty_table
+          new_table = described_class.add_column(table, { column_name: 'header_a', sort: Integer }, [])
+
+          expect(table.ncols).to eq(0)
+          expect(new_table.ncols).to eq(1)
+        end
+      end
+
+      context 'when table is non-empty' do
+        it 'adds column to the table' do
+          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          new_table = described_class.add_column(table, { column_name: 'header_d', sort: Integer }, [1, 2, 3])
+
+          expect(table.ncols).to eq(2)
+          expect(new_table.ncols).to eq(3)
+        end
+      end
+    end
+
+    describe '.build_column' do
+      context 'when header is not unique' do
+        it 'fails the require' do
+          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          expect do
+            described_class.build_column(table, { column_name: 'header_a', sort: Integer }) { |_i| false }
+          end.to raise_error(RequireException)
+        end
+      end
+
+      context 'when sort of row values does not match header' do
+        it 'fails the require' do
+          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          expect do
+            described_class.build_column(table, { column_name: 'header_d', sort: Integer }) { |_i| false }
+          end.to raise_error(EnsureException)
+        end
+      end
+
+      context 'when table is empty' do
+        it 'adds column to the table' do
+          table = described_class.empty_table
+          new_table = described_class.build_column(table, { column_name: 'header_a', sort: Integer }) do |r|
+            r.cells.size
+          end
+
+          expect(table.ncols).to eq(0)
+          expect(new_table.ncols).to eq(1)
+        end
+      end
+
+      context 'when table is non-empty' do
+        it 'adds column to the table' do
+          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          new_table = described_class.build_column(table, { column_name: 'header_d', sort: Integer }) do |r|
+            r.cells.size
+          end
+
+          expect(table.ncols).to eq(2)
+          expect(new_table.ncols).to eq(3)
+        end
+      end
+    end
   end
 
   describe 'properties' do

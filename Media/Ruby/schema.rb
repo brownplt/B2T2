@@ -14,6 +14,10 @@ class Schema
     @headers = headers
   end
 
+  def [](columen_name)
+    @headers.find { |header| header[:column_name] == columen_name }
+  end
+
   # SPEC VIOLATION
   def ==(other)
     return @headers == [] if other == []
