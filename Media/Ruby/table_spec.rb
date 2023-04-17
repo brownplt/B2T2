@@ -21,6 +21,75 @@ RSpec.describe Table do
   let(:row_b) { Row.new(schema: schema, cells: [Cell.new('header_a', 2), Cell.new('header_b', true)]) }
   let(:row_c) { Row.new(schema: schema, cells: [Cell.new('header_a', 3), Cell.new('header_b', false)]) }
 
+  describe 'constructor' do
+    describe '.empty_table' do
+      context 'when table is empty' do
+        it 'has no rows' do
+          table = described_class.empty_table
+          expect(table.rows).to eq([])
+        end
+
+        it 'has an empty schema' do
+          table = described_class.empty_table
+          expect(table.schema).to eq(Schema.new)
+        end
+      end
+    end
+
+    describe '.add_rows' do
+      context 'when table is empty' do
+        context 'when table schema does not match rows schema' do
+          it 'fails the require' do
+            table = described_class.empty_table
+            expect { described_class.add_rows(table, [row_a, row_b, row_c]) }.to raise_error(RequireException)
+          end
+        end
+
+        context 'when schemas match' do
+          it 'adds rows to the table' do
+            table = described_class.empty_table
+            new_table = described_class.add_rows(
+              table,
+              [
+                Row.new(schema: Schema.new, cells: []),
+                Row.new(schema: Schema.new, cells: []),
+                Row.new(schema: Schema.new, cells: [])
+              ]
+            )
+            expect(new_table.nrows).to eq(3)
+          end
+        end
+      end
+
+      context 'when table is non-empty' do
+        context 'when table schema does not match rows schema' do
+          it 'fails the require' do
+            table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+            expect do
+              described_class.add_rows(table, [Row.new(
+                schema: Schema.new(headers: [{ column_name: 'header_a', sort: Integer }]),
+                cells: [Cell.new('header_a', 1)]
+              )])
+            end.to raise_error(RequireException)
+          end
+        end
+
+        context 'when schemas match' do
+          it 'adds rows to the table' do
+            table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+            new_table = described_class.add_rows(table, [
+                                                   Row.new(
+                                                     schema: schema,
+                                                     cells: [Cell.new('header_a', 4), Cell.new('header_b', true)]
+                                                   )
+                                                 ])
+            expect(new_table.nrows).to eq(4)
+          end
+        end
+      end
+    end
+  end
+
   describe 'properties' do
     describe '#nrows' do
       context 'when table empty' do

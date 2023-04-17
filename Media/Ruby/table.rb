@@ -14,6 +14,11 @@ class Table
   # extracts the rows of a table
   attr_accessor :rows
 
+  def initialize(schema: Schema.new, rows: [])
+    @rows = rows
+    @schema = schema
+  end
+
   #### Constructors ####
   def self.empty_table
     t = Table.new
@@ -24,10 +29,31 @@ class Table
     t
   end
 
-  def initialize(schema: Schema.new, rows: [])
-    @rows = rows
-    @schema = schema
+  # addRows :: t1:Table * rs:Seq<Row> -> t2:Table
+  def self.add_rows(table, rows)
+    assert_require { rows.all? { |r| r.schema == table.schema } }
+
+    new_table = Table.new(schema: table.schema, rows: table.rows + rows)
+
+    assert_ensure { new_table.schema == table.schema }
+    assert_ensure { new_table.nrows == table.nrows + rows.size }
+
+    new_table
   end
+
+  def self.add_column; end
+
+  def self.build_column; end
+
+  def self.vcat; end
+
+  def self.hcat; end
+
+  def self.values; end
+
+  def self.cross_join; end
+
+  def self.left_join; end
   ####################
 
   #### Properties ####
