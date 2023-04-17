@@ -35,21 +35,6 @@ bundle rspec .
 * [x] removeAll
 * [x] colNameOfNumber
 
-
-**Relations:**
-
-* [ ] x has no duplicates
-* [ ] x is equal to y
-* [ ] x is (not) in y
-* [ ] x is a subsequence of y
-* [ ] x is of sort y
-* [ ] x is y
-* [ ] x is a categorical sort
-* [ ] x is (non-)negative
-* [ ] x is equal to the sort of y
-* [ ] x is the sort of elements of y
-* [ ] x is equal to y with all a_i replaced with b_i
-
 #### Constructors
 * [x] emptyTable
 * [x] addRows
