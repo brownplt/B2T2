@@ -49,16 +49,29 @@ To refer to this benchmark, please use the following citation:
 You may, if you wish, refer to this repository in *addition*, but
 please do refer to the above paper.
 
-## What Makes Our Benchmark Good?
 
-We think B2T2 is reasonably good because it is fair, comprehensive, concise, and realistic.
+## What Makes B2T2 Good?
 
-**Fairness**. A benchmark would be unfair if it was designed to favor some type systems. We collected operators from untyped languages, and we don't "own" a type system for tables, so there is no obvious problem when it comes to fairness.
+B2T2 strives to be fair, comprehensive, concise, and realistic:
 
-**Comprehensiveness**. A benchmark would be incomprehensive if it left out things that are obviously important. We have investigated widely used programming media, and also some educational materials. So we have made reasonable effort in including everything one would need in a realistic setting.
+- **Fairness**. A benchmark would be unfair if it was designed to favor some type
+  systems over others. Since B2T2 combines operators from untyped languages and
+  we (its authors) don't currently "own" a type system for tables, there is
+  no obvious problem when it comes to fairness.
 
-**Conciseness**. Although we tried to be comprehensive, we also wanted to keep the benchmark within a reasonable size. So we kept important things but also compressed them. For example, if an operation is equivalent to a composition of other operations, the composition is not included.
+- **Comprehensiveness**. A benchmark would be incomprehensive if it left out
+  things that are obviously important. B2T2 draws from several widely-used
+  programming media and also some educational materials in an effort to
+  cover all the bases.
 
-**Realistic**. We got operations from real libraries. 
+- **Conciseness**. Although we tried to be comprehensive, we also wanted to
+  keep B2T2 within a reasonable size. So we kept important things but
+  also compressed them. For example, if an operation is equivalent to a
+  composition of other operations, the composition is not included.
+
+- **Realistic**. An unrealistic benchmark would address synthetic or
+  hypothesized use-cases rather than real ones. B2T2 draws from existing
+  libraries to satisfy real needs.
 
 Future changes to B2T2 will be made with these perspectives in mind.
+
