@@ -8,6 +8,7 @@ require './schema'
 require './table'
 require './type_extensions'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 # rubocop:disable Metrics/BlockLength
 RSpec.describe Table do
   let(:headers) do
@@ -20,6 +21,18 @@ RSpec.describe Table do
   let(:row_a) { Row.new(schema: schema, cells: [Cell.new('header_a', 1), Cell.new('header_b', true)]) }
   let(:row_b) { Row.new(schema: schema, cells: [Cell.new('header_a', 2), Cell.new('header_b', true)]) }
   let(:row_c) { Row.new(schema: schema, cells: [Cell.new('header_a', 3), Cell.new('header_b', false)]) }
+  let(:rows) { [row_a, row_b, row_c] }
+
+  let(:headers2) do
+    [
+      { column_name: 'header_c', sort: String }
+    ]
+  end
+  let(:schema2) { Schema.new(headers: headers2) }
+  let(:row_d) { Row.new(schema: schema2, cells: [Cell.new('header_c', 'a')]) }
+  let(:row_e) { Row.new(schema: schema2, cells: [Cell.new('header_c', 'b')]) }
+  let(:row_f) { Row.new(schema: schema2, cells: [Cell.new('header_c', 'c')]) }
+  let(:rows2) { [row_d, row_e, row_f] }
 
   describe 'constructor' do
     describe '.empty_table' do
@@ -41,7 +54,7 @@ RSpec.describe Table do
         context 'when table schema does not match rows schema' do
           it 'fails the require' do
             table = described_class.empty_table
-            expect { described_class.add_rows(table, [row_a, row_b, row_c]) }.to raise_error(RequireException)
+            expect { described_class.add_rows(table, rows) }.to raise_error(RequireException)
           end
         end
 
@@ -64,7 +77,7 @@ RSpec.describe Table do
       context 'when table is non-empty' do
         context 'when table schema does not match rows schema' do
           it 'fails the require' do
-            table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+            table = described_class.new(schema: schema, rows: rows)
             expect do
               described_class.add_rows(table, [Row.new(
                 schema: Schema.new(headers: [{ column_name: 'header_a', sort: Integer }]),
@@ -76,7 +89,7 @@ RSpec.describe Table do
 
         context 'when schemas match' do
           it 'adds rows to the table' do
-            table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+            table = described_class.new(schema: schema, rows: rows)
             new_table = described_class.add_rows(table, [
                                                    Row.new(
                                                      schema: schema,
@@ -92,7 +105,7 @@ RSpec.describe Table do
     describe '.add_column' do
       context 'when header is not unique' do
         it 'fails the require' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           expect do
             described_class.add_column(table, { column_name: 'header_a', sort: Integer }, [1, 2, 3])
           end.to raise_error(RequireException)
@@ -101,7 +114,7 @@ RSpec.describe Table do
 
       context 'when number of rows does not match number of values' do
         it 'fails the require' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           expect do
             described_class.add_column(table, { column_name: 'header_d', sort: Integer }, [1, 2, 3, 4, 5, 6])
           end.to raise_error(RequireException)
@@ -110,7 +123,7 @@ RSpec.describe Table do
 
       context 'when sort of row values does not match header' do
         it 'fails the require' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           expect do
             described_class.add_column(table, { column_name: 'header_d', sort: Integer }, [1, false, 3])
           end.to raise_error(EnsureException)
@@ -129,7 +142,7 @@ RSpec.describe Table do
 
       context 'when table is non-empty' do
         it 'adds column to the table' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           new_table = described_class.add_column(table, { column_name: 'header_d', sort: Integer }, [1, 2, 3])
 
           expect(table.ncols).to eq(2)
@@ -141,7 +154,7 @@ RSpec.describe Table do
     describe '.build_column' do
       context 'when header is not unique' do
         it 'fails the require' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           expect do
             described_class.build_column(table, { column_name: 'header_a', sort: Integer }) { |_i| false }
           end.to raise_error(RequireException)
@@ -150,7 +163,7 @@ RSpec.describe Table do
 
       context 'when sort of row values does not match header' do
         it 'fails the require' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           expect do
             described_class.build_column(table, { column_name: 'header_d', sort: Integer }) { |_i| false }
           end.to raise_error(EnsureException)
@@ -171,7 +184,7 @@ RSpec.describe Table do
 
       context 'when table is non-empty' do
         it 'adds column to the table' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           new_table = described_class.build_column(table, { column_name: 'header_d', sort: Integer }) do |r|
             r.cells.size
           end
@@ -185,7 +198,7 @@ RSpec.describe Table do
     describe '.vcat' do
       context 'when schemas of tables are not equal' do
         it 'fails the require' do
-          table1 = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table1 = described_class.new(schema: schema, rows: rows)
           table2 = described_class.empty_table
 
           expect do
@@ -208,13 +221,191 @@ RSpec.describe Table do
 
       context 'when table is non-empty' do
         it 'adds column to the table' do
-          table1 = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
-          table2 = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table1 = described_class.new(schema: schema, rows: rows)
+          table2 = described_class.new(schema: schema, rows: rows)
 
           table3 = described_class.vcat(table1, table2)
 
           expect(table3.ncols).to eq(2)
           expect(table3.nrows).to eq(6)
+        end
+      end
+    end
+
+    describe '.hcat' do
+      context 'when a header is not unique' do
+        it 'fails the require' do
+          table1 = described_class.new(schema: schema, rows: rows)
+          table2 = described_class.new(schema: schema, rows: rows)
+
+          expect do
+            described_class.hcat(table1, table2)
+          end.to raise_error(RequireException)
+        end
+      end
+
+      context 'when the number of rows is not equal' do
+        it 'fails the require' do
+          table1 = described_class.new(schema: schema, rows: rows)
+          table2 = described_class.new(schema: schema2, rows: [row_d])
+
+          expect do
+            described_class.hcat(table1, table2)
+          end.to raise_error(RequireException)
+        end
+      end
+
+      context 'when both tables are empty' do
+        it 'returns an empty table' do
+          table1 = described_class.empty_table
+          table2 = described_class.empty_table
+
+          table3 = described_class.hcat(table1, table2)
+
+          expect(table3.ncols).to eq(0)
+          expect(table3.nrows).to eq(0)
+        end
+      end
+
+      context 'when one table is empty' do
+        context 'when table1 is empty' do
+          it 'returns table2' do
+            table1 = described_class.add_rows(
+              described_class.empty_table,
+              [
+                Row.new(schema: Schema.new, cells: []),
+                Row.new(schema: Schema.new, cells: []),
+                Row.new(schema: Schema.new, cells: [])
+              ]
+            )
+
+            table2 = described_class.new(schema: schema, rows: rows)
+
+            table3 = described_class.hcat(table1, table2)
+
+            expect(table3.ncols).to eq(2)
+            expect(table3.nrows).to eq(3)
+          end
+        end
+
+        context 'when table2 is empty' do
+          it 'returns table1' do
+            table1 = described_class.new(schema: schema, rows: rows)
+            table2 = described_class.add_rows(
+              described_class.empty_table,
+              [
+                Row.new(schema: Schema.new, cells: []),
+                Row.new(schema: Schema.new, cells: []),
+                Row.new(schema: Schema.new, cells: [])
+              ]
+            )
+
+            table3 = described_class.hcat(table1, table2)
+
+            expect(table3.ncols).to eq(2)
+            expect(table3.nrows).to eq(3)
+          end
+        end
+      end
+
+      context 'when both tables are non-empty' do
+        it 'returns a table with the columns of both tables' do
+          table1 = described_class.new(schema: schema, rows: rows)
+          table2 = described_class.new(schema: schema2, rows: rows2)
+
+          table3 = described_class.hcat(table1, table2)
+
+          expect(table3.ncols).to eq(3)
+          expect(table3.nrows).to eq(3)
+        end
+      end
+    end
+
+    describe '.values' do
+      context 'when rows do not have the same schema' do
+        it 'fails the require' do
+          expect do
+            described_class.values([row_a, row_b, row_c, row_d])
+          end.to raise_error(RequireException)
+        end
+      end
+
+      context 'when rows have the same schema' do
+        it 'returns a table with the rows' do
+          table = described_class.values(rows)
+
+          expect(table.ncols).to eq(2)
+          expect(table.nrows).to eq(3)
+        end
+
+        it 'returns a table with the rows even when the row sequence is empty' do
+          table = described_class.values([])
+
+          expect(table.ncols).to eq(0)
+          expect(table.nrows).to eq(0)
+        end
+      end
+    end
+
+    describe '.cross_join' do
+      context 'when a header is not unique' do
+        it 'fails the require' do
+          table1 = described_class.new(schema: schema, rows: rows)
+          table2 = described_class.new(schema: schema, rows: rows)
+
+          expect do
+            described_class.cross_join(table1, table2)
+          end.to raise_error(RequireException)
+        end
+      end
+
+      context 'when both tables are empty' do
+        it 'returns an empty table' do
+          table1 = described_class.empty_table
+          table2 = described_class.empty_table
+
+          table3 = described_class.cross_join(table1, table2)
+
+          expect(table3.ncols).to eq(0)
+          expect(table3.nrows).to eq(0)
+        end
+      end
+
+      context 'when one table is empty' do
+        context 'when table1 is empty' do
+          it 'returns an empty table' do
+            table1 = described_class.empty_table
+            table2 = described_class.new(schema: schema, rows: rows)
+
+            table3 = described_class.cross_join(table1, table2)
+
+            expect(table3.ncols).to eq(2)
+            expect(table3.nrows).to eq(0)
+          end
+        end
+
+        context 'when table2 is empty' do
+          it 'returns an empty table' do
+            table1 = described_class.new(schema: schema, rows: rows)
+            table2 = described_class.empty_table
+
+            table3 = described_class.cross_join(table1, table2)
+
+            expect(table3.ncols).to eq(2)
+            expect(table3.nrows).to eq(0)
+          end
+        end
+      end
+
+      context 'when both tables are non-empty' do
+        it 'returns a table with the rows of both tables' do
+          table1 = described_class.new(schema: schema, rows: rows)
+          table2 = described_class.new(schema: schema2, rows: rows2)
+
+          table3 = described_class.cross_join(table1, table2)
+
+          expect(table3.ncols).to eq(3)
+          expect(table3.nrows).to eq(9)
         end
       end
     end
@@ -231,7 +422,7 @@ RSpec.describe Table do
 
       context 'when table is non-empty' do
         it 'returns the number of rows' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           expect(table.nrows).to eq(3)
         end
       end
@@ -247,7 +438,7 @@ RSpec.describe Table do
 
       context 'when table is non-empty' do
         it 'returns the number of columns' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           expect(table.ncols).to eq(2)
         end
       end
@@ -263,7 +454,7 @@ RSpec.describe Table do
 
       context 'when table is non-empty' do
         it 'returns the names of columns' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           expect(table.header).to eq(%w[header_a header_b])
         end
       end
@@ -305,14 +496,14 @@ RSpec.describe Table do
       context 'when input is valid' do
         context 'when index is first row' do
           it 'returns row' do
-            table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+            table = described_class.new(schema: schema, rows: rows)
             expect(table.get_row(0)).to eq(row_a)
           end
         end
 
         context 'when index is final row' do
           it 'returns row' do
-            table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+            table = described_class.new(schema: schema, rows: rows)
             expect(table.get_row(2)).to eq(row_c)
           end
         end
@@ -332,7 +523,7 @@ RSpec.describe Table do
 
       context 'when input column name not in row' do
         it 'fails' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
 
           expect do
             table.get_value(row_a, 'header_d')
@@ -342,14 +533,14 @@ RSpec.describe Table do
 
       context 'when input correct and sort correct' do
         it 'retrieves value' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           value = table.get_value(row_c, 'header_a')
 
           expect(value).to eq(3)
         end
 
         it 'retrieves value' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           value = table.get_value(row_a, 'header_b')
 
           expect(value).to be(true)
@@ -370,7 +561,7 @@ RSpec.describe Table do
 
       context 'when input column name not in row' do
         it 'fails' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
 
           expect do
             table.get_column_by_index(4)
@@ -378,7 +569,7 @@ RSpec.describe Table do
         end
 
         it 'fails' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
 
           expect do
             table.get_column_by_index(-1)
@@ -388,14 +579,14 @@ RSpec.describe Table do
 
       context 'when input correct and sort correct' do
         it 'returns first column' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           column = table.get_column_by_index(0)
 
           expect(column).to eq([1, 2, 3])
         end
 
         it 'returns last column' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           column = table.get_column_by_index(1)
 
           expect(column).to eq([true, true, false])
@@ -416,7 +607,7 @@ RSpec.describe Table do
 
       context 'when input column name not in row' do
         it 'fails' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
 
           expect do
             table.get_column_by_name('header_d')
@@ -426,14 +617,14 @@ RSpec.describe Table do
 
       context 'when input correct and sort correct' do
         it 'returns first column' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           column = table.get_column_by_name('header_a')
 
           expect(column).to eq([1, 2, 3])
         end
 
         it 'returns last column' do
-          table = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table = described_class.new(schema: schema, rows: rows)
           column = table.get_column_by_name('header_b')
 
           expect(column).to eq([true, true, false])
@@ -442,5 +633,6 @@ RSpec.describe Table do
     end
   end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers
 # rubocop:enable RSpec/NestedGroups
 # rubocop:enable Metrics/BlockLength

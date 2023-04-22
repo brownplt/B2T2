@@ -91,6 +91,7 @@ class Table
     new_table
   end
 
+  # vcat :: t1:Table * t2:Table -> t3:Table
   def self.vcat(table1, table2)
     assert_require { table1.schema == table2.schema }
 
@@ -102,16 +103,72 @@ class Table
     table3
   end
 
-  def self.hcat
-    raise NotImplementedError
+  # hcat :: t1:Table * t2:Table -> t3:Table
+  def self.hcat(table1, table2)
+    assert_require { (table1.header + table2.header).uniq == (table1.header + table2.header) }
+    assert_require { table1.nrows == table2.nrows }
+
+    table3 = Table.new(
+      schema: Schema.new(headers: table1.schema.headers + table2.schema.headers),
+      rows: table1.rows.zip(table2.rows).map do |r1, r2|
+              Row.new(
+                schema: table1.schema, cells: r1.cells + r2.cells
+              )
+            end
+    )
+
+    # TODO: this is a hacky way to check that the schema is correct
+    assert_ensure { table3.header == table1.header + table2.header }
+    assert_ensure { table3.nrows == table1.nrows }
+
+    table3
   end
 
-  def self.values
-    raise NotImplementedError
+  # values :: rs:Seq<Row> -> t:Table
+  # since the spec assumes a schema attached to a row, we get the schema for free and are not left
+  # implying the schema from the rows themselves
+  def self.values(rows)
+    # length(rs) is positive
+    assert_require { rows.size >= 0 }
+    assert_require { rows.all? { |r| r.is_a?(Row) && r.schema == rows[0].schema } }
+
+    table = if rows.size.positive?
+              Table.new(schema: rows[0].schema, rows: rows)
+            else
+              empty_table
+            end
+
+    if rows.size.positive?
+      assert_ensure { table.schema == rows[0].schema }
+    else
+      assert_ensure { table.schema == Schema.new }
+    end
+
+    assert_ensure { table.nrows == rows.size }
+
+    table
   end
 
-  def self.cross_join
-    raise NotImplementedError
+  # crossJoin :: t1:Table * t2:Table -> t3:Table
+  def self.cross_join(table1, table2)
+    assert_require { (table1.header + table2.header).uniq == (table1.header + table2.header) }
+
+    table3 = Table.new(
+      schema: Schema.new(headers: table1.schema.headers + table2.schema.headers),
+      rows: table1.rows.flat_map do |r1|
+              table2.rows.map do |r2|
+                Row.new(
+                  schema: table1.schema, cells: r1.cells + r2.cells
+                )
+              end
+            end
+    )
+
+    # TODO: this is a hacky way to check that the schema is correct
+    assert_ensure { table3.header == table1.header + table2.header }
+    assert_ensure { table3.nrows == (table1.nrows * table2.nrows) }
+
+    table3
   end
 
   def self.left_join

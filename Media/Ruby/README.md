@@ -40,10 +40,10 @@ bundle rspec .
 * [x] addRows
 * [x] addColumn
 * [x] buildColumn
-* [ ] vcat
-* [ ] hcat
-* [ ] values
-* [ ] crossJoin
+* [x] vcat
+* [x] hcat
+* [x] values
+* [x] crossJoin
 * [ ] leftJoin
 
 #### Properties
