@@ -80,18 +80,26 @@ class Table
 
     assert_ensure { new_table.header == table.header + [column[:column_name]] }
     assert_ensure { table.header.all? { |c| table.schema[c] == new_table.schema[c] } }
-    assert_ensure do
-      new_table.rows.all? do |r|
-        new_table.get_value(r, column[:column_name]).is_a?(new_table.schema[column[:column_name]][:sort])
-      end
+    new_table.rows.each do |r|
+      # disabling rubocop to enable my hacky assert_ensure error message parsing to continue working
+      # rubocop:disable Layout/LineLength
+      assert_ensure { new_table.get_value(r, column[:column_name]).is_a?(new_table.schema[column[:column_name]][:sort]) }
+      # rubocop:enable Layout/LineLength
     end
     assert_ensure { new_table.nrows == table.nrows }
 
     new_table
   end
 
-  def self.vcat
-    raise NotImplementedError
+  def self.vcat(table1, table2)
+    assert_require { table1.schema == table2.schema }
+
+    table3 = Table.new(schema: table1.schema, rows: table1.rows + table2.rows)
+
+    assert_ensure { table1.schema == table3.schema }
+    assert_ensure { table3.nrows == table1.nrows + table2.nrows }
+
+    table3
   end
 
   def self.hcat

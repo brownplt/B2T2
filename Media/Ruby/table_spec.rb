@@ -181,6 +181,43 @@ RSpec.describe Table do
         end
       end
     end
+
+    describe '.vcat' do
+      context 'when schemas of tables are not equal' do
+        it 'fails the require' do
+          table1 = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table2 = described_class.empty_table
+
+          expect do
+            described_class.vcat(table1, table2)
+          end.to raise_error(RequireException)
+        end
+      end
+
+      context 'when table is empty' do
+        it 'adds column to the table' do
+          table1 = described_class.empty_table
+          table2 = described_class.empty_table
+
+          table3 = described_class.vcat(table1, table2)
+
+          expect(table3.ncols).to eq(0)
+          expect(table3.nrows).to eq(0)
+        end
+      end
+
+      context 'when table is non-empty' do
+        it 'adds column to the table' do
+          table1 = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+          table2 = described_class.new(schema: schema, rows: [row_a, row_b, row_c])
+
+          table3 = described_class.vcat(table1, table2)
+
+          expect(table3.ncols).to eq(2)
+          expect(table3.nrows).to eq(6)
+        end
+      end
+    end
   end
 
   describe 'properties' do
