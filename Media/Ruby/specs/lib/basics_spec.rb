@@ -5,6 +5,7 @@ require './lib/schema'
 require './lib/table'
 
 # rubocop:disable RSpec/MultipleMemoizedHelpers
+# rubocop:disable Metrics/BlockLength
 RSpec.describe Basics do
   include described_class
 
@@ -758,3 +759,4 @@ RSpec.describe Basics do
   end
 end
 # rubocop:enable RSpec/MultipleMemoizedHelpers
+# rubocop:enable Metrics/BlockLength

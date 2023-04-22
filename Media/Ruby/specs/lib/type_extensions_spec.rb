@@ -4,8 +4,8 @@ require './lib/schema'
 require './lib/table'
 require './lib/type_extensions'
 
-# rubocop:disable Metrics/BlockLength
 # rubocop:disable RSpec/DescribeClass
+# rubocop:disable Metrics/BlockLength
 RSpec.describe 'type extensions' do
   # explicitly testing type assertions establishing what assumptions we can make when enforcing sorts
   describe '.is_a?' do
@@ -74,5 +74,5 @@ RSpec.describe 'type extensions' do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength
 # rubocop:enable RSpec/DescribeClass
+# rubocop:enable Metrics/BlockLength

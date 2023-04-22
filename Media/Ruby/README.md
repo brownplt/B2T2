@@ -66,7 +66,7 @@ bundle rspec .
 * [ ] distinct
 * [ ] dropColumn
 * [ ] dropColumns
-* [ ] tfilter
+* [x] tfilter
 
 #### Ordering
 

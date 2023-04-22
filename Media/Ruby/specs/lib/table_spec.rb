@@ -594,6 +594,56 @@ RSpec.describe Table do
       end
     end
   end
+
+  describe 'Subtable' do
+    describe '.tfilter' do
+      context 'when table is empty' do
+        it 'returns empty table' do
+          table = described_class.empty_table
+
+          subtable = described_class.tfilter(table) { |row| row[0] == 1 }
+
+          expect(subtable.nrows).to eq(0)
+          expect(subtable.ncols).to eq(0)
+        end
+      end
+
+      context 'when table is non-empty' do
+        context 'when input is not filered' do
+          it 'returns a non-empty table with a non-empty schema' do
+            table = described_class.new(schema: schema, rows: rows)
+
+            subtable = described_class.tfilter(table) { |_row| true }
+
+            expect(subtable.nrows).to eq(3)
+            expect(subtable.ncols).to eq(2)
+          end
+        end
+
+        context 'when input is filtered' do
+          it 'returns a non-empty table with a non-empty schema' do
+            table = described_class.new(schema: schema, rows: rows)
+
+            subtable = described_class.tfilter(table) { |row| row.cells.first.value != 1 }
+
+            expect(subtable.nrows).to eq(2)
+            expect(subtable.ncols).to eq(2)
+          end
+        end
+
+        context 'when all input is filtered out' do
+          it 'returns an empty table with a non-empty schema' do
+            table = described_class.new(schema: schema, rows: rows)
+
+            subtable = described_class.tfilter(table) { |_row| false }
+
+            expect(subtable.nrows).to eq(0)
+            expect(subtable.ncols).to eq(2)
+          end
+        end
+      end
+    end
+  end
 end
 # rubocop:enable RSpec/MultipleMemoizedHelpers
 # rubocop:enable RSpec/NestedGroups

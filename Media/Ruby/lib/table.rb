@@ -183,6 +183,7 @@ class Table
   ####################
 
   #### Properties ####
+  # TODO: move this off the table, should take a table as input (technically according to the spec)
   # nrows :: t:Table -> n:Number
   def nrows
     length(rows)
@@ -267,6 +268,18 @@ class Table
   ####################
 
   #### Subtable ####
+  # tfilter :: t1:Table * f:(r:Row -> b:Boolean) -> t2:Table
+  def self.tfilter(table1, &block)
+    table2 = Table.new(
+      schema: table1.schema,
+      rows: table1.rows.select { |r| block.call(r) }
+    )
+
+    assert_ensure { table2.schema == table1.schema }
+    assert_ensure { table2.rows.all? { |r| r.schema == table1.schema } }
+
+    table2
+  end
   ####################
 
   #### Ordering ####

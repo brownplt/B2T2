@@ -6,6 +6,7 @@ require './lib/table'
 require './lib/type_extensions'
 
 # rubocop:disable RSpec/DescribeClass
+# rubocop:disable Metrics/BlockLength
 
 # gradebook: a gradebook table with no missing values
 #
@@ -133,3 +134,4 @@ RSpec.describe 'quiz score filter' do
   end
 end
 # rubocop:enable RSpec/DescribeClass
+# rubocop:enable Metrics/BlockLength
