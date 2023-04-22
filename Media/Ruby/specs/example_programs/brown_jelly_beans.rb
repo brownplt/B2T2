@@ -200,13 +200,22 @@ RSpec.describe 'brown jelly beans' do
 
     let(:table) { Table.new(schema: schema, rows: rows) }
 
+    let(:count_participants) do
+      lambda do |t, color|
+        Table.tfilter(t) { |r| keep.call(r, color) }.nrows
+      end
+    end
+
+    # correct version of keep method
+    let(:keep) do
+      lambda do |row, color|
+        get_value(row, color)
+      end
+    end
+
     context 'when happy path' do
       context 'when passing a valid column name' do
         it 'returns the correct number of participants' do
-          count_participants = lambda do |t, color|
-            Table.tfilter(t) { |r| tkeep_correct(r, color) }.nrows
-          end
-
           expect(count_participants.call(table, 'get acne')).to eq(5)
           expect(count_participants.call(table, 'red')).to eq(1)
           expect(count_participants.call(table, 'black')).to eq(3)
@@ -223,31 +232,26 @@ RSpec.describe 'brown jelly beans' do
 
     context 'when unhappy path' do
       context 'when passing a non-valid column name' do
-        it 'fails since "color" is not a valid column name - user meant to pass variable name' do
-          count_participants = lambda do |t, color|
-            Table.tfilter(t) { |r| tkeep_wrong(r, color) }.nrows
-          end
-
-          expect { count_participants.call(table, 'brown') }.to raise_error(RequireException)
-        end
-
         it 'fails since "turquoise" is not a valid column name' do
-          count_participants = lambda do |t, color|
-            Table.tfilter(t) { |r| tkeep_correct(r, color) }.nrows
-          end
-
           expect { count_participants.call(table, 'turquoise') }.to raise_error(RequireException)
         end
       end
+
+      context 'when typo in keep function' do
+        let(:keep) do
+          # disable to keep intent of test
+          # rubocop:disable Lint/UnusedBlockArgument
+          lambda do |row, color|
+            get_value(row, 'color')
+          end
+          # rubocop:enable Lint/UnusedBlockArgument
+        end
+
+        it 'fails since "color" is not a valid column name - user meant to pass variable name' do
+          expect { count_participants.call(table, 'brown') }.to raise_error(RequireException)
+        end
+      end
     end
-  end
-
-  def tkeep_wrong(row, color)
-    get_value(row, 'color')
-  end
-
-  def tkeep_correct(row, color)
-    get_value(row, color)
   end
 end
 # rubocop:enable RSpec/DescribeClass
