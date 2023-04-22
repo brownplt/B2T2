@@ -200,25 +200,7 @@ RSpec.describe 'brown jelly beans' do
 
     let(:table) { Table.new(schema: schema, rows: rows) }
 
-    context 'when unhappy path' do
-      context 'when passing a non-valid column name' do
-        it 'fails since "color" is not a valid column name - user meant to pass variable name' do
-          count_participants = lambda do |t, color|
-            Table.tfilter(t) { |r| tkeep_wrong(r, color) }.nrows
-          end
-
-          expect { count_participants.call(table, 'brown') }.to raise_error(RequireException)
-        end
-
-        it 'fails since "turquoise" is not a valid column name' do
-          count_participants = lambda do |t, color|
-            Table.tfilter(t) { |r| tkeep_correct(r, color) }.nrows
-          end
-
-          expect { count_participants.call(table, 'turquoise') }.to raise_error(RequireException)
-        end
-      end
-
+    context 'when happy path' do
       context 'when passing a valid column name' do
         it 'returns the correct number of participants' do
           count_participants = lambda do |t, color|
@@ -235,6 +217,26 @@ RSpec.describe 'brown jelly beans' do
           expect(count_participants.call(table, 'orange')).to eq(4)
           expect(count_participants.call(table, 'pink')).to eq(5)
           expect(count_participants.call(table, 'purple')).to eq(0)
+        end
+      end
+    end
+
+    context 'when unhappy path' do
+      context 'when passing a non-valid column name' do
+        it 'fails since "color" is not a valid column name - user meant to pass variable name' do
+          count_participants = lambda do |t, color|
+            Table.tfilter(t) { |r| tkeep_wrong(r, color) }.nrows
+          end
+
+          expect { count_participants.call(table, 'brown') }.to raise_error(RequireException)
+        end
+
+        it 'fails since "turquoise" is not a valid column name' do
+          count_participants = lambda do |t, color|
+            Table.tfilter(t) { |r| tkeep_correct(r, color) }.nrows
+          end
+
+          expect { count_participants.call(table, 'turquoise') }.to raise_error(RequireException)
         end
       end
     end
