@@ -448,14 +448,14 @@ RSpec.describe Table do
       context 'when table empty' do
         it 'returns 0 column names' do
           table = described_class.empty_table
-          expect(table.header).to eq([])
+          expect(table.schema.headers).to eq([])
         end
       end
 
       context 'when table is non-empty' do
         it 'returns the names of columns' do
           table = described_class.new(schema: schema, rows: rows)
-          expect(table.header).to eq(%w[header_a header_b])
+          expect(table.schema.headers.map { |c| c[:column_name] }).to eq(%w[header_a header_b])
         end
       end
     end
@@ -506,44 +506,6 @@ RSpec.describe Table do
             table = described_class.new(schema: schema, rows: rows)
             expect(table.get_row(2)).to eq(row_c)
           end
-        end
-      end
-    end
-
-    describe '#get_value' do
-      context 'when input is not a string' do
-        it 'fails' do
-          table = described_class.empty_table
-
-          expect do
-            table.get_value(row_a, 1)
-          end.to raise_error ArgumentError
-        end
-      end
-
-      context 'when input column name not in row' do
-        it 'fails' do
-          table = described_class.new(schema: schema, rows: rows)
-
-          expect do
-            table.get_value(row_a, 'header_d')
-          end.to raise_error RequireException
-        end
-      end
-
-      context 'when input correct and sort correct' do
-        it 'retrieves value' do
-          table = described_class.new(schema: schema, rows: rows)
-          value = table.get_value(row_c, 'header_a')
-
-          expect(value).to eq(3)
-        end
-
-        it 'retrieves value' do
-          table = described_class.new(schema: schema, rows: rows)
-          value = table.get_value(row_a, 'header_b')
-
-          expect(value).to be(true)
         end
       end
     end

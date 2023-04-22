@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+require './lib/cell'
+require './lib/row'
+require './lib/ensure_exception'
+require './lib/require_exception'
+require './lib/type_extensions'
+
+# rubocop:disable Metrics/ModuleLength
 # An implementation of the 'Functions' subsection under 'Assumptions' from the
 # B2T2 paper
 module Basics
@@ -111,6 +118,47 @@ module Basics
     schema.headers[index][:column_name]
   end
 
+  # returns headers of a table or a row
+  def header(value)
+    raise ArgumentError, 'expected a row or a table' unless value.respond_to?(:schema)
+
+    value.schema.headers
+  end
+
+  # adds up all values in the sequence, assuming a homogenous sequence
+  def sum(values, initial: 0)
+    assert_type_sequence(values)
+
+    return initial if values.empty?
+
+    first_sort = values[0].class
+    values.each do |value|
+      raise ArgumentError, 'expected a homogenous sequence' unless value.is_a?(first_sort)
+    end
+
+    values.reduce(initial) { |sum, value| sum + value }
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  # getValue :: r:Row * c:ColName -> v:Value
+  def get_value(row, column_name)
+    assert_type_string(column_name)
+
+    assert_require { header(row).map { |c| c[:column_name] }.member?(column_name) }
+
+    values = row.cells.select { |c| c.column_name == column_name }
+    assert_ensure { values.size == 1 }
+    value = values[0].value
+
+    headers = row.schema.headers.select { |h| h[:column_name] == column_name }
+    assert_ensure { headers.size == 1 }
+    headerr = headers[0]
+    assert_ensure { value.is_a?(headerr[:sort]) }
+
+    value
+  end
+  # rubocop:enable Metrics/AbcSize
+
   #### helpers specific to this class ####
   def assert_type_number(number)
     raise ArgumentError, 'expected an int or float' unless number.is_a?(Integer) || number.is_a?(Float)
@@ -139,4 +187,21 @@ module Basics
   def assert_types_match(value_a, value_b)
     raise ArgumentError, 'expected types to match' unless value_a.instance_of?(value_b.class)
   end
+
+  #### Ensure/Require Helpers ####
+  # Especially hacky, but it works
+  def assert_require(&block)
+    file_name, line_number = block.source_location
+    message = File.readlines(file_name)[line_number - 1].split('assert_require {')[1].split("}\n")[0].strip
+    raise RequireException, "[Failed Require]: #{message}" unless block.call
+  end
+
+  # Especially hacky, but it works
+  def assert_ensure(&block)
+    file_name, line_number = block.source_location
+    message = File.readlines(file_name)[line_number - 1].split('assert_ensure {')[1].split("}\n")[0].strip
+    raise EnsureException, "[Failed Ensure]: #{message}" unless block.call
+  end
+  ####################
 end
+# rubocop:enable Metrics/ModuleLength

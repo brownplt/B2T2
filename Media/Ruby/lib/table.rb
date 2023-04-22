@@ -47,7 +47,7 @@ class Table
   # MODIFIED: we include the sort of the column as well as the column name
   # addColumn :: t1:Table * c:ColName * vs:Seq<Value> -> t2:Table
   def self.add_column(table, column, values)
-    assert_require { table.header.none? { |h| h == column[:column_name] } }
+    assert_require { table.schema.headers.none? { |h| h[:column_name] == column[:column_name] } }
     assert_require { values.size == table.nrows }
 
     new_schema = Schema.new(headers: table.schema.headers + [column])
@@ -57,8 +57,8 @@ class Table
     end
     new_table = Table.new(schema: new_schema, rows: new_rows)
 
-    assert_ensure { new_table.header == table.header + [column[:column_name]] }
-    assert_ensure { table.header.all? { |c| table.schema[c] == new_table.schema[c] } }
+    assert_ensure { new_table.schema.headers == table.schema.headers + [column] }
+    assert_ensure { table.schema.headers.all? { |c| table.schema[c] == new_table.schema[c] } }
     assert_ensure { values.all? { |v| v.is_a?(new_table.schema[column[:column_name]][:sort]) } }
     assert_ensure { new_table.nrows == table.nrows }
 
@@ -67,7 +67,7 @@ class Table
 
   # buildColumn :: t1:Table * c:ColName * f:(r:Row -> v:Value) -> t2:Table
   def self.build_column(table, column, &block)
-    assert_require { table.header.none? { |h| h == column[:column_name] } }
+    assert_require { table.schema.headers.none? { |h| h[:column_name] == column[:column_name] } }
 
     new_schema = Schema.new(headers: table.schema.headers + [column])
     new_rows = table.rows.map do |row|
@@ -78,8 +78,8 @@ class Table
     end
     new_table = Table.new(schema: new_schema, rows: new_rows)
 
-    assert_ensure { new_table.header == table.header + [column[:column_name]] }
-    assert_ensure { table.header.all? { |c| table.schema[c] == new_table.schema[c] } }
+    assert_ensure { new_table.schema.headers == table.schema.headers + [column] }
+    assert_ensure { table.schema.headers.all? { |c| table.schema[c] == new_table.schema[c] } }
     new_table.rows.each do |r|
       # disabling rubocop to enable my hacky assert_ensure error message parsing to continue working
       # rubocop:disable Layout/LineLength
@@ -105,7 +105,10 @@ class Table
 
   # hcat :: t1:Table * t2:Table -> t3:Table
   def self.hcat(table1, table2)
-    assert_require { (table1.header + table2.header).uniq == (table1.header + table2.header) }
+    # disabling rubocop to enable my hacky assert_ensure error message parsing to continue working
+    # rubocop:disable Layout/LineLength
+    assert_require { (table1.schema.headers + table2.schema.headers).uniq == (table1.schema.headers + table2.schema.headers) }
+    # rubocop:enable Layout/LineLength
     assert_require { table1.nrows == table2.nrows }
 
     table3 = Table.new(
@@ -118,7 +121,7 @@ class Table
     )
 
     # TODO: this is a hacky way to check that the schema is correct
-    assert_ensure { table3.header == table1.header + table2.header }
+    assert_ensure { table3.schema.headers == table1.schema.headers + table2.schema.headers }
     assert_ensure { table3.nrows == table1.nrows }
 
     table3
@@ -151,7 +154,10 @@ class Table
 
   # crossJoin :: t1:Table * t2:Table -> t3:Table
   def self.cross_join(table1, table2)
-    assert_require { (table1.header + table2.header).uniq == (table1.header + table2.header) }
+    # disabling rubocop to enable my hacky assert_ensure error message parsing to continue working
+    # rubocop:disable Layout/LineLength
+    assert_require { (table1.schema.headers + table2.schema.headers).uniq == (table1.schema.headers + table2.schema.headers) }
+    # rubocop:enable Layout/LineLength
 
     table3 = Table.new(
       schema: Schema.new(headers: table1.schema.headers + table2.schema.headers),
@@ -165,7 +171,7 @@ class Table
     )
 
     # TODO: this is a hacky way to check that the schema is correct
-    assert_ensure { table3.header == table1.header + table2.header }
+    assert_ensure { table3.schema.headers == table1.schema.headers + table2.schema.headers }
     assert_ensure { table3.nrows == (table1.nrows * table2.nrows) }
 
     table3
@@ -188,9 +194,9 @@ class Table
   end
 
   # header :: t:Table -> cs:Seq<ColName>
-  def header
-    schema.headers.map { |h| h[:column_name] }
-  end
+  # def header
+  # schema.headers.map { |h| h[:column_name] }
+  # end
   ####################
 
   #### Access Subcomponents ####
@@ -203,30 +209,31 @@ class Table
     rows[number]
   end
 
-  # getValue :: r:Row * c:ColName -> v:Value
-  def get_value(row, column_name)
-    assert_type_string(column_name)
+  # # getValue :: r:Row * c:ColName -> v:Value
+  # def get_value(row, column_name)
+  #   assert_type_string(column_name)
 
-    assert_require { header.member?(column_name) }
+  #   assert_require { header.member?(column_name) }
 
-    values = row.cells.select { |c| c.column_name == column_name }
-    assert_ensure { values.size == 1 }
-    value = values[0].value
+  #   values = row.cells.select { |c| c.column_name == column_name }
+  #   assert_ensure { values.size == 1 }
+  #   value = values[0].value
 
-    headers = row.schema.headers.select { |h| h[:column_name] == column_name }
-    assert_ensure { headers.size == 1 }
-    header = headers[0]
-    assert_ensure { value.is_a?(header[:sort]) }
+  #   headers = row.schema.headers.select { |h| h[:column_name] == column_name }
+  #   assert_ensure { headers.size == 1 }
+  #   header = headers[0]
+  #   assert_ensure { value.is_a?(header[:sort]) }
 
-    value
-  end
+  #   value
+  # end
   # rubocop:enable Metrics/AbcSize
 
+  # rubocop:disable Metrics/AbcSize
   # getColumn :: t:Table * n:Number -> vs:Seq<Value>
   def get_column_by_index(index)
     assert_type_number(index)
 
-    assert_require { range(header.size).member?(index) }
+    assert_require { range(schema.headers.size).member?(index) }
 
     rows.map do |r|
       value = r.cells[index].value
@@ -238,14 +245,13 @@ class Table
       value
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   # getColumn :: t:Table * c:ColName -> vs:Seq<Value>
-  # rubocop:disable Metrics/AbcSize
   def get_column_by_name(column_name)
     assert_type_string(column_name)
 
-    assert_require { header.member?(column_name) }
-
+    # assert_require { schema.headers.member?(column_name) }
     rows.map do |r|
       value = get_value(r, column_name)
 
@@ -258,7 +264,6 @@ class Table
       value
     end
   end
-  # rubocop:enable Metrics/AbcSize
   ####################
 
   #### Subtable ####

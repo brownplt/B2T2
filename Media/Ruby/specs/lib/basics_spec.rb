@@ -4,8 +4,21 @@ require './lib/basics'
 require './lib/schema'
 require './lib/table'
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Basics do
   include described_class
+
+  let(:headers) do
+    [
+      { column_name: 'header_a', sort: Integer },
+      { column_name: 'header_b', sort: Boolean }
+    ]
+  end
+  let(:schema) { Schema.new(headers: headers) }
+  let(:row_a) { Row.new(schema: schema, cells: [Cell.new('header_a', 1), Cell.new('header_b', true)]) }
+  let(:row_b) { Row.new(schema: schema, cells: [Cell.new('header_a', 2), Cell.new('header_b', true)]) }
+  let(:row_c) { Row.new(schema: schema, cells: [Cell.new('header_a', 3), Cell.new('header_b', false)]) }
+  let(:rows) { [row_a, row_b, row_c] }
 
   describe '.even' do
     context 'when input is not a number' do
@@ -645,4 +658,103 @@ RSpec.describe Basics do
       end
     end
   end
+
+  describe '.header' do
+    context 'when input does not have a schema' do
+      it 'fails' do
+        expect do
+          header([])
+        end.to raise_error(ArgumentError)
+      end
+    end
+
+    context 'when input has a schema' do
+      it 'returns the headers for the schema for a table' do
+        expect(header(Table.new(schema: schema, rows: rows))).to eq(schema.headers)
+      end
+
+      it 'returns the headers for the schema for a row' do
+        expect(header(row_a)).to eq(schema.headers)
+      end
+    end
+  end
+
+  describe '.sum' do
+    context 'when input is not a sequence' do
+      it 'fails' do
+        expect do
+          sum(10)
+        end.to raise_error(ArgumentError)
+      end
+    end
+
+    context 'when input is not a homogenous sequence' do
+      it 'fails' do
+        expect do
+          sum([10, 'a'])
+        end.to raise_error(ArgumentError)
+      end
+    end
+
+    context 'when input is empty' do
+      it 'returns 0' do
+        expect(sum([])).to eq(0)
+      end
+    end
+
+    context 'when input is not a sequence of numbers' do
+      it 'creates a longer string' do
+        expect(sum(%w[1 2 3 4], initial: '')).to eq('1234')
+      end
+
+      it 'creates a longer sequence' do
+        expect(sum([['1'], ['2'], %w[3 4]], initial: [])).to eq(%w[1 2 3 4])
+      end
+    end
+
+    context 'when input is a sequence of numbers' do
+      it 'returns the sum' do
+        expect(sum([1, 2, 3, 4])).to eq(10)
+      end
+    end
+  end
+
+  describe '.get_value' do
+    context 'when input is not a string' do
+      it 'fails' do
+        table = Table.empty_table
+
+        expect do
+          table.get_value(row_a, 1)
+        end.to raise_error ArgumentError
+      end
+    end
+
+    context 'when input column name not in row' do
+      it 'fails' do
+        table = Table.new(schema: schema, rows: rows)
+
+        expect do
+          table.get_value(row_a, 'header_d')
+        end.to raise_error RequireException
+      end
+    end
+
+    context 'when input correct and sort correct' do
+      it 'retrieves value' do
+        table = Table.new(schema: schema, rows: rows)
+        value = table.get_value(row_c, 'header_a')
+
+        expect(value).to eq(3)
+      end
+
+      it 'retrieves value' do
+        table = Table.new(schema: schema, rows: rows)
+        value = table.get_value(row_a, 'header_b')
+
+        expect(value).to be(true)
+      end
+    end
+  end
 end
+# rubocop:enable RSpec/MultipleMemoizedHelpers
