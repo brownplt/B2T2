@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require './schema'
-require './table'
-require './type_extensions'
+require './lib/schema'
+require './lib/table'
+require './lib/type_extensions'
 
 # rubocop:disable Metrics/BlockLength
 # rubocop:disable RSpec/DescribeClass

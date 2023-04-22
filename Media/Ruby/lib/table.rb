@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require './basics'
-require './ensure_exception'
-require './require_exception'
-require './type_extensions'
+require './lib/basics'
+require './lib/ensure_exception'
+require './lib/require_exception'
+require './lib/type_extensions'
 
 # rubocop:disable Metrics/ClassLength
 # rubocop:disable Metrics/AbcSize
@@ -259,7 +259,24 @@ class Table
     end
   end
   # rubocop:enable Metrics/AbcSize
+  ####################
 
+  #### Subtable ####
+  ####################
+
+  #### Ordering ####
+  ####################
+
+  #### Aggregate ####
+  ####################
+
+  #### Missing Values ####
+  ####################
+
+  #### Data Cleaning ####
+  ####################
+
+  #### Utilities ####
   ####################
 
   #### Ensure/Require Helpers ####

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require './cell'
-require './ensure_exception'
-require './require_exception'
-require './row'
-require './schema'
-require './table'
-require './type_extensions'
+require './lib/cell'
+require './lib/ensure_exception'
+require './lib/require_exception'
+require './lib/row'
+require './lib/schema'
+require './lib/table'
+require './lib/type_extensions'
 
 # rubocop:disable RSpec/MultipleMemoizedHelpers
 # rubocop:disable Metrics/BlockLength

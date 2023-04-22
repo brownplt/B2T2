@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require './basics'
-require './schema'
-require './table'
+require './lib/basics'
+require './lib/schema'
+require './lib/table'
 
 RSpec.describe Basics do
   include described_class
