@@ -4,10 +4,21 @@
 module Boolean
 end
 
+# std lib TrueClass we are monkey patching
 class TrueClass
   include Boolean
+
+  # yeah I'm really overriding this :)
+  def class
+    Boolean
+  end
 end
 
+# std lib FalseClass we are monkey patching
 class FalseClass
   include Boolean
+
+  def class
+    Boolean
+  end
 end
