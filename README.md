@@ -30,25 +30,6 @@ The folder should include at least two things:
 
 Refer to [`Media/TypeScript`](Media/TypeScript) for an example.
 
-## Citation
-
-To refer to this benchmark, please use the following citation:
-
-```
-  @article{lgk-pj-2022,
-   title={Types for Tables: A Language Design Benchmark},
-   author={Kuang-Chen Lu and Ben Greenman and and Shriram Krishnamurthi},
-   journal={The Art, Science, and Engineering of Programming},
-   volume={6},
-   number={2},
-   pages={8:1--8:30},
-   year={2022}
-  }
-```
-
-You may, if you wish, refer to this repository in *addition*, but
-please do refer to the above paper.
-
 
 ## What Makes B2T2 Good?
 
@@ -75,3 +56,22 @@ B2T2 strives to be fair, comprehensive, concise, and realistic:
 
 Future changes to B2T2 will be made with these perspectives in mind.
 
+
+## Citation
+
+To refer to this benchmark, please use the following citation:
+
+```
+  @article{lgk-pj-2022,
+   title={Types for Tables: A Language Design Benchmark},
+   author={Kuang-Chen Lu and Ben Greenman and and Shriram Krishnamurthi},
+   journal={The Art, Science, and Engineering of Programming},
+   volume={6},
+   number={2},
+   pages={8:1--8:30},
+   year={2022}
+  }
+```
+
+You may, if you wish, refer to this repository in *addition*, but
+please do refer to the above paper.
