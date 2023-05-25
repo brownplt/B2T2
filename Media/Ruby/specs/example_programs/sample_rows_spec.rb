@@ -8,7 +8,7 @@ require './lib/type_extensions'
 
 # rubocop:disable RSpec/DescribeClass
 
-# gradebook: a gradebook table with no missing values
+# gradebook: a gradebook table with some missing values
 RSpec.describe 'sample rows' do
   include Basics
 

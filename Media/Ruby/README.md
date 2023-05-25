@@ -60,7 +60,7 @@ bundle rspec .
 
 #### Subtable
 
-* [ ] selectRows (overloading 1 & 2)
+* [x] selectRows (overloading 1 & 2)
 * [ ] selectColumns (overloading 1 & 2 & 3)
 * [ ] head
 * [ ] distinct
@@ -76,7 +76,7 @@ bundle rspec .
 
 #### Aggregate
 
-* [ ] count
+* [x] count
 * [ ] bin
 * [ ] piviotTable
 * [ ] groupBy

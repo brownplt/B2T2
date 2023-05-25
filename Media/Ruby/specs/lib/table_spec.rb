@@ -479,7 +479,7 @@ RSpec.describe Table do
 
           expect do
             table.get_row(-1)
-          end.to raise_error ArgumentError
+          end.to raise_error RequireException
         end
       end
 
@@ -489,7 +489,7 @@ RSpec.describe Table do
 
           expect do
             table.get_row(0)
-          end.to raise_error ArgumentError
+          end.to raise_error RequireException
         end
       end
 
@@ -819,6 +819,40 @@ RSpec.describe Table do
                 expect(subtable.ncols).to eq(0)
               end
             end
+          end
+        end
+      end
+    end
+  end
+
+  describe "Aggregate" do
+    describe ".count" do
+      context 'when column name is not a string' do
+        it 'fails the require' do
+          table = described_class.empty_table
+
+          expect do
+            described_class.count(table, 1)
+          end.to raise_error RequireException
+        end
+      end
+
+      context 'when column is not in the header' do
+        it 'fails the require' do
+          table = described_class.empty_table
+
+          expect do
+            described_class.count(table, 'foo')
+          end.to raise_error RequireException
+        end
+      end
+
+      context 'when column is in the header' do
+        context 'when column is not empty' do
+          it 'returns the count' do
+            table = described_class.new(schema: schema, rows: rows)
+
+            expect(described_class.count(table, 'header_a')).to eq(3)
           end
         end
       end

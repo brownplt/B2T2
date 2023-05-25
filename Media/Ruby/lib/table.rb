@@ -204,8 +204,8 @@ class Table
   # getRow :: t:Table * n:Number -> r:Row
   def get_row(number)
     assert_type_number(number)
-    raise ArgumentError, 'index must be positive' if number.negative?
-    raise ArgumentError, 'index must be less than length of table rows' if number >= rows.size
+    assert_require { number >= 0 }
+    assert_require { number < nrows }
 
     rows[number]
   end
@@ -272,7 +272,16 @@ class Table
   def self.tfilter(table1, &block)
     table2 = Table.new(
       schema: table1.schema,
-      rows: table1.rows.select { |r| block.call(r) }
+      rows: table1.rows.select do |r|
+        result = block.call(r)
+
+        # hacky way to check that the block returns a boolean. In Ruby, the truthiness doesn't care if it
+        # is a boolean or not, so we need to check that it is a boolean (out of choice for
+        # spec/example_errors/favorite_color_spec.rb to pass)
+        assert_require { result.is_a?(Boolean) }
+
+        result
+      end
     )
 
     assert_ensure { table2.schema == table1.schema }
@@ -330,6 +339,47 @@ class Table
   ####################
 
   #### Aggregate ####
+  # count :: t1:Table * c:ColName -> t2:Table
+  def self.count(table1, column_name)
+    assert_require { column_name.is_a?(String) }
+
+    pp table1.schema.headers
+    assert_require { table1.schema.headers.map{ |x| x[:column_name]}.member?(column_name) }
+
+
+    # TODO: assert that schema(t1)[c] is a categorical sort
+
+    # TODO: this is ugly, but it works for now. Fix it later.
+    sort_of_column = table1.schema.headers.select { |h| h[:column_name] == column_name }[0][:sort]
+
+    table2 = Table.new(
+      schema: Schema.new(
+        headers: [
+          { column_name: 'value', sort: sort_of_column },
+          { column_name: 'count', sort: Integer }
+        ]
+      ),
+      rows: table1.rows.group_by { |r| r.cells.select{ |x| x.column_name == column_name} }.map do |k, v|
+        Row.new(
+          schema: table1.schema,
+          cells: [
+            Cell.new(k,'value'),
+            Cell.new(v.size, 'count')
+          ]
+        )
+      end
+    )
+
+    assert_ensure { table2.schema.headers.size == 2 }
+    assert_ensure { table2.schema.headers[0][:column_name] == 'value' }
+    assert_ensure { table2.schema.headers[1][:column_name] == 'count' }
+    assert_ensure { table2.schema.headers[0][:sort] == sort_of_column }
+    assert_ensure { table2.schema.headers[1][:sort] == Integer }
+    # TODO: correct this to better match the spec
+    # assert_ensure { table2.nrows == table1.rows.group_by { |r| get_value(r, column_name) }.size }
+
+    table2
+  end
   ####################
 
   #### Missing Values ####

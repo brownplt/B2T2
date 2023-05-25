@@ -71,6 +71,10 @@ RSpec.describe 'table encoder logic' do
         it 'successfully parses String when integer with punctuation' do
           expect(TableEncoder.try_to_force_type('"102!"')).to eq('"102!"')
         end
+
+        it 'does not downcase String' do
+          expect(TableEncoder.try_to_force_type('"Hello"')).to eq('"Hello"')
+        end
       end
 
       describe 'when single quotes are used' do
@@ -85,6 +89,10 @@ RSpec.describe 'table encoder logic' do
         it 'successfully parses String when integer with punctuation' do
           expect(TableEncoder.try_to_force_type('\'102!\'')).to eq("'102!'")
         end
+
+        it 'does not downcase String' do
+          expect(TableEncoder.try_to_force_type('\'Hello\'')).to eq('\'Hello\'')
+        end
       end
 
       describe 'when no quotes are used' do
@@ -98,6 +106,10 @@ RSpec.describe 'table encoder logic' do
 
         it 'successfully parses String when integer with punctuation' do
           expect(TableEncoder.try_to_force_type('102!')).to eq('102!')
+        end
+
+        it 'does not downcase String' do
+          expect(TableEncoder.try_to_force_type('Hello')).to eq('Hello')
         end
       end
     end

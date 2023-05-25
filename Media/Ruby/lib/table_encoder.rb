@@ -63,7 +63,8 @@ module TableEncoder
     return value_cleaned.to_i if value_cleaned.match(/^\d+$/)
 
     # Default: String
-    value_cleaned
+    # don't lowercase if string
+    value.strip
   end
 end
 # rubocop:enable Metrics/AbcSize
