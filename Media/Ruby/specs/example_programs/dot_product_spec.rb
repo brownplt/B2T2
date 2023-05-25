@@ -9,7 +9,7 @@ require './lib/type_extensions'
 # rubocop:disable RSpec/DescribeClass
 
 # gradebook: a gradebook table with no missing values
-RSpec.describe 'quiz score filter' do
+RSpec.describe 'dot product' do
   include Basics
 
   describe 'appends average quiz score to gradebook' do
@@ -35,7 +35,7 @@ RSpec.describe 'quiz score filter' do
     # > dotProduct(gradebook, "quiz1", "quiz2")
     # 183
     context 'when happy path' do
-      it 'returns a table with the average quiz score' do
+      it 'returns the dot product' do
         # start with a gradebook table
         gradebook = TableEncoder.encode(raw_table_string)
 

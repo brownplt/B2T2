@@ -18,7 +18,7 @@ module TableEncoder
            .zip((0..))
            .select { |line| line[0].strip.start_with?('#') && line[1] != 2 }
            .map { |line| line[0].strip[3..-2].gsub('#', '').split('|').map(&:strip) }
-           .map { |values| values.map { |value| try_to_force_type(value) } }
+           .map { |values| values.map { |value| try_to_force_type(value) }.compact }
 
     headers = rows.shift
 

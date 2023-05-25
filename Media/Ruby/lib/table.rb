@@ -280,6 +280,29 @@ class Table
 
     table2
   end
+
+  # selectRows :: t1:Table * ns:Seq<Number> -> t2:Table
+  # rubocop:disable Metrics/AbcSize
+  def self.select_rows_by_indecies(table1, indices)
+    # functionally the same as 'for all n in ns, n is in range(nrows(t1))'
+    assert_require { indices.is_a?(Array) }
+    assert_require { indices.all? { |i| i.is_a?(Integer) } }
+    assert_require { indices.all? { |i| i >= 0 } }
+    assert_require { indices.all? { |i| i < table1.nrows } }
+
+    table2 = Table.new(
+      schema: table1.schema,
+      rows: indices.map { |i| table1.rows[i] }
+    )
+
+    assert_ensure { table2.schema == table1.schema }
+    assert_ensure { table2.nrows == indices.size }
+
+    table2
+  end
+  # rubocop:enable Metrics/AbcSize
+
+  # selectRows :: t1:Table * bs:Seq<Boolean> -> t2:Table
   ####################
 
   #### Ordering ####

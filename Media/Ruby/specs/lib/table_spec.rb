@@ -643,6 +643,101 @@ RSpec.describe Table do
         end
       end
     end
+
+    describe '.select_rows_by_indecies' do
+      describe 'overload(1/2)' do
+        context 'when index is not a number' do
+          it 'fails the require' do
+            table = described_class.empty_table
+
+            expect do
+              described_class.select_rows_by_indecies(table, ['a'])
+            end.to raise_error RequireException
+          end
+        end
+
+        context 'when index is not a positive number' do
+          it 'fails the require' do
+            table = described_class.empty_table
+
+            expect do
+              described_class.select_rows_by_indecies(table, [-1])
+            end.to raise_error RequireException
+          end
+        end
+
+        context 'when index is a number outside bounds table rows' do
+          it 'fails the require' do
+            table = described_class.empty_table
+
+            expect do
+              described_class.select_rows_by_indecies(table, [1])
+            end.to raise_error RequireException
+          end
+        end
+
+        context 'when indecies are not a sequence' do
+          it 'fails the require' do
+            table = described_class.empty_table
+
+            expect do
+              described_class.select_rows_by_indecies(table, 1)
+            end.to raise_error RequireException
+          end
+        end
+
+        context 'when index is valid' do
+          context 'when index is first row' do
+            it 'returns first row' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              subtable = described_class.select_rows_by_indecies(table, [0])
+
+              expect(subtable.nrows).to eq(1)
+              expect(subtable.ncols).to eq(2)
+              expect(subtable.get_row(0)).to eq(rows[0])
+            end
+          end
+
+          context 'when index is final row' do
+            it 'returns final row' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              subtable = described_class.select_rows_by_indecies(table, [2])
+
+              expect(subtable.nrows).to eq(1)
+              expect(subtable.ncols).to eq(2)
+              expect(subtable.get_row(0)).to eq(rows[2])
+            end
+          end
+
+          context 'when index is middle row' do
+            it 'returns middle row' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              subtable = described_class.select_rows_by_indecies(table, [1])
+
+              expect(subtable.nrows).to eq(1)
+              expect(subtable.ncols).to eq(2)
+              expect(subtable.get_row(0)).to eq(rows[1])
+            end
+          end
+
+          context 'when index is multiple rows' do
+            it 'returns multiple rows' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              subtable = described_class.select_rows_by_indecies(table, [0, 2])
+
+              expect(subtable.nrows).to eq(2)
+              expect(subtable.ncols).to eq(2)
+              expect(subtable.get_row(0)).to eq(rows[0])
+              expect(subtable.get_row(1)).to eq(rows[2])
+            end
+          end
+        end
+      end
+    end
   end
 end
 # rubocop:enable RSpec/MultipleMemoizedHelpers
