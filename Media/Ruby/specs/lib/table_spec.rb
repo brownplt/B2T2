@@ -737,6 +737,91 @@ RSpec.describe Table do
           end
         end
       end
+
+      describe 'overload(2/2)' do
+        describe 'select_rows_by_indecies' do
+          context 'when predicate is not a boolean' do
+            it 'fails the require' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              expect do
+                described_class.select_rows_by_predicate(table, [0, true, false])
+              end.to raise_error RequireException
+            end
+          end
+
+          context 'when predicates is not a sequence' do
+            it 'fails the require' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              expect do
+                described_class.select_rows_by_predicate(table, true)
+              end.to raise_error RequireException
+            end
+          end
+
+          context 'when predicates is not equal to table rows' do
+            it 'fails the require' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              expect do
+                described_class.select_rows_by_predicate(table, [true, false])
+              end.to raise_error RequireException
+            end
+          end
+
+          context 'when predicates is equal to table rows' do
+            context 'when predicate is all true' do
+              it 'returns all rows' do
+                table = described_class.new(schema: schema, rows: rows)
+
+                subtable = described_class.select_rows_by_predicate(table, [true, true, true])
+
+                expect(subtable.nrows).to eq(3)
+                expect(subtable.ncols).to eq(2)
+                expect(subtable.get_row(0)).to eq(rows[0])
+                expect(subtable.get_row(1)).to eq(rows[1])
+                expect(subtable.get_row(2)).to eq(rows[2])
+              end
+            end
+
+            context 'when predicate is all false' do
+              it 'returns no rows' do
+                table = described_class.new(schema: schema, rows: rows)
+
+                subtable = described_class.select_rows_by_predicate(table, [false, false, false])
+
+                expect(subtable.nrows).to eq(0)
+                expect(subtable.ncols).to eq(2)
+              end
+            end
+
+            context 'when predicate is mixed' do
+              it 'returns mixed rows' do
+                table = described_class.new(schema: schema, rows: rows)
+
+                subtable = described_class.select_rows_by_predicate(table, [true, false, true])
+
+                expect(subtable.nrows).to eq(2)
+                expect(subtable.ncols).to eq(2)
+                expect(subtable.get_row(0)).to eq(rows[0])
+                expect(subtable.get_row(1)).to eq(rows[2])
+              end
+            end
+
+            context 'when table is empty' do
+              it 'returns empty table' do
+                table = described_class.empty_table
+
+                subtable = described_class.select_rows_by_predicate(table, [])
+
+                expect(subtable.nrows).to eq(0)
+                expect(subtable.ncols).to eq(0)
+              end
+            end
+          end
+        end
+      end
     end
   end
 end

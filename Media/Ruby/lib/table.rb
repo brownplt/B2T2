@@ -303,6 +303,27 @@ class Table
   # rubocop:enable Metrics/AbcSize
 
   # selectRows :: t1:Table * bs:Seq<Boolean> -> t2:Table
+  # rubocop:disable Metrics/AbcSize
+  def self.select_rows_by_predicate(table1, predicates)
+    # bonus type checking
+    assert_require { predicates.is_a?(Array) }
+    assert_require { predicates.all? { |p| p.is_a?(Boolean) } }
+    # spec defined check(s)
+    assert_require { predicates.size == table1.nrows }
+
+    table2 = Table.new(
+      schema: table1.schema,
+      rows: table1.rows.select.with_index { |_, i| predicates[i] }
+    )
+
+    assert_ensure { table2.schema == table1.schema }
+    # TODO: implement remove_all
+    # assert_ensure { table2.nrows == length(remove_all(predicates, [false])) }
+
+    table2
+  end
+  # rubocop:enable Metrics/AbcSize
+
   ####################
 
   #### Ordering ####
