@@ -121,7 +121,7 @@ bundle rspec .
 * [x] getOnlyRow
 * [x] favoriteColor
 * [x] brownJellyBeans
-* [ ] employeeToDepartment
+* [x] employeeToDepartment
 
 ### Example Programs
 

@@ -46,7 +46,6 @@ RSpec.describe 'get only row' do
 
         it 'returns the correct number of participants who like green' do
           result = participants_whose_name_is_alice.call(table)
-          pp result
           expect(result.cells).to eq(table.get_row(1).cells)
         end
       end
