@@ -823,6 +823,113 @@ RSpec.describe Table do
         end
       end
     end
+
+    describe '.head' do
+      context 'when num is not a number' do
+        it 'fails with require' do
+          table = described_class.new(schema: schema, rows: rows)
+
+          expect do
+            described_class.head(table, 'a')
+          end.to raise_error RequireException
+        end
+      end
+
+      context 'when num is out of bounds positive' do
+        it 'fails with require' do
+          table = described_class.new(schema: schema, rows: rows)
+
+          expect do
+            described_class.head(table, 4)
+          end.to raise_error RequireException
+        end
+      end
+
+      context 'when num is out of bounds negative' do
+        it 'fails with require' do
+          table = described_class.new(schema: schema, rows: rows)
+
+          expect do
+            described_class.head(table, -4)
+          end.to raise_error RequireException
+        end
+      end
+
+      context 'when valid num' do
+        context 'when table is empty' do
+          context 'when num is 0' do
+            it 'returns an empty table' do
+              table = described_class.empty_table
+
+              result = described_class.head(table, 0)
+
+              expect(result.nrows).to eq(table.nrows)
+              expect(result.ncols).to eq(table.ncols)
+            end
+          end
+
+          context 'when table is not empty' do
+            it 'returns an empty table' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              result = described_class.head(table, 0)
+
+              expect(result.nrows).to eq(0)
+              expect(result.ncols).to eq(table.ncols)
+            end
+          end
+        end
+
+        context 'when only first row' do
+          context 'when num is positive' do
+            it 'returns a table with just the first row' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              expect(described_class.head(table, 1).rows).to eq([row_a])
+            end
+          end
+
+          context 'when num is negative' do
+            it 'returns a table with just the first row' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              expect(described_class.head(table, -2).rows).to eq([row_a])
+            end
+          end
+        end
+
+        context 'when a couple rows' do
+          context 'when num is positive' do
+            it 'returns a table with just the first row' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              expect(described_class.head(table, 2).rows).to eq([row_a, row_b])
+            end
+          end
+
+          context 'when num is negative' do
+            it 'returns a table with just the first row' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              expect(described_class.head(table, -1).rows).to eq([row_a, row_b])
+            end
+          end
+        end
+
+        context 'when entire table' do
+          context 'when num is positive' do
+            it 'returns a table with just the first row' do
+              table = described_class.new(schema: schema, rows: rows)
+
+              result = described_class.head(table, 3)
+
+              expect(result.nrows).to eq(table.nrows)
+              expect(result.ncols).to eq(table.ncols)
+            end
+          end
+        end
+      end
+    end
   end
 
   describe 'Aggregate' do

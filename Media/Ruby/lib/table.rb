@@ -333,6 +333,40 @@ class Table
   end
   # rubocop:enable Metrics/AbcSize
 
+  # head :: t1:Table * n:Number -> t2:Table
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Style/MultilineBlockChain
+  def self.head(table1, num)
+    assert_require { num.is_a?(Integer) }
+
+    if num >= 0
+      assert_require { (0..table1.nrows).include?(num) }
+    else
+      assert_require { (0..table1.nrows).include?(-num) }
+    end
+
+    table2 = Table.new(
+      schema: table1.schema,
+      rows: table1.rows.zip(1..).select do |val|
+              (num >= 0 && val[1] <= num) || (num.negative? && val[1] <= (table1.nrows + num))
+            end.map { |val| val[0] }
+    )
+
+    assert_ensure { table1.schema == table2.schema }
+    if num >= 0
+      assert_ensure { table2.nrows == num }
+    else
+      assert_ensure { table2.nrows == (table1.nrows + num) }
+    end
+
+    table2
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Style/MultilineBlockChain
   ####################
 
   #### Ordering ####
@@ -340,9 +374,9 @@ class Table
 
   #### Aggregate ####
   # count :: t1:Table * c:ColName -> t2:Table
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/AbcSize
   def self.count(table1, column_name)
     assert_require { column_name.is_a?(String) }
     assert_require { table1.schema.headers.map { |x| x[:column_name] }.member?(column_name) }
@@ -389,9 +423,9 @@ class Table
 
     table2
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/AbcSize
 
   ####################
 
