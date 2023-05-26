@@ -930,6 +930,98 @@ RSpec.describe Table do
         end
       end
     end
+
+    describe '.distinct' do
+      context "when empty table" do
+        it "returns an empty table" do
+          table = described_class.empty_table
+          
+          table_with_unique_rows = described_class.distinct(table)
+
+          expect(table_with_unique_rows.nrows).to eq(table.nrows)
+          expect(table_with_unique_rows.ncols).to eq(table.ncols)
+        end
+      end
+
+      context "when all unique rows" do
+        it "returns an unmodified table" do
+          table = described_class.new(schema: schema, rows: rows)
+          
+          table_with_unique_rows = described_class.distinct(table)
+
+          expect(table_with_unique_rows.nrows).to eq(table.nrows)
+          expect(table_with_unique_rows.ncols).to eq(table.ncols)
+          expect(table_with_unique_rows.rows).to eq(rows)
+        end
+      end
+
+      context "when some non-unique rows" do
+        it "returns a truncated table" do
+          table = described_class.new(schema: schema, rows: [row_a, row_b, row_a, row_c, row_b])
+
+          table_with_unique_rows = described_class.distinct(table)
+
+          expect(table_with_unique_rows.nrows).to eq(3)
+          expect(table_with_unique_rows.ncols).to eq(table.ncols)
+          expect(table_with_unique_rows.rows).to eq(rows)
+        end
+      end
+    end
+
+    describe '.drop_column' do
+      context "when column name is valid" do
+        it "removes header_a" do
+          table = described_class.new(schema: schema, rows: rows)
+
+          table_with_dropped_column = described_class.drop_column(table, 'header_b')
+
+          expect(table_with_dropped_column.nrows).to eq(3)
+          expect(table_with_dropped_column.ncols).to eq(1)
+          expect(table_with_dropped_column.schema.headers).to eq([{column_name: "header_a", sort: Integer}])
+        end
+      end
+    end
+
+    describe '.drop_columns' do
+      context "when column names are valid" do
+        context "when drop no columns" do
+          it "returns same table" do
+            table = described_class.new(schema: schema, rows: rows)
+
+            table_with_dropped_column = described_class.drop_columns(table, [])
+  
+            expect(table_with_dropped_column.nrows).to eq(3)
+            expect(table_with_dropped_column.ncols).to eq(2)
+            expect(table_with_dropped_column.schema.headers).to eq([{column_name: "header_a", sort: Integer}, {column_name: "header_b", sort: Boolean}])
+          end
+        end
+
+        context "when drop single column" do
+          it "removes header_a" do
+            table = described_class.new(schema: schema, rows: rows)
+
+            table_with_dropped_column = described_class.drop_columns(table, ['header_a'])
+  
+            expect(table_with_dropped_column.nrows).to eq(3)
+            expect(table_with_dropped_column.ncols).to eq(1)
+            expect(table_with_dropped_column.schema.headers).to eq([{column_name: "header_b", sort: Boolean}])
+          end
+        end
+        
+        context "when drop multiple columns" do
+          it "removes header_a and header_b" do
+            table = described_class.new(schema: schema, rows: rows)
+
+            table_with_dropped_column = described_class.drop_columns(table, ['header_a', 'header_b'])
+  
+            expect(table_with_dropped_column.nrows).to eq(3)
+            expect(table_with_dropped_column.ncols).to eq(0)
+            expect(table_with_dropped_column.schema.headers).to eq([])
+          end
+        end
+       
+      end
+    end
   end
 
   describe 'Aggregate' do

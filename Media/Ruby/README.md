@@ -62,8 +62,8 @@ bundle rspec .
 
 * [x] selectRows (overloading 1 & 2)
 * [ ] selectColumns (overloading 1 & 2 & 3)
-* [ ] head
-* [ ] distinct
+* [x] head
+* [x] distinct
 * [ ] dropColumn
 * [ ] dropColumns
 * [x] tfilter

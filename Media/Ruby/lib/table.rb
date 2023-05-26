@@ -326,8 +326,7 @@ class Table
     )
 
     assert_ensure { table2.schema == table1.schema }
-    # TODO: implement remove_all
-    # assert_ensure { table2.nrows == length(remove_all(predicates, [false])) }
+    assert_ensure { table2.nrows == remove_all(predicates, [false]).size }
 
     table2
   end
@@ -427,6 +426,54 @@ class Table
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/AbcSize
 
+  # distinct :: t1:Table -> t2:Table
+  def self.distinct(table1)
+    table2 = Table.new(
+      schema: table1.schema,
+      # how pleasant!
+      rows: table1.rows.uniq
+    )
+
+    assert_ensure { table1.schema == table2.schema }
+
+    table2
+  end
+
+  # dropColumn :: t1:Table * c:ColName -> t2:Table
+  def self.drop_column(table1, column_name)
+    assert_require { column_name.is_a?(String) }
+    assert_require { table1.schema.headers.select { |h| h[:column_name] == column_name }.any? }
+
+    table2 = Table.new(
+      schema: Schema.new(headers: table1.schema.headers.select { |h| h[:column_name] != column_name }),
+      rows: table1.rows.map { |r| r.cells = r.cells.select{ |c| c.column_name != column_name }; r }
+    )
+    
+    assert_ensure { table1.nrows == table2.nrows }
+    assert_ensure { table2.schema.headers.map{ |h| h[:column_name]} == remove_all(table1.schema.headers.map{ |h| h[:column_name]} , [column_name])}
+    assert_ensure { table2.schema.headers.map { |h| table1.schema.headers.include?(h)}.all? }
+
+    table2
+  end
+
+  # dropColumns :: t1:Table * cs:Seq<ColName> -> t2:Table
+  def self.drop_columns(table1, column_names)
+    assert_require { column_names.is_a?(Array) }
+    # TODO: write this so sane humans can comprehend
+    assert_require { column_names.map{ |c| c.is_a?(String) && table1.schema.headers.select { |h| h[:column_name] == c }.any? }.all? }
+
+    table2 = Table.new(
+      schema: Schema.new(headers: table1.schema.headers.select { |h| !column_names.include?(h[:column_name]) }),
+      rows: table1.rows.map { |r| r.cells = r.cells.select{ |c| !column_names.include?(c.column_name) }; r }
+    )
+    
+    assert_ensure { table1.nrows == table2.nrows }
+    assert_ensure { table2.schema.headers.map{ |h| h[:column_name]} == remove_all(table1.schema.headers.map{ |h| h[:column_name]} , column_names)}
+    assert_ensure { table2.schema.headers.map { |h| table1.schema.headers.include?(h)}.all? }
+
+    table2
+  end
+
   ####################
 
   #### Missing Values ####
@@ -465,6 +512,24 @@ class Table
     file_name, line_number = block.source_location
     message = File.readlines(file_name)[line_number - 1].split('assert_ensure {')[1].split("}\n")[0].strip
     raise EnsureException, "[Failed Ensure]: #{message}" unless block.call
+  end
+  ####################
+
+  #### Class/Instance Duplicates ####
+  # Duplicated due to issue between class and instance methods
+  def self.remove_all(sequence_a, sequence_b)
+    assert_type_sequence(sequence_a)
+    assert_type_sequence(sequence_b)
+
+    values_in_b = sequence_b.each_with_object({}) do |x, memoize|
+      memoize[x] = true
+    end
+
+    sequence_a.reject { |x| values_in_b.key?(x) }
+  end
+
+  def self.assert_type_sequence(sequence)
+    raise ArgumentError, 'expected a sequence' unless sequence.is_a?(Array)
   end
   ####################
 end
