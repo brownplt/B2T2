@@ -127,8 +127,8 @@ bundle rspec .
 
 * [x] dotProduct
 * [x] sampleRows
-* [ ] pHackingHomogenous
-* [ ] pHackingHeterogenous
+* [x] pHackingHomogeneous
+* [x] pHackingHeterogenous
 * [x] quizScoreFilter
 * [ ] quizScoreSelect
 * [ ] groupByRetentive
