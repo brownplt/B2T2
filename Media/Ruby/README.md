@@ -116,7 +116,7 @@ bundle rspec .
 
 * [x] midFinal
 * [x] blackAndWhite
-* [ ] pieCount
+* [x] pieCount
 * [x] brownGetAcne
 * [x] getOnlyRow
 * [x] favoriteColor
