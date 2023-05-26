@@ -99,9 +99,37 @@ bundle rspec .
 * [ ] renameColumns
 * [ ] find
 * [ ] groupByRetentive
-* [ ] grouoBySubtractive
+* [ ] groupBySubtractive
 * [ ] update
 * [ ] select
 * [ ] selectMany
 * [ ] groupJoin
 * [ ] join
+
+### Error Programs
+
+#### Malformed Tables
+
+**TBD**
+
+#### Using Tables
+
+* [x] midFinal
+* [x] blackAndWhite
+* [ ] pieCount
+* [x] brownGetAcne
+* [x] getOnlyRow
+* [x] favoriteColor
+* [x] brownJellyBeans
+* [ ] employeeToDepartment
+
+### Example Programs
+
+* [x] dotProduct
+* [x] sampleRows
+* [ ] pHackingHomogenous
+* [ ] pHackingHeterogenous
+* [x] quizScoreFilter
+* [ ] quizScoreSelect
+* [ ] groupByRetentive
+* [ ] groupBySubtractive
