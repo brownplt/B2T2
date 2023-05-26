@@ -6,8 +6,12 @@ require './lib/require_exception'
 require './lib/type_extensions'
 
 # rubocop:disable Metrics/ClassLength
-# rubocop:disable Metrics/AbcSize
 # rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/PerceivedComplexity
+# rubocop:disable Metrics/AbcSize
+# rubocop:disable Style/MultilineBlockChain
+
 # Table: an immutable, two part data structure: a schema and a rectangular collection of cells
 class Table
   include Basics
@@ -227,9 +231,6 @@ class Table
 
   #   value
   # end
-  # rubocop:enable Metrics/AbcSize
-
-  # rubocop:disable Metrics/AbcSize
   # getColumn :: t:Table * n:Number -> vs:Seq<Value>
   def get_column_by_index(index)
     assert_type_number(index)
@@ -246,7 +247,6 @@ class Table
       value
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   # getColumn :: t:Table * c:ColName -> vs:Seq<Value>
   def get_column_by_name(column_name)
@@ -291,7 +291,6 @@ class Table
   end
 
   # selectRows :: t1:Table * ns:Seq<Number> -> t2:Table
-  # rubocop:disable Metrics/AbcSize
   def self.select_rows_by_indecies(table1, indices)
     # functionally the same as 'for all n in ns, n is in range(nrows(t1))'
     assert_require { indices.is_a?(Array) }
@@ -309,10 +308,8 @@ class Table
 
     table2
   end
-  # rubocop:enable Metrics/AbcSize
 
   # selectRows :: t1:Table * bs:Seq<Boolean> -> t2:Table
-  # rubocop:disable Metrics/AbcSize
   def self.select_rows_by_predicate(table1, predicates)
     # bonus type checking
     assert_require { predicates.is_a?(Array) }
@@ -330,13 +327,8 @@ class Table
 
     table2
   end
-  # rubocop:enable Metrics/AbcSize
 
   # head :: t1:Table * n:Number -> t2:Table
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
-  # rubocop:disable Style/MultilineBlockChain
   def self.head(table1, num)
     assert_require { num.is_a?(Integer) }
 
@@ -362,20 +354,38 @@ class Table
 
     table2
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Style/MultilineBlockChain
   ####################
 
   #### Ordering ####
+  # tsort :: t1:Table * c:ColName * b:Boolean -> t2:Table
+  def self.tsort(table1, column_name, is_ascending)
+    assert_require { column_name.is_a?(String) }
+    assert_require { is_ascending.is_a?(Boolean) }
+
+    # TODO: we do this alot, write a method for it
+    assert_require { table1.schema.headers.select { |h| h[:column_name] == column_name }.any? }
+    # spec requires the sort to be Number
+    column_sort =  table1.schema.headers.select { |h| h[:column_name] == column_name }[0][:sort]
+    assert_require { column_sort == Integer || column_name == Float }
+
+    sorted_rows = table1.rows.sort_by { |r| get_value(r, column_name) }
+    sorted_rows = sorted_rows.reverse unless is_ascending
+
+    table2 = Table.new(
+      schema: table1.schema,
+      rows: sorted_rows
+    )
+
+    assert_ensure { table2.nrows == table1.nrows }
+    assert_ensure { table2.schema == table1.schema }
+
+    table2
+  end
   ####################
 
   #### Aggregate ####
   # count :: t1:Table * c:ColName -> t2:Table
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/PerceivedComplexity
-  # rubocop:disable Metrics/AbcSize
+
   def self.count(table1, column_name)
     assert_require { column_name.is_a?(String) }
     assert_require { table1.schema.headers.map { |x| x[:column_name] }.member?(column_name) }
@@ -422,9 +432,6 @@ class Table
 
     table2
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/AbcSize
 
   # distinct :: t1:Table -> t2:Table
   def self.distinct(table1)
@@ -445,13 +452,19 @@ class Table
     assert_require { table1.schema.headers.select { |h| h[:column_name] == column_name }.any? }
 
     table2 = Table.new(
-      schema: Schema.new(headers: table1.schema.headers.select { |h| h[:column_name] != column_name }),
-      rows: table1.rows.map { |r| r.cells = r.cells.select{ |c| c.column_name != column_name }; r }
+      schema: Schema.new(headers: table1.schema.headers.reject { |h| h[:column_name] == column_name }),
+      rows: table1.rows.map do |r|
+              r.cells = r.cells.reject { |c| c.column_name == column_name }
+              r
+            end
     )
-    
+
     assert_ensure { table1.nrows == table2.nrows }
-    assert_ensure { table2.schema.headers.map{ |h| h[:column_name]} == remove_all(table1.schema.headers.map{ |h| h[:column_name]} , [column_name])}
-    assert_ensure { table2.schema.headers.map { |h| table1.schema.headers.include?(h)}.all? }
+    # disabling rubocop to enable my hacky assert_ensure error message parsing to continue working
+    # rubocop:disable Layout/LineLength
+    assert_ensure { table2.schema.headers.map { |h| h[:column_name] } == remove_all(table1.schema.headers.map { |h| h[:column_name] }, [column_name]) }
+    # rubocop:disenableable Layout/LineLength
+    assert_ensure { table2.schema.headers.map { |h| table1.schema.headers.include?(h) }.all? }
 
     table2
   end
@@ -460,16 +473,24 @@ class Table
   def self.drop_columns(table1, column_names)
     assert_require { column_names.is_a?(Array) }
     # TODO: write this so sane humans can comprehend
-    assert_require { column_names.map{ |c| c.is_a?(String) && table1.schema.headers.select { |h| h[:column_name] == c }.any? }.all? }
+    # disabling rubocop to enable my hacky assert_ensure error message parsing to continue working
+    assert_require { column_names.map { |c| c.is_a?(String) && table1.schema.headers.select { |h| h[:column_name] == c }.any? }.all? }
+    # rubocop:enable Layout/LineLength
 
     table2 = Table.new(
-      schema: Schema.new(headers: table1.schema.headers.select { |h| !column_names.include?(h[:column_name]) }),
-      rows: table1.rows.map { |r| r.cells = r.cells.select{ |c| !column_names.include?(c.column_name) }; r }
+      schema: Schema.new(headers: table1.schema.headers.reject { |h| column_names.include?(h[:column_name]) }),
+      rows: table1.rows.map do |r|
+              r.cells = r.cells.reject { |c| column_names.include?(c.column_name) }
+              r
+            end
     )
-    
+
     assert_ensure { table1.nrows == table2.nrows }
-    assert_ensure { table2.schema.headers.map{ |h| h[:column_name]} == remove_all(table1.schema.headers.map{ |h| h[:column_name]} , column_names)}
-    assert_ensure { table2.schema.headers.map { |h| table1.schema.headers.include?(h)}.all? }
+    # disabling rubocop to enable my hacky assert_ensure error message parsing to continue working
+    # rubocop:disable Layout/LineLength
+    assert_ensure { table2.schema.headers.map { |h| h[:column_name] } == remove_all(table1.schema.headers.map { |h| h[:column_name] }, column_names) }
+    # rubocop:enable Layout/LineLength
+    assert_ensure { table2.schema.headers.map { |h| table1.schema.headers.include?(h) }.all? }
 
     table2
   end
@@ -531,7 +552,39 @@ class Table
   def self.assert_type_sequence(sequence)
     raise ArgumentError, 'expected a sequence' unless sequence.is_a?(Array)
   end
+
+  # getValue :: r:Row * c:ColName -> v:Value
+  def self.get_value(row, column_name)
+    assert_type_string(column_name)
+
+    assert_require { header(row).map { |c| c[:column_name] }.member?(column_name) }
+
+    values = row.cells.select { |c| c.column_name == column_name }
+    assert_ensure { values.size == 1 }
+    value = values[0].value
+
+    headers = row.schema.headers.select { |h| h[:column_name] == column_name }
+    assert_ensure { headers.size == 1 }
+    headerr = headers[0]
+    assert_ensure { value.is_a?(headerr[:sort]) }
+
+    value
+  end
+
+  def self.assert_type_string(string)
+    raise ArgumentError, 'expected a string' unless string.is_a?(String)
+  end
+
+  def self.header(value)
+    raise ArgumentError, 'expected a row or a table' unless value.respond_to?(:schema)
+
+    value.schema.headers
+  end
   ####################
 end
 # rubocop:enable Metrics/ClassLength
 # rubocop:enable Metrics/MethodLength
+# rubocop:enable Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/PerceivedComplexity
+# rubocop:enable Metrics/AbcSize
+# rubocop:enable Style/MultilineBlockChain

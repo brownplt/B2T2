@@ -64,13 +64,13 @@ bundle rspec .
 * [ ] selectColumns (overloading 1 & 2 & 3)
 * [x] head
 * [x] distinct
-* [ ] dropColumn
-* [ ] dropColumns
+* [x] dropColumn
+* [x] dropColumns
 * [x] tfilter
 
 #### Ordering
 
-* [ ] tsort
+* [x] tsort
 * [ ] sortByColumns
 * [ ] orderBy
 

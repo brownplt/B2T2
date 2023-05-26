@@ -932,10 +932,10 @@ RSpec.describe Table do
     end
 
     describe '.distinct' do
-      context "when empty table" do
-        it "returns an empty table" do
+      context 'when empty table' do
+        it 'returns an empty table' do
           table = described_class.empty_table
-          
+
           table_with_unique_rows = described_class.distinct(table)
 
           expect(table_with_unique_rows.nrows).to eq(table.nrows)
@@ -943,10 +943,10 @@ RSpec.describe Table do
         end
       end
 
-      context "when all unique rows" do
-        it "returns an unmodified table" do
+      context 'when all unique rows' do
+        it 'returns an unmodified table' do
           table = described_class.new(schema: schema, rows: rows)
-          
+
           table_with_unique_rows = described_class.distinct(table)
 
           expect(table_with_unique_rows.nrows).to eq(table.nrows)
@@ -955,8 +955,8 @@ RSpec.describe Table do
         end
       end
 
-      context "when some non-unique rows" do
-        it "returns a truncated table" do
+      context 'when some non-unique rows' do
+        it 'returns a truncated table' do
           table = described_class.new(schema: schema, rows: [row_a, row_b, row_a, row_c, row_b])
 
           table_with_unique_rows = described_class.distinct(table)
@@ -969,57 +969,123 @@ RSpec.describe Table do
     end
 
     describe '.drop_column' do
-      context "when column name is valid" do
-        it "removes header_a" do
+      context 'when column name is valid' do
+        it 'removes header_a' do
           table = described_class.new(schema: schema, rows: rows)
 
           table_with_dropped_column = described_class.drop_column(table, 'header_b')
 
           expect(table_with_dropped_column.nrows).to eq(3)
           expect(table_with_dropped_column.ncols).to eq(1)
-          expect(table_with_dropped_column.schema.headers).to eq([{column_name: "header_a", sort: Integer}])
+          expect(table_with_dropped_column.schema.headers).to eq([{ column_name: 'header_a', sort: Integer }])
         end
       end
     end
 
     describe '.drop_columns' do
-      context "when column names are valid" do
-        context "when drop no columns" do
-          it "returns same table" do
+      context 'when column names are valid' do
+        context 'when drop no columns' do
+          it 'returns same table' do
             table = described_class.new(schema: schema, rows: rows)
 
             table_with_dropped_column = described_class.drop_columns(table, [])
-  
+
             expect(table_with_dropped_column.nrows).to eq(3)
             expect(table_with_dropped_column.ncols).to eq(2)
-            expect(table_with_dropped_column.schema.headers).to eq([{column_name: "header_a", sort: Integer}, {column_name: "header_b", sort: Boolean}])
+            expect(table_with_dropped_column.schema.headers).to eq([{ column_name: 'header_a', sort: Integer },
+                                                                    { column_name: 'header_b', sort: Boolean }])
           end
         end
 
-        context "when drop single column" do
-          it "removes header_a" do
+        context 'when drop single column' do
+          it 'removes header_a' do
             table = described_class.new(schema: schema, rows: rows)
 
             table_with_dropped_column = described_class.drop_columns(table, ['header_a'])
-  
+
             expect(table_with_dropped_column.nrows).to eq(3)
             expect(table_with_dropped_column.ncols).to eq(1)
-            expect(table_with_dropped_column.schema.headers).to eq([{column_name: "header_b", sort: Boolean}])
+            expect(table_with_dropped_column.schema.headers).to eq([{ column_name: 'header_b', sort: Boolean }])
           end
         end
-        
-        context "when drop multiple columns" do
-          it "removes header_a and header_b" do
+
+        context 'when drop multiple columns' do
+          it 'removes header_a and header_b' do
             table = described_class.new(schema: schema, rows: rows)
 
-            table_with_dropped_column = described_class.drop_columns(table, ['header_a', 'header_b'])
-  
+            table_with_dropped_column = described_class.drop_columns(table, %w[header_a header_b])
+
             expect(table_with_dropped_column.nrows).to eq(3)
             expect(table_with_dropped_column.ncols).to eq(0)
             expect(table_with_dropped_column.schema.headers).to eq([])
           end
         end
-       
+      end
+    end
+  end
+
+  describe 'Ordering' do
+    describe '.tsort' do
+      context 'when column name is not a string' do
+        it 'fails with require' do
+          table = described_class.new(schema: schema, rows: rows)
+
+          expect do
+            described_class.tsort(table, 10, true)
+          end.to raise_error RequireException
+        end
+      end
+
+      context 'when is_ascending is not a boolean' do
+        it 'fails with require' do
+          table = described_class.new(schema: schema, rows: rows)
+
+          expect do
+            described_class.tsort(table, 'header_a', 'true')
+          end.to raise_error RequireException
+        end
+      end
+
+      context 'when column is not in header' do
+        it 'fails with require' do
+          table = described_class.new(schema: schema, rows: rows)
+
+          expect do
+            described_class.tsort(table, 'header_c', true)
+          end.to raise_error RequireException
+        end
+      end
+
+      context 'when column is not a number' do
+        it 'fails with require' do
+          table = described_class.new(schema: schema, rows: rows)
+
+          expect do
+            described_class.tsort(table, 'header_b', true)
+          end.to raise_error RequireException
+        end
+      end
+
+      context 'when table is non-empty and the column is valid' do
+        context 'when sorting in ascending order' do
+          it 'returns a table sorted by header_a' do
+            table = described_class.new(schema: schema, rows: rows)
+
+            sorted_table = described_class.tsort(table, 'header_a', true)
+
+            expect(sorted_table.rows).to eq(rows)
+          end
+        end
+
+        context 'when sorting in descending order' do
+          it 'returns a table sorted by header_a' do
+            table = described_class.new(schema: schema, rows: rows)
+
+            sorted_table = described_class.tsort(table, 'header_a', false)
+
+            expect(sorted_table.rows).to eq(rows.reverse)
+          end
+        end
       end
     end
   end
