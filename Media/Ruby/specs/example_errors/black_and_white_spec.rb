@@ -44,7 +44,6 @@ RSpec.describe 'black and white' do
         # > buildColumn(jellyAnon, "eat black and white", eatBlackAndWhite)
         let(:eat_black_and_white) do
           lambda do |r|
-            # OMG this is the method I needed in the row parsing debauchery
             get_value(r, 'black') && get_value(r, 'white')
           end
         end

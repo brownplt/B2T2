@@ -60,8 +60,8 @@ RSpec.describe 'brown jelly beans' do
           # TODO: this was painful... why is this so painful?
           count_of_brown_and_acne = result
                                     .rows
-                                    .select { |r| r.cells.select { |c| c.column_name == 'value' }[0].value == true }
-                                    .map { |r| r.cells.select { |c| c.column_name == 'count' }[0].value }
+                                    .select { |r| get_value(r, 'value') == true }
+                                    .map { |r| get_value(r, 'count') }
                                     .first
 
           expect(count_of_brown_and_acne).to eq(1)
