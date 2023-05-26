@@ -825,8 +825,8 @@ RSpec.describe Table do
     end
   end
 
-  describe "Aggregate" do
-    describe ".count" do
+  describe 'Aggregate' do
+    describe '.count' do
       context 'when column name is not a string' do
         it 'fails the require' do
           table = described_class.empty_table
@@ -850,9 +850,12 @@ RSpec.describe Table do
       context 'when column is in the header' do
         context 'when column is not empty' do
           it 'returns the count' do
-            table = described_class.new(schema: schema, rows: rows)
+            table = described_class.new(schema: schema, rows: rows + rows + rows + [rows[0]])
 
-            expect(described_class.count(table, 'header_a')).to eq(3)
+            result = described_class.count(table, 'header_a')
+
+            # TODO: find a cleaner way to write this test
+            expect(result.get_column_by_name('count')).to eq([4, 3, 3])
           end
         end
       end

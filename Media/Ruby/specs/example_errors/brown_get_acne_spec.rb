@@ -42,7 +42,6 @@ RSpec.describe 'brown jelly beans' do
         # > brownAndGetAcneTable =
         #   buildColumn(jellyNamed, "brown and get acne", brownAndGetAcne)
         # > count(brownAndGetAcneTable, "brown and get acne")
-
         let(:brown_and_get_acne) do
           lambda do |r|
             get_value(r, 'brown') && get_value(r, 'get acne')
@@ -50,19 +49,25 @@ RSpec.describe 'brown jelly beans' do
         end
 
         let(:brown_and_get_acne_table) do
-          Table.build_column(table, {column_name: 'brown and get acne', sort: Boolean} ) do |r|
+          Table.build_column(table, { column_name: 'brown and get acne', sort: Boolean }) do |r|
             brown_and_get_acne.call(r)
           end
         end
 
         it 'returns the correct number of participants who like green' do
-          result = count(brown_and_get_acne_table, 'brown and get acne')
+          result = Table.count(brown_and_get_acne_table, 'brown and get acne')
 
-          expect(result).to eq(3)
+          # TODO: this was painful... why is this so painful?
+          count_of_brown_and_acne = result
+                                    .rows
+                                    .select { |r| r.cells.select { |c| c.column_name == 'value' }[0].value == true }
+                                    .map { |r| r.cells.select { |c| c.column_name == 'count' }[0].value }
+                                    .first
+
+          expect(count_of_brown_and_acne).to eq(1)
         end
       end
     end
-
 
     context 'when buggy program' do
       # > brownAndGetAcne =
@@ -72,6 +77,21 @@ RSpec.describe 'brown jelly beans' do
       # > brownAndGetAcneTable =
       #     buildColumn(jellyNamed, "part2", brownAndGetAcne)
       # > count(brownAndGetAcneTable, "brown and get acne")
+      let(:brown_and_get_acne) do
+        lambda do |r|
+          get_value(r, 'brown') && get_value(r, 'get acne')
+        end
+      end
+
+      let(:brown_and_get_acne_table) do
+        Table.build_column(table, { column_name: 'part2', sort: Boolean }) do |r|
+          brown_and_get_acne.call(r)
+        end
+      end
+
+      it 'fails with require' do
+        expect { Table.count(brown_and_get_acne_table, 'brown and get acne') }.to raise_error(RequireException)
+      end
     end
   end
 end

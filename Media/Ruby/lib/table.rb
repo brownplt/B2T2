@@ -340,31 +340,41 @@ class Table
 
   #### Aggregate ####
   # count :: t1:Table * c:ColName -> t2:Table
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def self.count(table1, column_name)
     assert_require { column_name.is_a?(String) }
-
-    pp table1.schema.headers
-    assert_require { table1.schema.headers.map{ |x| x[:column_name]}.member?(column_name) }
-
-
+    assert_require { table1.schema.headers.map { |x| x[:column_name] }.member?(column_name) }
     # TODO: assert that schema(t1)[c] is a categorical sort
 
-    # TODO: this is ugly, but it works for now. Fix it later.
     sort_of_column = table1.schema.headers.select { |h| h[:column_name] == column_name }[0][:sort]
 
+    new_schema = Schema.new(
+      headers: [
+        { column_name: 'value', sort: sort_of_column },
+        { column_name: 'count', sort: Integer }
+      ]
+    )
+
+    reduced_rows = table1
+                   .rows
+                   .map { |r| r.cells.select { |x| x.column_name == column_name } }
+                   .flatten
+                   .map(&:value)
+                   .each_with_object({}) do |x, sum|
+      sum[x] = 0 unless sum.key?(x)
+      sum[x] += 1
+    end
+
     table2 = Table.new(
-      schema: Schema.new(
-        headers: [
-          { column_name: 'value', sort: sort_of_column },
-          { column_name: 'count', sort: Integer }
-        ]
-      ),
-      rows: table1.rows.group_by { |r| r.cells.select{ |x| x.column_name == column_name} }.map do |k, v|
+      schema: new_schema,
+      rows: reduced_rows.map do |k, v|
         Row.new(
-          schema: table1.schema,
+          schema: new_schema,
           cells: [
-            Cell.new(k,'value'),
-            Cell.new(v.size, 'count')
+            Cell.new('value', k),
+            Cell.new('count', v)
           ]
         )
       end
@@ -375,11 +385,14 @@ class Table
     assert_ensure { table2.schema.headers[1][:column_name] == 'count' }
     assert_ensure { table2.schema.headers[0][:sort] == sort_of_column }
     assert_ensure { table2.schema.headers[1][:sort] == Integer }
-    # TODO: correct this to better match the spec
-    # assert_ensure { table2.nrows == table1.rows.group_by { |r| get_value(r, column_name) }.size }
+    # TODO: length(removeDuplicates(getColumn(t1, c)))
 
     table2
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
+
   ####################
 
   #### Missing Values ####
