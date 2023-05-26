@@ -29,9 +29,19 @@ module ErrorHelpers
   # pieChart :: t:Table * c1:ColName * c2:ColName -> Image
   # where the first column must contain categorical values, and the second column
   # must contain positive numbers.
-  def self.pie_chart
-    # TODO: understand what a categorical value is...
+  # rubocop:disable Metrics/AbcSize
+  def self.pie_chart(table, column_1_name, column_2_name)
+    assert_require { table.schema.headers.select { |h| h[:column_name] == column_1_name }.any? }
+    assert_require { table.schema.headers.select { |h| h[:column_name] == column_2_name }.any? }
+
+    # column1 = table.schema.headers.select { |h| h[:column_name] == column_1_name }[0]
+    column2 = table.schema.headers.select { |h| h[:column_name] == column_2_name }[0]
+    # TODO: figure out what a categorical value is
+    # assert_require { column1[:sort] == Integer || column1[:sort] == Float }
+    assert_require { column2[:sort] == Integer || column2[:sort] == Float }
+    assert_require { table.get_column_by_name(column_2_name).select(&:negative?).all? }
   end
+  # rubocop:enable Metrics/AbcSize
 
   #### Ensure/Require Helpers ####
   # TODO: don't copy-pasta this everywhere
