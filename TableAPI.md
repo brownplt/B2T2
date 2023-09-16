@@ -39,6 +39,7 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 - `even`: consumes an integer and returns a boolean
 - `length`: consumes a sequence and measures its length
 - `schema`: extracts the schema of a table
+- `subTable`: extracts a combination of rows (`selectRows`) and columns (`selectColumns`) from a table
 - `range`: consumes a number and produces a sequence of valid indices
 - `concat`: concatenates two sequences or two strings
 - `startsWith`: checks whether a string starts with another string
@@ -46,7 +47,7 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 - `filter`: the conventional sequence (e.g. lists) filter
 - `map`: the conventional sequence (e.g. lists) map
 - `removeDuplicates`: consumes a sequence and produces a subsequence with all duplicated elements removed
-- `removeAll`: consumes two sequences and produces a subsequence of the first input, removing all elements that also appear in the second input.
+- `removeAll`: consumes two sequences and produces a subsequence of the first input, removing all elements that also appear in the second input
 - `colNameOfNumber`: converts a `Number` to a `ColName`
 
 #### Relations
