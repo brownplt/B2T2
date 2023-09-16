@@ -34,6 +34,19 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 
 ### Assumptions
 
+#### ColumnNames
+
+Column names must be first-class and manufacturable to support the full B2T2
+specification. This API and the example programs assume that column names
+behave like strings to keep the specification simple. However, other designs
+are possible.
+
+Required column operations:
+
+- `concat`: append two column names
+- `colNameOfNumber`: convert a `Number` to a `ColName`
+- `split`: divide a column name into pieces (used to implement `startsWith`)
+
 #### Functions
 
 - `even`: consumes an integer and returns a boolean
@@ -48,7 +61,6 @@ For our convenience, we sometimes apply table operators to rows (e.g. `selectCol
 - `map`: the conventional sequence (e.g. lists) map
 - `removeDuplicates`: consumes a sequence and produces a subsequence with all duplicated elements removed
 - `removeAll`: consumes two sequences and produces a subsequence of the first input, removing all elements that also appear in the second input
-- `colNameOfNumber`: converts a `Number` to a `ColName`
 
 #### Relations
 
