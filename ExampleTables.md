@@ -28,7 +28,7 @@ This file lists some tables that are either used in other files (e.g. TableAPI a
 | Last Name    | Department ID |
 | ------------ | ------------- |
 | "Rafferty"   | 31            |
-| "Jones"      | 32            |
+| "Jones"      | 33            |
 | "Heisenberg" | 33            |
 | "Robinson"   | 34            |
 | "Smith"      | 34            |
