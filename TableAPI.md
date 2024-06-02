@@ -387,7 +387,7 @@ Computes the cartesian product of two tables.
 - `header(t3)` is equal to `concat(header(t1), removeAll(header(t2), cs))`
 - for all `c` in `header(t1)`, `schema(t3)[c]` is equal to `schema(t1)[c]`
 - for all `c` in `removeAll(header(t2), cs))`, `schema(t3)[c]` is equal to `schema(t2)[c]`
-- `nrows(t3)` is equal to `nrows(t1)`
+- `nrows(t3)` is equal to `nrows(t1)` if `distinct(selectColumns(t2, cs))` is equal to `selectColumns(t2, cs)`, otherwise each row of `t1` may have several matches
 
 #### Description
 
@@ -1402,7 +1402,7 @@ The inverse of `pivotLonger`.
 
 #### Description
 
-When columns `cs` of table `t` have sequences, returns a `Table` where each element of each `c` in `cs` is flattened, meaning the column corresponding to `c` becomes a longer column where the original entries are concatenated. Elements of row `i` of `t` in columns other than `cs` will be repeated according to the length of `getValue(getRow(t1, i), c1)`. These lengths must therefore be the same for each `c` in `cs`.
+When columns `cs` of table `t` have sequences, returns a `Table` where each element of each `c` in `cs` is flattened, meaning the column corresponding to `c` becomes a longer column where the original entries are concatenated. If all sequences to be flattened are empty, the behavior is unspecified. Elements of row `i` of `t` in columns other than `cs` will be repeated according to the length of `getValue(getRow(t1, i), c1)`. These lengths must therefore be the same for each `c` in `cs`.
 
 ```lua
 > flatten(gradebookSeq, ["quizzes"])
