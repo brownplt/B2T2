@@ -2,6 +2,8 @@
 
 The Brown Benchmark for Table Types
 
+Version 1.1
+
 ## Context
 
 This benchmark is documented in the paper
