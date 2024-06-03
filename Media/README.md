@@ -7,7 +7,7 @@ Media
 - [TypeScript](./TypeScript/README.md)
 
 
-#### In-Progress:
+#### In-Progress Implementations:
 
 - [Ruby](https://github.com/brownplt/B2T2/pull/44)
 - [OCaml](https://github.com/dibrinsofor/B2T2/tree/ocaml-imp/Media/Ocaml)
@@ -17,6 +17,8 @@ Media
 
 
 #### Related Work:
+
+The following papers reference B2T2 but do not provide a full implementation of the benchmark:
 
 - _Infix-Extensible Record Types for Tabular Data_. Adam Pazke, Ningning Xie. TyDe 2023. <https://doi.org/10.1145/3609027.3609406>
 
