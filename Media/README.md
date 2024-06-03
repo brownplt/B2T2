@@ -16,9 +16,12 @@ Media
 - [Dex](https://github.com/google-research/dex-lang/blob/main/examples/data-frames.dx)
 
 
-#### Related Work:
+#### Papers that fully implement B2T2
 
-The following papers reference B2T2 but do not provide a full implementation of the benchmark:
+_none yet --- your name should go here!_
+
+
+#### Papers that partially implement B2T2
 
 - _Infix-Extensible Record Types for Tabular Data_. Adam Pazke, Ningning Xie. TyDe 2023. <https://doi.org/10.1145/3609027.3609406>
 
