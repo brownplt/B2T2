@@ -20,17 +20,24 @@ accomplish and what the following components are about.
 - [Errors](Errors.md)
 - [Datasheet Template](Datasheet.md)
 
-## Submissions
+## Implementations
 
-To submit an implementation of B2T2, open a pull request with a new folder in
-the `Media/` directory for your programming medium (which might be a language,
-a theoretical model, or some other way of expressing tabular programs).
-The folder should include at least two things:
+Implementations live in the Media folder:
 
-- code that addresses the main components of B2T2 (Tables, API, Example Programs, Errors)
-- a datasheet describing the implementation
+- [`Media/`](Media)
+
+To submit your own implementation of B2T2, open a pull request with a new folder in
+the `Media/` directory for your programming medium --- which might be a language,
+a theoretical model, or some other way of expressing tabular programs.
+The new folder should include at least two things:
+
+1. code that addresses the components of B2T2 (Tables, API, Example Programs, Errors)
+2. a datasheet describing the implementation
 
 Refer to [`Media/TypeScript`](Media/TypeScript) for an example.
+
+If you have a work-in-progress implementation or other work that draws inspiration from
+B2T2, open a pull request to list it in the catalog at [`Media/README.md`](Media/README.md).
 
 
 ## What Makes B2T2 Good?
