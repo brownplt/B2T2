@@ -2,7 +2,7 @@
 
 The Brown Benchmark for Table Types
 
-Version 1.1
+Version 1.2
 
 ## Context
 

@@ -19,7 +19,7 @@
 > Q. Do tables express heterogeneous data, or must data be homogenized?
 
 
-> Q. Do tables capture missing data and, if so, how?
+> Q. Do tables capture missing data and, if so, how? Do missing values affect the output constraints of any operations, for example `groupBy`?
 
 
 > Q. Are mutable tables supported? Are there any limitations?

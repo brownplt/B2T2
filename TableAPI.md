@@ -1032,7 +1032,7 @@ Sorts the rows of a `Table` in ascending order by using a sequence of specified 
 - `header(t2)` is equal to `["value", "count"]`
 - `schema(t2)["value"]` is equal to `schema(t1)[c]`
 - `schema(t2)["count"]` is equal to `Number`
-- `nrows(t2)` is equal to `length(removeDuplicates(getColumn(t1, c)))`
+- `nrows(t2)` is equal to `length(removeDuplicates(getColumn(t1, c)))` Note that if there are missing values in the input, this constraint requires one row for missing values in the output.
 
 #### Description
 
@@ -1149,6 +1149,8 @@ Partitions rows into groups and summarize each group with the functions in `agg`
 - `schema(r2)` is equal to `schema(t1)`
 - `schema(t2)` is equal to `schema(r3)`
 - `nrows(t2)` is equal to `length(removeDuplicates(ks))`, where `ks` is the results of applying `key` to each row of `t1`. `ks` can be defined with `select` and `getColumn`.
+
+Note that these constraints assume a first class representation for missing values.
 
 #### Description
 
