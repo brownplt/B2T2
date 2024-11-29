@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+# for the assert_ensure, assert_require hacks to display a useful error based on the source code
+# used to test the assertion
+gem 'ruby2ruby'
+
+group :development, :test do
+  gem 'rspec'
+  gem 'rubocop'
+  gem 'rubocop-rspec'
+end
