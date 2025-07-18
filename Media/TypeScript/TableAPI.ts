@@ -147,7 +147,7 @@ const vcat = <S extends STop>(t1: Table<S>, t2: Table<S>): Table<S> => {
 }
 // constraints
 () => {
-	// - [ ] `schema(t1)` is equal to `schema(t2)`
+	// - [x] `schema(t1)` is equal to `schema(t2)`
 	// - [x] `schema(t3)` is equal to `schema(t1)`
 	// - [ ] `nrows(t3)` is equal to `nrows(t1) + nrows(t2)`
 }
