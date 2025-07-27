@@ -1770,7 +1770,7 @@ Projects each `Row` of a `Table` into a new `Table`.
 | "Eve Smith"   | 80.5                  |
 ```
 
-### `selectMany :: t1:Table * project:(r1:Row * n:Number -> t2:Table) * result:(r2:Row * r3:Row -> r4:Row) -> t2:Table`
+### `selectMany :: t1:Table * project:(r1:Row * n:Number -> t2:Table) * result:(r2:Row * r3:Row -> r4:Row) -> t3:Table`
 
 #### Constraints
 
@@ -1782,7 +1782,7 @@ Projects each `Row` of a `Table` into a new `Table`.
 - `n` is in `range(nrows(t1))`
 - `schema(r2)` is equal to `schema(t1)`
 - `schema(r3)` is equal to `schema(t2)`
-- `schema(t2)` is equal to `schema(r4)`
+- `schema(r4)` is equal to `schema(t3)`
 
 #### Description
 
